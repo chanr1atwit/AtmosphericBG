@@ -27,7 +27,7 @@ class Photo:
     # Add multiple tags to photoTags
     def addTags(self, tags):
         for tag in tags:
-            addTag(tag)
+            self.__addTag(tag)
 
     ### TESTING METHODS ###
 

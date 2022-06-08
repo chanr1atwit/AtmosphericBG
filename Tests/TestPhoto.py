@@ -54,7 +54,7 @@ def testAddTags():
     photo1 = photo.Photo(location, fillTags())
     ok = assertEquals("Initial", "Photo", "Tags", tags, photo1.getTags())
 
-    tags += ["Quiet, Moody"]
+    tags += ["Quiet", "Moody"]
     photo1.addTags(["Quiet", "Moody"])
     ok = assertEquals("New", "Photo", "Tags", tags, photo1.getTags())
 

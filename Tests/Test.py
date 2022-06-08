@@ -12,8 +12,11 @@ def swText(string):
     print(string)
     starsln()
 
+def equalsPrint(provDesc, foundDesc, typeDesc, provided, found):
+    print(f"{provDesc} {typeDesc}: {provided}\n{foundDesc} {typeDesc}: {found}")
+
 def assertEquals(provDesc, foundDesc, typeDesc, provided, found):
     ok = provided == found
-    print(f"{provDesc} {typeDesc}: {provided}\n{foundDesc} {typeDesc}: {found}\n" +
-          f"Equal? {'Yes' if ok else 'No'}\n")
+    equalsPrint(provDesc, foundDesc, typeDesc, provided, found)
+    print(f"Equal? {'Yes' if ok else 'No'}\n")
     return ok
