@@ -13,7 +13,7 @@ def swText(string):
     starsln()
 
 def equalsPrint(provDesc, foundDesc, typeDesc, provided, found):
-    print(f"{provDesc} {typeDesc}: {provided}\n{foundDesc} {typeDesc}: {found}")
+    print(f"{provDesc} {typeDesc}: {str(provided)}\n{foundDesc} {typeDesc}: {str(found)}")
 
 def assertEquals(provDesc, foundDesc, typeDesc, provided, found):
     ok = provided == found

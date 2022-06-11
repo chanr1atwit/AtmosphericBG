@@ -38,3 +38,20 @@ class Photo:
     # Return photoTags
     def getTags(self):
         return self.__photoTags
+
+    # Checks the equality of two photos
+    def __eq__(self, other):
+        eq = self.__fileLocation == other.getLocation()
+        return eq and set(self.__photoTags) == set(other.getTags())
+
+    def __str__(self):
+        str = f"{self.__fileLocation}"
+        if len(self.__photoTags) > 0:
+            str += "["
+        for tag in self.__photoTags:
+            str += f"'{tag},'"
+        if len(self.__photoTags) > 0:
+            str[len(str-2)] = ""
+            str[len(str-1)] = "]"
+        print(str)
+        return str
