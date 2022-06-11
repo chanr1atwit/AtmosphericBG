@@ -33,12 +33,12 @@ def testRead():
     return ok
     
 def runTests():
-    swText("Testing PhotoLibraryModel.py")
+    header("Testing PhotoLibraryModel.py")
 
     if not testRead():
        sys.exit()
 
-    swText("Done testing PhotoLibraryModel.py")
+    header("Done testing PhotoLibraryModel.py")
 
 if __name__ == "__main__":
     runTests()

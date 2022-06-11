@@ -47,11 +47,10 @@ class Photo:
     def __str__(self):
         str = f"{self.__fileLocation}"
         if len(self.__photoTags) > 0:
-            str += "["
+            str += ": ["
         for tag in self.__photoTags:
-            str += f"'{tag},'"
+            str += f"'{tag}', "
         if len(self.__photoTags) > 0:
-            str[len(str-2)] = ""
-            str[len(str-1)] = "]"
-        print(str)
+            str = str[0:len(str)-2] 
+            str += "]"
         return str
