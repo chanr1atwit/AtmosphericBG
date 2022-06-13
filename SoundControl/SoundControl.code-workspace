@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "SoundControl",
+			"path": "."
+		},
+		{
+			"name": "wmi",
+			"path": "..\\..\\..\\Downloads\\wmi"
+		}
+	],
+	"settings": {}
+}
