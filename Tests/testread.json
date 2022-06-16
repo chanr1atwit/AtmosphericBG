@@ -1,0 +1,14 @@
+[
+  {
+    "location": "photo1.jpg",
+    "tags": [ "Happy", "Excited", "High BPM" ]
+  },
+  {
+    "location": "photo2.jpg",
+    "tags": [ "Sad", "Low BPM" ]
+  },
+  {
+    "location": "photo3.jpg",
+    "tags": [ "Calm", "Relaxed", "Medium BPM" ]
+  }
+]
