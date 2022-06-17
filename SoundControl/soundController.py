@@ -11,7 +11,7 @@ class soundController:
         #use a set to remove duplicate processes
         arr = set()
         #edit for listed executable list
-        for process in f.Win32_Process():#error str object not callable
+        for process in f.Win32_Process():
             # do not read in all processes, just the first ten
             #if(len(arr) == 10):
                 #return arr
