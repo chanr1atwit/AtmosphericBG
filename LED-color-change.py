@@ -47,8 +47,8 @@ class Color:
         return colors(255, 0, 255)
 
     @classmethod
-    def getRandomColor(colors):
-        i = random.randint(0,7)
+    def setColors(colors):
+        i = setColor.randint(0,7)
         return {
             '0': colors.white(),
             '1': colors.black(),
