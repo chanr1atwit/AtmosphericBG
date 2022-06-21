@@ -48,7 +48,7 @@ class Color:
 
     @classmethod
     def setColors(colors):
-        i = setColor.randint(0,7)
+        i = setColor.getint(0,7)
         return {
             '0': colors.white(),
             '1': colors.black(),
