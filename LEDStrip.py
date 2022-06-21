@@ -3,7 +3,6 @@ from time import sleep
 import os
 import wave
 import pyaudio
-import _rpi_ws281x as ws
 import time
 
 def Color(red, green, blue):
@@ -35,7 +34,7 @@ class _LED_Data(object):
         """Scale each LED in the buffer by the provided brightness.  A brightness
         of 0 is the darkest and 255 is the brightest.
         """
-        ws.ws2811_channel_t_brightness_set(self._channel, brightness)
+        self.setBrightness(self._channel, brightness)
         """ws is websockets is a library for building WebSocket servers and clients in Python with a focus on correctness, simplicity, 
            robustness, and performance.
         """
