@@ -1,29 +1,28 @@
 #Abstract base classes
-import abc
 #interface
-class VisualizerInterface(abc.ABC):
-    @abc.abstractclassmethod
+class VisualizerClass:
+    
+    def __init__(self,lineThickness,peakVolume):
+        self.lineThickness = lineThickness
+        self.peakVolume = peakVolume
+
     def draw(self):
         pass
 
 #general name for visualizers until decided
-class Visualizer1(VisualizerInterface):
-    def __init(self,lineThickness,peakVolume):
-        pass
-
+class Visualizer1(VisualizerClass):
+    
     def draw(self):
         pass
+    
 #general name for visualizers until decided
-class Visualizer2(VisualizerInterface):
-    def __init(self,lineThickness,peakVolume):
-        pass
-
+class Visualizer2(VisualizerClass):
+    
     def draw(self):
         pass
-#general name for visualizers until decided
-class Visualizer3(VisualizerInterface):
-    def __init(self,lineThickness,peakVolume):
-        pass
 
+#general name for visualizers until decided
+class Visualizer3__(VisualizerClass):
+    
     def draw(self):
         pass
