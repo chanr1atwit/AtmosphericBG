@@ -9,14 +9,14 @@ class soundController:
     def detectSources(self):
         f = wmi.WMI()
         #use a set to remove duplicate 
-        list = set()
+        arr = set()
         #edit for listed executable list
         for process in f.Win32_Process():
             # do not read in all processes, just the first ten
             #if(len(arr) == 10):
                 #return arr
-            list.add(process.Name)
-        return list
+            arr.add(process.Name)
+        return arr
     #displays list and allows user to select app
     def selectSources(self,list):
        print(str(list))
