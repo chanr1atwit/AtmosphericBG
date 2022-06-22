@@ -121,6 +121,9 @@ def testWrite():
 
     return ok
 
+def testEdit():
+    pass
+
 def runTests():
     header("Testing PhotoLibraryModel.py")
 
