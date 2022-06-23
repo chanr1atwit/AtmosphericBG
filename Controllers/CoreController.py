@@ -2,6 +2,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from Views.MainGUI import *
+from Views.PhotoLibraryGUI import *
+from Views.SettingsGUI import *
 
 
 class CoreController:
@@ -19,11 +21,16 @@ class CoreController:
 
         # All Views
         self.mainGUI = MainGUI(self)
+        self.photoLibraryGUI = PhotoLibraryGUI(self)
+        self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI
+        # If it closes, the app shuts down
+        # Other windows will open as dialogs
         self.mainGUI.show()
 
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
 
-CoreController(sys.argv)
+    def openView(self, view):
+        view.show()
