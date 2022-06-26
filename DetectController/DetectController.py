@@ -1,12 +1,12 @@
 #imports wmi for python, author: Tim Golden
 import wmi
-class soundController:
+class DetectController:
     #constructor with one param
     def __init__(self,sourceID):
        self.sourceID = sourceID
     
     #reads in processID from taskmanager and adds to array
-    def detectSources(self):
+    def DetectSources(self):
         f = wmi.WMI()
         #use a set to remove duplicate 
         arr = set()
@@ -18,7 +18,7 @@ class soundController:
             arr.add(process.Name)
         return arr
     #displays list and allows user to select app
-    def selectSources(self,list):
+    def SelectSources(self,list):
        print(str(list))
     
         
