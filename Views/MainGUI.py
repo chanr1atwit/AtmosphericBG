@@ -23,11 +23,23 @@ class MainGUI(GUI):
         line.setLineWidth(2)
         line.setFrameShape(QtW.QFrame.VLine)
 
+        line2 = QtW.QFrame(self.window)
+        line2.setGeometry(QtC.QRect(0, 410, 520, 2))
+        line2.setFrameShadow(QtW.QFrame.Plain)
+        line2.setLineWidth(2)
+        line2.setFrameShape(QtW.QFrame.HLine)
+
         # Labels on View
+        self.imageLabel = QtW.QLabel("Currently Chosen Image:", self.window)
+        self.imageLabel.setGeometry(QtC.QRect(30, 10, 471, 16))
+
+        self.visualizerLabel = QtW.QLabel("Selected App:", self.window)
+        self.visualizerLabel.setGeometry(QtC.QRect(50, 450, 291, 16))
 
         # Check boxes
         self.visualizerCB = QtW.QCheckBox("Enable Visualizer", self.window)
         self.visualizerCB.setGeometry(QtC.QRect(570, 360, 111, 20))
+        
         self.visualizerDemoCD = QtW.QCheckBox("Visualizer Demo", self.window)
         self.visualizerDemoCD.setGeometry(QtC.QRect(740, 360, 111, 20))
         
