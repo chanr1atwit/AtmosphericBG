@@ -1,4 +1,4 @@
-# MainGUI subclass, last edited 6/23/2022
+# MainGUI subclass, last edited 6/27/2022
 from PyQt5 import QtWidgets as QtW
 from PyQt5.QtGui import QPainter as Qp
 from PyQt5 import QtCore as QtC
@@ -67,11 +67,12 @@ class MainGUI(GUI):
 
     # List of connected views that need methods
     def photoLibraryView(self):
-        self.controller.openView(self.controller.photoLibraryGUI)
+        self.controller.photoLibraryGUI.show()
 
     def selectionView(self):
         # Implementation of select view to be done by Rodney
-        pass# self.controller.openView(self.controller.selectionView)
+        pass#self.controller.selectionView.show()
 
     def settingsView(self):
-        self.controller.openView(self.controller.settingsGUI)
+        # NEED TO UPDATE SETTINGS GUI TO A GUI SUBCLASS
+        self.controller.settingsGUI.show()

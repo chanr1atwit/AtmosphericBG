@@ -1,4 +1,4 @@
-# CoreController class, last edited 6/20/2022
+# CoreController class, last edited 6/27/2022
 import sys
 from PyQt5.QtWidgets import QApplication
 
@@ -7,8 +7,6 @@ from Controllers.PhotoLibraryController import *
 from Views.MainGUI import *
 from Views.PhotoLibraryGUI import *
 from Views.SettingsGUI import *
-
-
 
 class CoreController:
     # Create all elements of the app
@@ -34,6 +32,3 @@ class CoreController:
 
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
-
-    def openView(self, view):
-        view.show()

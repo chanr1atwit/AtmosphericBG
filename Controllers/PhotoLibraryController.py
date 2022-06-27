@@ -1,6 +1,5 @@
-# PhotoLibraryController class, last edited 6/26/2022
+# PhotoLibraryController class, last edited 6/27/2022
 import sys
-import os
 from os.path import exists
 from PyQt5 import QtWidgets as QtW
 from PhotoLibrary.Photo import *
@@ -13,15 +12,16 @@ class PhotoLibraryController:
         # Models
         self.photoLibrary = PhotoLibraryModel()
         # For now, read from default file, eventually add config files to change
-        self.photoLibrary.readJSON("Files/photolibrary.json")
+        self.json = "Files/photolibrary.json"
+        self.photoLibrary.readJSON(self.json)
 
         # Subcontrollers
         #self.samplingTimerController = SamplingTimerController()
-        
-    def openView(self, view):
-        view.show()
 
-    def convertTags(tags):
+    def updateJSON(self):
+        self.photoLibrary.writeJSON(self.json)
+
+    def convertTags(self, tags):
         checked = []
         for tag in tags:
             if tag.isChecked():
@@ -33,6 +33,7 @@ class PhotoLibraryController:
         if not exists(location) or (".jpg" not in location and ".png" not in location):
             return False
 
-        checked = convertTags(tags)
+        checked = self.convertTags(tags)
 
         self.photoLibrary.addPhotos([Photo(location, checked)])
+        return True

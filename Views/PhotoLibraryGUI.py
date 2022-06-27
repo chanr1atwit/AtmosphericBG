@@ -1,4 +1,4 @@
-# MainGUI class, last edited 6/26/2022
+# MainGUI class, last edited 6/27/2022
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from Views.GUI import *
@@ -14,12 +14,15 @@ class PhotoLibraryGUI(GUI):
         # Holds reference to success/failure window
         # so that the window doesn't immedeatly close
         self.status = None
-        self.text = ""
 
         # Buttons on View
         addButton = QtW.QPushButton("Add Photo", self.window)
         addButton.setGeometry(QtC.QRect(100, 100, 131, 40))
         addButton.clicked.connect(self.addPhotoDialog)
+
+        saveButton = QtW.QPushButton("Save Current Library", self.window)
+        saveButton.setGeometry(QtC.QRect(100, 250, 131, 40))
+        saveButton.clicked.connect(self.controller.updateJSON)
 
         backButton = QtW.QPushButton("Back", self.window)
         backButton.setGeometry(QtC.QRect(100,400,131,40))
@@ -27,18 +30,19 @@ class PhotoLibraryGUI(GUI):
 
     # List of connected views
     def mainView(self):
+        self.controller.updateJSON()
         self.hide()
 
     # Use GUI to allow for adding photos
     def addPhotoDialog(self):
         addPhotoGUI = GUI(None, 800, 350, "Add a photo")
 
-        self.text = QtW.QTextEdit("Photo Directory", addPhotoGUI.window)
-        self.text.setGeometry(QtC.QRect(75,50,200,25))
+        linkText = QtW.QTextEdit("Photo Directory", addPhotoGUI.window)
+        linkText.setGeometry(QtC.QRect(75,50,200,25))
 
         browseButton = QtW.QPushButton("...", addPhotoGUI.window)
         browseButton.setGeometry(QtC.QRect(300, 50, 50, 25))
-        browseButton.clicked.connect(lambda : self.browseFiles(self.text))
+        browseButton.clicked.connect(lambda : self.browseFiles(addPhotoGUI, linkText))
 
         #add elipse button next to linkText
 
@@ -93,14 +97,13 @@ class PhotoLibraryGUI(GUI):
     # Access to backend functionality
     def requestAddPhoto(self, gui, link, tags):
         self.status = None
-        if self.controller.addPhoto(link, tags):
+        if self.controller.addPhoto(link.toPlainText().lower(), tags):
             self.addPhotoSuccess()
         else:
             self.addPhotoFailure()
     
-    def browseFiles(self, text):
-        temp = GUI(None, 500, 500, "Open File").window
-        file = QtW.QFileDialog.getOpenFileName(temp, 'Open file','C:\\',"Image files (*.jpg *.png)")
+    def browseFiles(self, gui, text):
+        file = QtW.QFileDialog.getOpenFileName(gui.window, 'Open file','C://Users/$username/Pictures/',"Image files (*.jpg *.png)")
         if file[0] == "":
             return
-        self.text.setText(file[0])
+        text.setText(str(file[0]))
