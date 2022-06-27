@@ -16,10 +16,7 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)
-        
-        # Models
-        
+        self.app = QApplication(argv)        
 
         # Subcontrollers
         self.photoLibraryController = PhotoLibraryController()
