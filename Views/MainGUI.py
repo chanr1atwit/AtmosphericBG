@@ -46,33 +46,16 @@ class MainGUI(GUI):
         # Buttons on View
         libraryButton = QtW.QPushButton("Photo Library", self.window)
         libraryButton.setGeometry(QtC.QRect(30, 340, 131, 40))
-        libraryButton.clicked.connect(self.photoLibraryView)
+        libraryButton.clicked.connect(self.controller.photoLibraryView)
 
         settingsButton = QtW.QPushButton("Advanced Settings", self.window)
         settingsButton.setGeometry(QtC.QRect(360, 340, 131, 40))
-        settingsButton.clicked.connect(self.settingsView)
+        settingsButton.clicked.connect(self.controller.settingsView)
         
         selectionButton = QtW.QPushButton("Selection Menu", self.window)
         selectionButton.setGeometry(QtC.QRect(360, 440, 131, 40))
-        selectionButton.clicked.connect(self.selectionView)
+        selectionButton.clicked.connect(self.controller.selectionView)
 
         selectionButton = QtW.QPushButton("Select Visualizer", self.window)
         selectionButton.setGeometry(QtC.QRect(560, 400, 131, 40))
-        selectionButton.clicked.connect(self.selectionView)
-
-    # Window should never be 'hidden' 
-    # unless it is minimized by user
-    def hide(self):
-        pass
-
-    # List of connected views that need methods
-    def photoLibraryView(self):
-        self.controller.photoLibraryGUI.show()
-
-    def selectionView(self):
-        # Implementation of select view to be done by Rodney
-        pass#self.controller.selectionView.show()
-
-    def settingsView(self):
-        # NEED TO UPDATE SETTINGS GUI TO A GUI SUBCLASS
-        self.controller.settingsGUI.show()
+        selectionButton.clicked.connect(self.controller.selectionView)

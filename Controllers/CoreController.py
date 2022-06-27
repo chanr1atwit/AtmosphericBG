@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import QApplication
 from Controllers.PhotoLibraryController import *
 
 from Views.MainGUI import *
-from Views.PhotoLibraryGUI import *
 from Views.SettingsGUI import *
 
 class CoreController:
@@ -22,7 +21,6 @@ class CoreController:
 
         # All Views
         self.mainGUI = MainGUI(self)
-        self.photoLibraryGUI = PhotoLibraryGUI(self.photoLibraryController)
         self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI
@@ -32,3 +30,21 @@ class CoreController:
 
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
+
+    # Window should never be 'hidden' 
+    # unless it is minimized by user
+    def hide(self):
+        pass
+
+    # List of connected views that need methods
+    def photoLibraryView(self):
+        self.photoLibraryController.photoGUI.show()
+
+    def selectionView(self):
+        # Implementation of select view to be done by Rodney
+        pass
+
+    def settingsView(self):
+        # NEED TO UPDATE SETTINGS GUI TO A GUI SUBCLASS
+        # ALSO NEED TO MAKE SETTINGS CONTROLLER TO HOLD SETTINGS GUI
+        self.settingsGUI.show()

@@ -1,6 +1,7 @@
 # MainGUI class, last edited 6/27/2022
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
+from PyQt5 import QtGui as QtG
 from Views.GUI import *
 
 class PhotoLibraryGUI(GUI):
@@ -11,62 +12,84 @@ class PhotoLibraryGUI(GUI):
         # Call to super init
         # Window and controller defined by GUI superclass
         super().__init__(controller, 1500, 800, "Atmospheric BG - Photo Library")
+        self.widget = QtW.QWidget()
+        self.widget.setGeometry(QtC.QRect(0, 0, 1300, 800))
+        #layout = QtW.QVBoxLayout(self.widget)    
+
         # Holds reference to success/failure window
-        # so that the window doesn't immedeatly close
+        # so that the window doesn't immedeatly close.
+        # Will be set to none before each attempt at adding.
         self.status = None
+
+        self.images = QtW.QScrollArea() # All pixmaps
+        self.images.setVerticalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOn)
+        self.images.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
+        self.images.setWidget(self.widget)
+        self.images.setWidgetResizable(True)
+        
+        
+
+        # HBox is stored in self.current
+        # and number of images in self.num
+        #self.addNewHBox() 
+        self.num = 0
+        #vLayout = QtG.QVBoxLayout()
+        #vLayout.addWidget()
+        #vLayout.addWidget(scroll)
+        #self.setLayout(vLayout)
 
         # Buttons on View
         addButton = QtW.QPushButton("Add Photo", self.window)
-        addButton.setGeometry(QtC.QRect(100, 100, 131, 40))
-        addButton.clicked.connect(self.addPhotoDialog)
+        addButton.setGeometry(QtC.QRect(1320, 100, 131, 40))
+        addButton.clicked.connect(self.addPhotoView)
 
+        editButton = QtW.QPushButton("Edit Tags", self.window)
+        editButton.setGeometry(QtC.QRect(1320, 200, 131, 40))
+        editButton.clicked.connect(self.editTagsView)
+
+        removeButton = QtW.QPushButton("Edit Tags", self.window)
+        removeButton.setGeometry(QtC.QRect(1320, 300, 131, 40))
+        removeButton.clicked.connect(self.controller.removePhoto)
+
+        # Only here until save on close is implemented
         saveButton = QtW.QPushButton("Save Current Library", self.window)
-        saveButton.setGeometry(QtC.QRect(100, 250, 131, 40))
+        saveButton.setGeometry(QtC.QRect(1320, 400, 131, 40))
         saveButton.clicked.connect(self.controller.updateJSON)
 
         backButton = QtW.QPushButton("Back", self.window)
-        backButton.setGeometry(QtC.QRect(100,400,131,40))
+        backButton.setGeometry(QtC.QRect(1320,600,131,40))
         backButton.clicked.connect(self.mainView)
 
     # List of connected views
+
+    # Close current gui and return to main
     def mainView(self):
         self.controller.updateJSON()
         self.hide()
 
     # Use GUI to allow for adding photos
-    def addPhotoDialog(self):
-        addPhotoGUI = GUI(None, 800, 350, "Add a photo")
+    def addPhotoView(self):
+        addPhotoGUI = GUI(None, 600, 350, "Add a photo")
 
         linkText = QtW.QTextEdit("Photo Directory", addPhotoGUI.window)
         linkText.setGeometry(QtC.QRect(75,50,200,25))
-
-        browseButton = QtW.QPushButton("...", addPhotoGUI.window)
-        browseButton.setGeometry(QtC.QRect(300, 50, 50, 25))
-        browseButton.clicked.connect(lambda : self.browseFiles(addPhotoGUI, linkText))
 
         #add elipse button next to linkText
 
         happy = QtW.QCheckBox("Happy", addPhotoGUI.window)
         happy.setGeometry(QtC.QRect(75, 100, 111, 20))
-
         sad = QtW.QCheckBox("Sad", addPhotoGUI.window)
         sad.setGeometry(QtC.QRect(75, 130, 111, 20))
-        
         excited = QtW.QCheckBox("Excited", addPhotoGUI.window)
         excited.setGeometry(QtC.QRect(75, 160, 111, 20))
-        
         calm = QtW.QCheckBox("Calm", addPhotoGUI.window)
         calm.setGeometry(QtC.QRect(75, 190, 111, 20))
-        
         relaxed = QtW.QCheckBox("Relaxed", addPhotoGUI.window)
         relaxed.setGeometry(QtC.QRect(75, 220, 111, 20))
-        
         low = QtW.QCheckBox("Low", addPhotoGUI.window)
         low.setGeometry(QtC.QRect(75, 250, 111, 20))
-
         medium = QtW.QCheckBox("Medium", addPhotoGUI.window)
         medium.setGeometry(QtC.QRect(75, 280, 111, 20))
-
         high = QtW.QCheckBox("High", addPhotoGUI.window)
         high.setGeometry(QtC.QRect(75, 310, 111, 20))
 
@@ -74,36 +97,38 @@ class PhotoLibraryGUI(GUI):
 
         addButton = QtW.QPushButton("Add", addPhotoGUI.window)
         addButton.setGeometry(QtC.QRect(400, 100, 131, 40))
-        addButton.clicked.connect(lambda : self.requestAddPhoto(addPhotoGUI, linkText, tags))
+        addButton.clicked.connect(lambda : self.controller.requestAddPhoto(addPhotoGUI, linkText, tags))
+
+        browseButton = QtW.QPushButton("...", addPhotoGUI.window)
+        browseButton.setGeometry(QtC.QRect(300, 50, 50, 25))
+        browseButton.clicked.connect(lambda : self.controller.browseFiles(addPhotoGUI, linkText))
 
         backButton = QtW.QPushButton("Back", addPhotoGUI.window)
         backButton.setGeometry(QtC.QRect(400, 200, 131, 40))
-        backButton.clicked.connect(lambda : addPhotoGUI.window.hide())
+        backButton.clicked.connect(lambda : addPhotoGUI.hide())
 
         addPhotoGUI.show()
+
+    def editTagsView(self):
+        pass
 
     def addPhotoSuccess(self):
         self.status = GUI(None, 200, 50, "Success!")
         success = QtW.QLabel("Successfully added photo!", self.status.window)
         success.setGeometry(QtC.QRect(0, 0, 200, 50))
-        self.status.window.show()
+        self.status.show()
 
     def addPhotoFailure(self):
         self.status = GUI(None, 200, 50, "Failure!")
         failure = QtW.QLabel("Failed to add photo.", self.status.window)
         failure.setGeometry(QtC.QRect(0, 0, 200, 50))
-        self.status.window.show()
+        self.status.show()
 
-    # Access to backend functionality
-    def requestAddPhoto(self, gui, link, tags):
-        self.status = None
-        if self.controller.addPhoto(link.toPlainText().lower(), tags):
-            self.addPhotoSuccess()
-        else:
-            self.addPhotoFailure()
-    
-    def browseFiles(self, gui, text):
-        file = QtW.QFileDialog.getOpenFileName(gui.window, 'Open file','C://Users/$username/Pictures/',"Image files (*.jpg *.png)")
-        if file[0] == "":
-            return
-        text.setText(str(file[0]))
+    #def addNewHBox(self):
+
+    #    self.current = QtW.QHBoxLayout()
+        
+    #    self.images
+
+
+    #    self.num = 0
