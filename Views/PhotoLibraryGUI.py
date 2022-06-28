@@ -14,9 +14,6 @@ class PhotoLibraryGUI(GUI):
         super().__init__(controller, 1500, 800, "Atmospheric BG - Photo Library")
         self.num = 0
 
-
-
-
         listBox = QtW.QHBoxLayout(self.window)
         self.window.setLayout(listBox)
 
@@ -33,29 +30,6 @@ class PhotoLibraryGUI(GUI):
 
         vbox = QtW.QVBoxLayout(self.window)
 
-        ## Holds reference to success/failure window
-        ## so that the window doesn't immedeatly close.
-        ## Will be set to none before each attempt at adding.
-        #self.status = None
-
-        
-
-        #self.scroll = QtW.QScrollArea(self.window) # All pixmaps
-        #self.scroll.setVerticalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOn)
-        #self.scroll.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
-        #self.scroll.setWidgetResizable(True)
-        #self.scroll.setWidget(self.widget)
-        
-        
-
-        # HBox is stored in self.current
-        # and number of images in self.num
-        #self.addNewHBox() 
-        #vLayout = QtG.QVBoxLayout()
-        #vLayout.addWidget()
-        #vLayout.addWidget(scroll)
-        #self.setLayout(vLayout)
-
         # Buttons on View
         addButton = QtW.QPushButton("Add Photo", self.window)
         addButton.setGeometry(QtC.QRect(1320, 100, 131, 40))
@@ -65,9 +39,9 @@ class PhotoLibraryGUI(GUI):
         editButton.setGeometry(QtC.QRect(1320, 200, 131, 40))
         editButton.clicked.connect(self.editTagsView)
 
-        removeButton = QtW.QPushButton("Edit Tags", self.window)
+        removeButton = QtW.QPushButton("Remove Photo", self.window)
         removeButton.setGeometry(QtC.QRect(1320, 300, 131, 40))
-        removeButton.clicked.connect(self.controller.removePhoto)
+        removeButton.clicked.connect(self.controller.requestRemovePhoto)
 
         # Only here until save on close is implemented
         saveButton = QtW.QPushButton("Save Current Library", self.window)
@@ -77,9 +51,6 @@ class PhotoLibraryGUI(GUI):
         backButton = QtW.QPushButton("Back", self.window)
         backButton.setGeometry(QtC.QRect(1320,600,131,40))
         backButton.clicked.connect(self.mainView)
-
-
-
 
         vbox.addWidget(addButton)
         vbox.addWidget(editButton)
@@ -103,8 +74,6 @@ class PhotoLibraryGUI(GUI):
 
         linkText = QtW.QTextEdit("Photo Directory", addPhotoGUI.window)
         linkText.setGeometry(QtC.QRect(75,50,200,25))
-
-        #add elipse button next to linkText
 
         happy = QtW.QCheckBox("Happy", addPhotoGUI.window)
         happy.setGeometry(QtC.QRect(75, 100, 111, 20))
@@ -140,25 +109,65 @@ class PhotoLibraryGUI(GUI):
         addPhotoGUI.show()
 
     def editTagsView(self):
-        pass
+        if self.controller.findPhoto(self.controller.selected) is None:
+            return
 
-    def addPhotoSuccess(self):
+        editTagsGUI = GUI(None, 600, 350, "Edit tags")
+
+        pTags = self.controller.getTags()
+
+        happy = QtW.QCheckBox("Happy", editTagsGUI.window)
+        happy.setGeometry(QtC.QRect(75, 100, 111, 20))
+        happy.setChecked("Happy" in pTags)
+
+        sad = QtW.QCheckBox("Sad", editTagsGUI.window)
+        sad.setGeometry(QtC.QRect(75, 130, 111, 20))
+        sad.setChecked("Sad" in pTags)
+        
+        excited = QtW.QCheckBox("Excited", editTagsGUI.window)
+        excited.setGeometry(QtC.QRect(75, 160, 111, 20))
+        excited.setChecked("Excited" in pTags)
+        
+        calm = QtW.QCheckBox("Calm", editTagsGUI.window)
+        calm.setGeometry(QtC.QRect(75, 190, 111, 20))
+        calm.setChecked("Calm" in pTags)
+        
+        relaxed = QtW.QCheckBox("Relaxed", editTagsGUI.window)
+        relaxed.setGeometry(QtC.QRect(75, 220, 111, 20))
+        relaxed.setChecked("Relaxed" in pTags)
+        
+        low = QtW.QCheckBox("Low", editTagsGUI.window)
+        low.setGeometry(QtC.QRect(75, 250, 111, 20))
+        low.setChecked("Low" in pTags)
+        
+        medium = QtW.QCheckBox("Medium", editTagsGUI.window)
+        medium.setGeometry(QtC.QRect(75, 280, 111, 20))
+        medium.setChecked("Medium" in pTags)
+
+        high = QtW.QCheckBox("High", editTagsGUI.window)
+        high.setGeometry(QtC.QRect(75, 310, 111, 20))
+        high.setChecked("High" in pTags)
+
+        tags = [happy, sad, excited, calm, relaxed, low, medium, high]
+
+        editButton = QtW.QPushButton("Edit", editTagsGUI.window)
+        editButton.setGeometry(QtC.QRect(400, 100, 131, 40))
+        editButton.clicked.connect(lambda : self.controller.requestEditTags(editTagsGUI, tags))
+
+        backButton = QtW.QPushButton("Back", editTagsGUI.window)
+        backButton.setGeometry(QtC.QRect(400, 200, 131, 40))
+        backButton.clicked.connect(lambda : editTagsGUI.hide())
+
+        editTagsGUI.show()
+
+    def success(self, text):
         self.status = GUI(None, 200, 50, "Success!")
-        success = QtW.QLabel("Successfully added photo!", self.status.window)
+        success = QtW.QLabel(f"Successfully {text}!", self.status.window)
         success.setGeometry(QtC.QRect(0, 0, 200, 50))
         self.status.show()
 
-    def addPhotoFailure(self):
+    def failure(self, text):
         self.status = GUI(None, 200, 50, "Failure!")
-        failure = QtW.QLabel("Failed to add photo.", self.status.window)
+        failure = QtW.QLabel(f"Failed to {text}.", self.status.window)
         failure.setGeometry(QtC.QRect(0, 0, 200, 50))
         self.status.show()
-
-    #def addNewHBox(self):
-
-    #    self.current = QtW.QHBoxLayout()
-        
-    #    self.images
-
-
-    #    self.num = 0
