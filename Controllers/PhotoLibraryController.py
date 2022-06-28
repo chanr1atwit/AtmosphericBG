@@ -89,10 +89,10 @@ class PhotoLibraryController:
     
     # Find the photo based off selected
     def findPhoto(self, text):
-        print("made it here")
+        print("intiate find")
         for photo in self.photoLibrary.photos:
             if text == photo.getLocation():
-                print("found")
+                print("found photo")
                 return photo
         return None
 
@@ -117,6 +117,8 @@ class PhotoLibraryController:
         if self.selected == None:
             return False
         photo = self.findPhoto(self.selected)
+        if photo == None:
+            return False
         self.photoLibrary.removePhotos([photo])
         # Redraw box here
         return True
@@ -154,9 +156,9 @@ class PhotoLibraryController:
     # Request for photo to be removed
     def requestRemovePhoto(self):
         self.photoGUI.status = None
-        # Object has already been collected
-        if self.findPhoto(self.selected) is None:
-            return
+        ## Object has already been collected
+        #if self.findPhoto(self.selected) is None:
+        #    return
         if self.removePhoto():
             self.photoGUI.success("removed photo")
             # FORCE REDRAW IMAGES HERE
