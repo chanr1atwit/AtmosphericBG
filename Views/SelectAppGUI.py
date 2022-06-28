@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets as QtW
 from Views.GUI import *
 class SelectAppGUI:
     #remember to add controller back
-    def __init__(self):
+    def __init__(self,controller):
         # Access to controller functions that do the work
         super().__init__(controller, 1500, 800, "Atmospheric BG - App Selection")
 

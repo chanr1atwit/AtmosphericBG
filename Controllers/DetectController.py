@@ -1,5 +1,5 @@
 #imports wmi for python, author: Tim Golden
-import wmi
+from wmi import*
 class DetectController:
     #executable list
     execList = {'Spotify.exe','Discord.exe','msedge.exe','chrome.exe'}
