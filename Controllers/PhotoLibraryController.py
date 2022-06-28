@@ -39,6 +39,8 @@ class PhotoLibraryController:
             pTags = photo.getTags()
             if tags[0] in pTags and tags[1] in pTags:
                 choices.append(photo)
+        if len(choices) == 0:
+            return
         photo = random.choice(choices)
         self.updateBackground(photo.getLocation())
 
