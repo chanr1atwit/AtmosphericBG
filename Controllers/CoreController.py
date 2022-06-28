@@ -26,12 +26,12 @@ class CoreController:
         # Subcontrollers
         self.photoLibraryController = PhotoLibraryController()
         #self.samplingTimerController = SamplingTimerController()
-        #self.detectController = DetectController()#ERROR
+        self.detectController = DetectController()
 
         # All Views
         self.mainGUI = MainGUI(self)
         self.photoLibraryGUI = PhotoLibraryGUI(self.photoLibraryController)
-        self.selectAppGUI = SelectAppGUI()
+        self.selectAppGUI = SelectAppGUI(self.detectController)
         self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI

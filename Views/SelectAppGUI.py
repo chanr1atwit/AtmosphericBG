@@ -6,28 +6,35 @@ class SelectAppGUI:
     #remember to add controller back
     def __init__(self):
         # Access to controller functions that do the work
-        #super().__init__(controller, 1500, 800, "Atmospheric BG - App Selection")
+        super().__init__(controller, 1500, 800, "Atmospheric BG - App Selection")
 
         #temporary window
-        self.window = QtW.QMainWindow()
-        self.window.setGeometry(0, 0, 500, 500)
-        self.window.setWindowTitle("Atmospheric BG - App Selection")
-        self.window.setWindowModality(QtC.Qt.ApplicationModal)
+        #self.window = QtW.QMainWindow()
+        #self.window.setGeometry(0, 0, 500, 500)
+        #self.window.setWindowTitle("Atmospheric BG - App Selection")
+        #self.window.setWindowModality(QtC.Qt.ApplicationModal)
     
         addButton = QtW.QPushButton("New App", self.window)
         addButton.setGeometry(QtC.QRect(175, 100, 131, 40))
 
-        #arr = controller.detectSources()
-        #for each application, make new button
-        #for app in arr:
-            #addSelection = QtW.QPushButton(str(app), self.window)
-            #addSelection.setGeometry(QtC.QRect(100, 100, 131, 40))
+        arr = controller.detectSources()
+        #arr = {"1","2","3","4"}
+        i = 300
+        #for each application, make new buttons(loop works!)
+        for app in arr:
+             self.button = QtW.QPushButton(app, self.window)  
+             self.button.setGeometry(175,i,131,40)          
+             self.button.clicked.connect(self.mainView)
+             i = i + 50
+             
         
         backButton = QtW.QPushButton("Back", self.window)
         backButton.setGeometry(QtC.QRect(175,200,131,40))
         backButton.clicked.connect(self.mainView)
+        
+    def addnew():
+        pass
 
-         
     def show(self):
         self.window.show()
 
