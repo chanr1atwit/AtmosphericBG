@@ -1,6 +1,7 @@
 # PhotoLibraryController class, last edited 6/27/2022
 import sys
 import ctypes
+import random
 
 from PyQt5 import QtWidgets as QtW
 
@@ -29,6 +30,19 @@ class PhotoLibraryController:
         # Create images on view
         for picture in self.photoLibrary.getPhotos():
             self.createPixmap(picture.getLocation())
+
+    # Request to change the background
+    def requestChangeBackground(self, tags):
+        photos = self.photoLibrary.getPhotos()
+        choices = []
+        for photo in photos:
+            pTags = photo.getTags()
+            if tags[0] in pTags and tags[1] in pTags:
+                choices.append(photo)
+        photo = random.choice(choices)
+        self.updateBackground(photo.getLocation())
+
+
 
     # Create a new image to display on the PL GUI
     # NOTE: The new pixmap gets queued up to be displayed

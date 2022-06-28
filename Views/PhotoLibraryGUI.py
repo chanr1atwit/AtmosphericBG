@@ -52,11 +52,26 @@ class PhotoLibraryGUI(GUI):
         backButton.setGeometry(QtC.QRect(1320,600,131,40))
         backButton.clicked.connect(self.mainView)
 
+        self.mood = QtW.QComboBox(self.window)
+        self.mood.addItems(["Happy","Calm","Excited"])
+        self.mood.setGeometry(QtC.QRect(1320,650,131,40))
+        self.speed = QtW.QComboBox(self.window)
+        self.speed.addItems(["Low","Medium","High"])
+        self.speed.setGeometry(QtC.QRect(1320,700,131,40))
+
+        changeButton = QtW.QPushButton("Change", self.window)
+        changeButton.setGeometry(QtC.QRect(1320,750,131,40))
+        changeButton.clicked.connect(lambda : self.controller.requestChangeBackground([self.mood.currentText(),self.speed.currentText()]))
+
         vbox.addWidget(addButton)
         vbox.addWidget(editButton)
         vbox.addWidget(removeButton)
         vbox.addWidget(saveButton)
         vbox.addWidget(backButton)
+        vbox.addWidget(self.mood)
+        vbox.addWidget(self.speed)
+        vbox.addWidget(changeButton)
+
 
         listBox.addChildLayout(vbox)
         scroll.setWidget(self.scrollContent)
