@@ -60,6 +60,8 @@ class MainGUI(GUI):
         selectionButton.setGeometry(QtC.QRect(560, 400, 131, 40))
         selectionButton.clicked.connect(self.selectionView)
 
+        
+
     # Window should never be 'hidden' 
     # unless it is minimized by user
     def hide(self):
@@ -71,7 +73,7 @@ class MainGUI(GUI):
 
     def selectionView(self):
         # Implementation of select view to be done by Rodney
-        pass# self.controller.openView(self.controller.selectionView)
+        self.controller.openView(self.controller.selectAppGUI)
 
     def settingsView(self):
         self.controller.openView(self.controller.settingsGUI)

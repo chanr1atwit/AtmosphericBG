@@ -3,10 +3,12 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
+from Controllers.DetectController import *
 
 from Views.MainGUI import *
 from Views.PhotoLibraryGUI import *
 from Views.SettingsGUI import *
+from Views.SelectAppGUI import *
 
 
 
@@ -24,10 +26,12 @@ class CoreController:
         # Subcontrollers
         self.photoLibraryController = PhotoLibraryController()
         #self.samplingTimerController = SamplingTimerController()
+        #self.detectController = DetectController()#ERROR
 
         # All Views
         self.mainGUI = MainGUI(self)
         self.photoLibraryGUI = PhotoLibraryGUI(self.photoLibraryController)
+        self.selectAppGUI = SelectAppGUI()
         self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI
