@@ -12,27 +12,45 @@ class PhotoLibraryGUI(GUI):
         # Call to super init
         # Window and controller defined by GUI superclass
         super().__init__(controller, 1500, 800, "Atmospheric BG - Photo Library")
-        self.widget = QtW.QWidget()
-        self.widget.setGeometry(QtC.QRect(0, 0, 1300, 800))
-        #layout = QtW.QVBoxLayout(self.widget)    
+        self.num = 0
 
-        # Holds reference to success/failure window
-        # so that the window doesn't immedeatly close.
-        # Will be set to none before each attempt at adding.
-        self.status = None
 
-        self.images = QtW.QScrollArea() # All pixmaps
-        self.images.setVerticalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOn)
-        self.images.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
-        self.images.setWidget(self.widget)
-        self.images.setWidgetResizable(True)
+
+
+        listBox = QtW.QHBoxLayout(self.window)
+        self.window.setLayout(listBox)
+
+        scroll = QtW.QScrollArea(self.window)
+        scroll.setGeometry(QtC.QRect(0, 0, 1300, 800))
+        listBox.addWidget(scroll)
+        scroll.setVerticalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOn)
+        scroll.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
+        scroll.setWidgetResizable(True)
+        self.scrollContent = QtW.QWidget()
+        self.scrollContent.setGeometry(QtC.QRect(0, 0, 1300, 800))
+
+        scrollLayout = QtW.QVBoxLayout(self.scrollContent)
+
+        vbox = QtW.QVBoxLayout(self.window)
+
+        ## Holds reference to success/failure window
+        ## so that the window doesn't immedeatly close.
+        ## Will be set to none before each attempt at adding.
+        #self.status = None
+
+        
+
+        #self.scroll = QtW.QScrollArea(self.window) # All pixmaps
+        #self.scroll.setVerticalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOn)
+        #self.scroll.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
+        #self.scroll.setWidgetResizable(True)
+        #self.scroll.setWidget(self.widget)
         
         
 
         # HBox is stored in self.current
         # and number of images in self.num
         #self.addNewHBox() 
-        self.num = 0
         #vLayout = QtG.QVBoxLayout()
         #vLayout.addWidget()
         #vLayout.addWidget(scroll)
@@ -59,6 +77,18 @@ class PhotoLibraryGUI(GUI):
         backButton = QtW.QPushButton("Back", self.window)
         backButton.setGeometry(QtC.QRect(1320,600,131,40))
         backButton.clicked.connect(self.mainView)
+
+
+
+
+        vbox.addWidget(addButton)
+        vbox.addWidget(editButton)
+        vbox.addWidget(removeButton)
+        vbox.addWidget(saveButton)
+        vbox.addWidget(backButton)
+
+        listBox.addChildLayout(vbox)
+        scroll.setWidget(self.scrollContent)
 
     # List of connected views
 

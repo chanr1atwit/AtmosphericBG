@@ -32,13 +32,14 @@ class PhotoLibraryController:
     # NOTE: The new pixmap gets queued up to be displayed
     #       when the user closes the add window
     def createPixmap(self, link):
+        print(f'{self.photoGUI.num}')
         if self.photoGUI.num == 5:
             self.cx = 30
             self.cy += 250
             self.photoGUI.num = 0
             #self.photoGUI.addNewHBox()
         self.photoGUI.num += 1
-        label = QtW.QLabel(self.photoGUI.window)
+        label = QtW.QLabel(self.photoGUI.scrollContent)
 
         label.setFixedSize(200, 200)
         label.move(self.cx, self.cy)
