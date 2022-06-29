@@ -168,7 +168,7 @@ class PhotoLibraryController:
     # Browse files on system
     def browseFiles(self, gui, text):
         # Not putting this in the GUI file as it is so short
-        file = QtW.QFileDialog.getOpenFileName(gui.window, 'Open file','C://',"Image files (*.jpg *.png)")
+        file = QtW.QFileDialog.getOpenFileName(gui, 'Open file','C://',"Image files (*.jpg *.png)")
         if file[0] == "":
             return
         text.setText(str(file[0]))
