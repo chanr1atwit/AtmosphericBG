@@ -15,8 +15,8 @@ class PhotoLibraryController:
     def __init__(self):
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
-
         self.selected = None
+        self.num = 0
 
         # Models
         self.photoLibrary = PhotoLibraryModel()
@@ -50,20 +50,17 @@ class PhotoLibraryController:
     # NOTE: The new pixmap gets queued up to be displayed
     #       when the user closes the add window
     def createPixmap(self, link):
-        if self.photoGUI.num == 5:
-            self.cx = 30
-            self.cy += 250
-            self.photoGUI.num = 0
-            #self.photoGUI.addNewHBox()
-        self.photoGUI.num += 1
-        label = Image(link, parent=self.photoGUI.scrollContent)
-        label.setFixedSize(200, 200)
-        label.move(self.cx, self.cy)
-        self.cx += 260
+        if self.num == 5:
+            self.num = 0
+            self.photoGUI.addNewHBox()
+        self.num += 1
+        label = Image(link)
+        label.setFixedSize(260, 260)
         label.setScaledContents(True)
         label.setPixmap(QtG.QPixmap(link))
-        label.mousePressEvent = lambda e: self.setSelectedLabel(label.link)
-        #label.setStyleSheet("padding :30px")
+        label.mousePressEvent = lambda e: self.setSelectedLabel(label)
+        label.setStyleSheet("padding :30px")
+        self.photoGUI.hBoxLayout.addWidget(label)
         return label
 
     # Write all photos to the json file
@@ -77,7 +74,7 @@ class PhotoLibraryController:
 
     # Get tags from selected photo
     def getTags(self):
-        return self.findPhoto(self.selected).getTags()
+        return self.findPhoto(self.selected.link).getTags()
 
     # Convert the checkbox values into tags
     def convertTags(self, tags):
@@ -98,6 +95,9 @@ class PhotoLibraryController:
 
     # Return label of selected photo on gui
     def setSelectedLabel(self, label):
+        if self.selected is not None:
+            self.selected.setStyleSheet("padding :30px")
+        label.setStyleSheet("border-width :2px; padding :28px")
         self.selected = label
 
     # Try to add a photo to the model
@@ -114,20 +114,23 @@ class PhotoLibraryController:
 
     # Check if photo is selected and delete if so
     def removePhoto(self):
-        if self.selected == None:
+        if self.selected.link == None:
             return False
-        photo = self.findPhoto(self.selected)
+        photo = self.findPhoto(self.selected.link)
         if photo == None:
             return False
         self.photoLibrary.removePhotos([photo])
-        # Redraw box here
+        # Update window
+        # Create hbox subclass
         return True
 
     # Edit tags of request photo
     def editTags(self, tags):
-        if self.selected == None:
+        if self.selected.link == None:
             return False
-        photo = self.findPhoto(self.selected)
+        photo = self.findPhoto(self.selected.link)
+        if photo == None:
+            return False
         tags = self.convertTags(tags)
         self.photoLibrary.editTags(photo, tags)
         return True
@@ -157,7 +160,7 @@ class PhotoLibraryController:
     def requestRemovePhoto(self):
         self.photoGUI.status = None
         ## Object has already been collected
-        #if self.findPhoto(self.selected) is None:
+        #if self.findPhoto(self.selected.link) is None:
         #    return
         if self.removePhoto():
             self.photoGUI.success("removed photo")

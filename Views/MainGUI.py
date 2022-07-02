@@ -56,6 +56,6 @@ class MainGUI(GUI):
         selectionButton.setGeometry(QtC.QRect(360, 440, 131, 40))
         selectionButton.clicked.connect(self.controller.selectionView)
 
-        selectionButton = QtW.QPushButton("Select Visualizer", self)
-        selectionButton.setGeometry(QtC.QRect(560, 400, 131, 40))
-        selectionButton.clicked.connect(self.controller.selectionView)
+        #visualizerButton = QtW.QPushButton("Select Visualizer", self)
+        #visualizerButton.setGeometry(QtC.QRect(560, 400, 131, 40))
+        #visualizerButton.clicked.connect(self.controller.visualizerView)

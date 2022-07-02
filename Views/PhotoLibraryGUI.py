@@ -12,69 +12,103 @@ class PhotoLibraryGUI(GUI):
         # Call to super init
         # Window and controller defined by GUI superclass
         super().__init__(controller, 1500, 800, "Atmospheric BG - Photo Library")
-        self.num = 0
 
-        listBox = QtW.QHBoxLayout(self)
-        self.setLayout(listBox)
+        self.hBoxLayout = None
 
-        scroll = QtW.QScrollArea(self)
-        scroll.setGeometry(QtC.QRect(0, 0, 1300, 800))
-        listBox.addWidget(scroll)
-        scroll.setVerticalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOn)
-        scroll.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
-        scroll.setWidgetResizable(True)
-        self.scrollContent = QtW.QWidget()
-        self.scrollContent.setGeometry(QtC.QRect(0, 0, 1300, 800))
+        self.initializeWindow()
 
-        scrollLayout = QtW.QVBoxLayout(self.scrollContent)
+    def createButtons(self):
 
-        vbox = QtW.QVBoxLayout(self)
+        vBoxWidget = QtW.QWidget()
+
+        vBox = QtW.QVBoxLayout(vBoxWidget)
 
         # Buttons on View
-        addButton = QtW.QPushButton("Add Photo", self)
-        addButton.setGeometry(QtC.QRect(1320, 100, 131, 40))
+        addButton = QtW.QPushButton("Add Photo")
         addButton.clicked.connect(self.addPhotoView)
+        addButton.resize(131,60)
 
-        editButton = QtW.QPushButton("Edit Tags", self)
-        editButton.setGeometry(QtC.QRect(1320, 200, 131, 40))
+        editButton = QtW.QPushButton("Edit Tags")
         editButton.clicked.connect(self.editTagsView)
+        editButton.resize(131,60)
 
-        removeButton = QtW.QPushButton("Remove Photo", self)
-        removeButton.setGeometry(QtC.QRect(1320, 300, 131, 40))
+
+        removeButton = QtW.QPushButton("Remove Photo")
         removeButton.clicked.connect(self.controller.requestRemovePhoto)
+        removeButton.resize(131,60)
 
         # Only here until save on close is implemented
-        saveButton = QtW.QPushButton("Save Current Library", self)
-        saveButton.setGeometry(QtC.QRect(1320, 400, 131, 40))
+        saveButton = QtW.QPushButton("Save Current Library")
         saveButton.clicked.connect(self.controller.updateJSON)
+        saveButton.resize(131,60)
 
-        backButton = QtW.QPushButton("Back", self)
-        backButton.setGeometry(QtC.QRect(1320,600,131,40))
+        backButton = QtW.QPushButton("Back")
         backButton.clicked.connect(self.mainView)
-
-        self.mood = QtW.QComboBox(self)
-        self.mood.addItems(["Happy","Calm","Excited"])
-        self.mood.setGeometry(QtC.QRect(1320,650,131,40))
-        self.speed = QtW.QComboBox(self)
-        self.speed.addItems(["Low","Medium","High"])
-        self.speed.setGeometry(QtC.QRect(1320,700,131,40))
-
-        changeButton = QtW.QPushButton("Change", self)
-        changeButton.setGeometry(QtC.QRect(1320,750,131,40))
-        changeButton.clicked.connect(lambda : self.controller.requestChangeBackground([self.mood.currentText(),self.speed.currentText()]))
-
-        vbox.addWidget(addButton)
-        vbox.addWidget(editButton)
-        vbox.addWidget(removeButton)
-        vbox.addWidget(saveButton)
-        vbox.addWidget(backButton)
-        vbox.addWidget(self.mood)
-        vbox.addWidget(self.speed)
-        vbox.addWidget(changeButton)
+        backButton.resize(131,60)
 
 
-        listBox.addChildLayout(vbox)
-        scroll.setWidget(self.scrollContent)
+        mood = QtW.QComboBox()
+        mood.addItems(["Happy","Calm","Excited"])
+        mood.resize(131,60)
+        speed = QtW.QComboBox()
+        speed.addItems(["Low","Medium","High"])
+        speed.resize(131,60)
+
+        changeButton = QtW.QPushButton("Change")
+        changeButton.clicked.connect(lambda : self.controller.requestChangeBackground([mood.currentText(),speed.currentText()]))
+        changeButton.resize(131,60)
+
+        vBox.addWidget(addButton)
+        vBox.addWidget(editButton)
+        vBox.addWidget(removeButton)
+        vBox.addWidget(saveButton)
+        vBox.addWidget(backButton)
+        vBox.addWidget(mood)
+        vBox.addWidget(speed)
+        vBox.addWidget(changeButton)
+
+        return vBoxWidget
+
+    def addNewHBox(self):
+        hBoxWidget = QtW.QWidget()
+        self.hBoxLayout = QtW.QHBoxLayout(hBoxWidget)
+        self.scrollLayout.addWidget(hBoxWidget)
+        print(f"{str(self.hBoxLayout)}")
+
+    def initializeWindow(self):
+        self.controller.selected = None
+        self.scrollLayout = None
+        self.hBoxLayout = None
+        self.setCentralWidget(None)
+
+
+        # HBox that holds all widgets
+        window = QtW.QWidget()
+        window.setGeometry(QtC.QRect(0, 0, 1500, 800))
+        mainHBox = QtW.QHBoxLayout(window)
+
+        # Set window to main widget
+        self.setCentralWidget(window)
+
+        # Create the widget which will scroll
+        scrollWidget = QtW.QWidget()
+        scrollWidget.setGeometry(QtC.QRect(0, 0, 1300, 800))
+
+        scrollArea = QtW.QScrollArea()
+        scrollArea.setGeometry(QtC.QRect(0, 0, 1300, 800))
+        scrollArea.setHorizontalScrollBarPolicy(QtC.Qt.ScrollBarAlwaysOff)
+        scrollArea.setWidgetResizable(True)        
+        scrollArea.setWidget(scrollWidget)
+
+        # Layout for scrollWidget, which is scrollable
+        self.scrollLayout = QtW.QVBoxLayout(scrollWidget)
+
+        buttons = self.createButtons()
+
+        self.addNewHBox()
+
+        mainHBox.addWidget(scrollArea)
+        mainHBox.addWidget(buttons)
 
     # List of connected views
 
