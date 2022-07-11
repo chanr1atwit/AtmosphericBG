@@ -1,36 +1,36 @@
 #imports wmi for python, author: Tim Golden
-from wmi import*
+import wmi
+
+from Views.SelectAppGUI import *
+
 class DetectController:
     #executable list
-    execList = {'Spotify.exe','Discord.exe','msedge.exe','chrome.exe'}
     #constructor with one param
     def __init__(self):
-       pass
-
-    def InList(self,name,list):
-        for string in list:
-            if (name == string):
-                return True
-        return False
+        self.appSelectGUI = SelectAppGUI(self)
+        
+        self.execList = set(['spotify.exe','discord.exe','msedge.exe','chrome.exe'])
+        self.selectedSource = None
     
     #reads in process names from taskmanager and adds to set
-    def DetectSources(self):
+    def detectSources(self):
+        print("begining detection")
         f = wmi.WMI()
         #use a set to remove duplicate 
         arr = set()
         for process in f.Win32_Process():
             # do not read in all processes, just the musical ones
-            if(self.InList(process.Name,self.execList)):
-                arr.add(process.Name)
+            if process.Name.lower() in self.execList:
+                print(f"adding process to list {process.Name}")
+                arr.add(process)
         return arr
+
+    def selectSource(self, source):
+        self.selectedSource = source
+    
     #displays list and allows user to select app
-    def DisplaySources(self,set):
+    # NOTE: For testing use only
+    def displaySources(self,set):
        for string in set:
-            print(str(string))
-            print("\n")
+            print(str(string.Name),end="\n\n\n")
     
-
-
-    
-        
-

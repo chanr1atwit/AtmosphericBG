@@ -76,6 +76,7 @@ def init_rain(circles, color):
 # ========================
 # ANIMATION FUNCTIONS
 # ========================
+#ADD / EDIT ANIMATION FUNCTIONS
 def animate_bars(i, lines, lines_x, wf, color, max_y, bar_min):
   N = (int((i + 1) * RATE / FPS) - wf.tell()) // nFFT
   if not N:

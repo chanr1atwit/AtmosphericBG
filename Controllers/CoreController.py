@@ -19,8 +19,8 @@ class CoreController:
 
         # Subcontrollers
         self.photoLibraryController = PhotoLibraryController()
-        #self.samplingTimerController = SamplingTimerController()
         self.detectController = DetectController()
+        #self.samplingTimerController = SamplingTimerController()
 
         # All Views
         self.mainGUI = MainGUI(self)
@@ -44,8 +44,7 @@ class CoreController:
         self.photoLibraryController.photoGUI.show()
 
     def selectionView(self):
-        # Implementation of select view to be done by Rodney
-        pass
+        self.detectController.appSelectGUI.show()
 
     def settingsView(self):
         # NEED TO UPDATE SETTINGS GUI TO A GUI SUBCLASS
