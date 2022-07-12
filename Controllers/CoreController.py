@@ -1,11 +1,12 @@
-# CoreController class, last edited 6/27/2022
 import sys
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
+from Controllers.DetectController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
+from Views.SelectAppGUI import *
 
 class CoreController:
     # Create all elements of the app
@@ -17,6 +18,7 @@ class CoreController:
 
         # Subcontrollers
         self.photoLibraryController = PhotoLibraryController()
+        self.detectController = DetectController()
         #self.samplingTimerController = SamplingTimerController()
 
         # All Views
@@ -41,8 +43,7 @@ class CoreController:
         self.photoLibraryController.photoGUI.show()
 
     def selectionView(self):
-        # Implementation of select view to be done by Rodney
-        pass
+        self.detectController.appSelectGUI.show()
 
     def settingsView(self):
         # NEED TO UPDATE SETTINGS GUI TO A GUI SUBCLASS
