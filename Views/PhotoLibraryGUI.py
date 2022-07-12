@@ -1,4 +1,3 @@
-# MainGUI class, last edited 6/27/2022
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from PyQt5 import QtGui as QtG
@@ -31,7 +30,6 @@ class PhotoLibraryGUI(GUI):
         editButton = QtW.QPushButton("Edit Tags")
         editButton.clicked.connect(self.editTagsView)
         editButton.resize(131,60)
-
 
         removeButton = QtW.QPushButton("Remove Photo")
         removeButton.clicked.connect(self.controller.requestRemovePhoto)
@@ -73,6 +71,7 @@ class PhotoLibraryGUI(GUI):
         hBoxWidget = QtW.QWidget()
         self.hBoxLayout = QtW.QHBoxLayout(hBoxWidget)
         self.scrollLayout.addWidget(hBoxWidget)
+        self.hBoxLayout.setAlignment(QtC.Qt.AlignLeft)
         print(f"{str(self.hBoxLayout)}")
 
     def initializeWindow(self):
@@ -158,7 +157,7 @@ class PhotoLibraryGUI(GUI):
         addPhotoGUI.show()
 
     def editTagsView(self):
-        if self.controller.findPhoto(self.controller.selected) is None:
+        if self.controller.findPhoto(self.controller.selected.link) is None:
             return
 
         editTagsGUI = GUI(None, 600, 350, "Edit tags")

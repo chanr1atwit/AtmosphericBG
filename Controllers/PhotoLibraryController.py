@@ -1,4 +1,3 @@
-# PhotoLibraryController class, last edited 6/27/2022
 import sys
 import ctypes
 import random
@@ -9,12 +8,12 @@ from PhotoLibrary.Photo import *
 from PhotoLibrary.PhotoLibraryModel import *
 from Views.PhotoLibraryGUI import *
 
-
 class PhotoLibraryController:
     # Creates the models
     def __init__(self):
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
+        self.photoLabels = []
         self.selected = None
         self.num = 0
 
@@ -24,27 +23,37 @@ class PhotoLibraryController:
         self.json = "Files/photolibrary.json"
         self.photoLibrary.readJSON(self.json)
 
-        self.cx = 30
-        self.cy = 50
-
         # Create images on view
         for picture in self.photoLibrary.getPhotos():
-            self.createPixmap(picture.getLocation())
+            label = self.createPixmap(picture.getLocation())
+            self.photoLabels += [label]
 
-    # Request to change the background
-    def requestChangeBackground(self, tags):
+    def getChoices(self, tags):
         photos = self.photoLibrary.getPhotos()
         choices = []
         for photo in photos:
             pTags = photo.getTags()
             if tags[0] in pTags and tags[1] in pTags:
                 choices.append(photo)
+        return choices
+
+    # Request to change the background
+    def requestChangeBackground(self, tags):
+        choices = self.getChoices(tags)
         if len(choices) == 0:
             return
         photo = random.choice(choices)
         self.updateBackground(photo.getLocation())
 
-
+    # Redraw every label
+    def redrawWindow(self):
+        self.num = 0
+        self.photoGUI.initializeWindow()
+        links = []
+        for label in self.photoLabels:
+            links += [label.link]
+        for link in links:
+            self.createPixmap(link)
 
     # Create a new image to display on the PL GUI
     # NOTE: The new pixmap gets queued up to be displayed
@@ -86,8 +95,8 @@ class PhotoLibraryController:
     
     # Find the photo based off selected
     def findPhoto(self, text):
-        print("intiate find")
-        for photo in self.photoLibrary.photos:
+        print("initiate find")
+        for photo in self.photoLibrary.getPhotos():
             if text == photo.getLocation():
                 print("found photo")
                 return photo
@@ -97,8 +106,9 @@ class PhotoLibraryController:
     def setSelectedLabel(self, label):
         if self.selected is not None:
             self.selected.setStyleSheet("padding :30px")
-        label.setStyleSheet("border-width :2px; padding :28px")
+        label.setStyleSheet("border: 2px solid red; padding :28px")
         self.selected = label
+        print(self.selected.link)
 
     # Try to add a photo to the model
     def addPhoto(self, location, tags, text):
@@ -109,6 +119,7 @@ class PhotoLibraryController:
         photo = Photo(location, checked)
         label = self.createPixmap(text)
         print(f"link {label.link}, photo {photo.getLocation()}")
+        self.photoLabels += [label]
         self.photoLibrary.addPhotos([photo])
         return True
 
@@ -120,14 +131,15 @@ class PhotoLibraryController:
         if photo == None:
             return False
         self.photoLibrary.removePhotos([photo])
-        # Update window
-        # Create hbox subclass
+        self.photoLabels.remove(self.selected)
+        self.redrawWindow()
         return True
 
     # Edit tags of request photo
     def editTags(self, tags):
         if self.selected.link == None:
             return False
+        print(f"{self.selected.link}")
         photo = self.findPhoto(self.selected.link)
         if photo == None:
             return False
@@ -142,6 +154,7 @@ class PhotoLibraryController:
         if self.addPhoto(text, tags, text):
             gui.hide()    
             self.photoGUI.success("added photo")
+            self.photoLibrary.writeJSON(self.json)
         else:
             gui.hide()
             self.photoGUI.failure("add photo")
@@ -152,6 +165,7 @@ class PhotoLibraryController:
         if self.editTags(tags):
             gui.hide()
             self.photoGUI.success("altered tags")
+            self.photoLibrary.writeJSON(self.json)
         else:
             gui.hide()
             self.photoGUI.failure("alter tags")
@@ -164,6 +178,7 @@ class PhotoLibraryController:
         #    return
         if self.removePhoto():
             self.photoGUI.success("removed photo")
+            self.photoLibrary.writeJSON(self.json)
             # FORCE REDRAW IMAGES HERE
         else:
             self.photoGUI.failure("remove photo")
