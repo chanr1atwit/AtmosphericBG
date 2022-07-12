@@ -26,13 +26,5 @@ class SettingsGUI(GUI):
         mainButton.setGeometry(QtC.QRect(100,400,131,40))
         mainButton.clicked.connect(self.mainView)
 
-    # Show the PhotoLibraryGUI dialog
-    def show(self):
-        self.show()
-
-    def hide(self):
-        self.hide()
-
-    # List of connected views
     def mainView(self):
         self.hide()
