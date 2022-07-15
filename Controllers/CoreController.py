@@ -17,6 +17,8 @@ class CoreController:
         self.app = QApplication(argv)        
 
         # Subcontrollers
+        # Only using default settings for PLController atm,
+        # will be using config files for setup soon though
         self.photoLibraryController = PhotoLibraryController()
         self.detectController = DetectController()
         #self.samplingTimerController = SamplingTimerController()

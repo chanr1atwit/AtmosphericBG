@@ -21,7 +21,6 @@ class PhotoLibraryController:
         self.num = 0
 
         # If both are False, all PL user functionality is essentially disabled
-        # Can create a workaround later to properly disable everything
         self.enableDynamic = dynamic
         self.enablePL = pl
 
@@ -37,8 +36,8 @@ class PhotoLibraryController:
             self.photoLabels += [label]
 
     def getChoices(self, tags):
-        photos = None
-        if not self.disablePL:
+        photos = []
+        if self.enablePL:
             photos = self.photoLibrary.getPhotos()
         choices = []
         for photo in photos:
@@ -59,9 +58,10 @@ class PhotoLibraryController:
         if photo.getLocation() == "dynamic":
             # Generate temporary background
             imageLocation = DBG.generateImage(tags)
-            self.updateBackground(imageLocation)
-            # os.remove
-            remove(imageLocation) 
+# Testing with actual photo a while ago, will remove comment when imagelocation is not none
+            # self.updateBackground(imageLocation)
+            # remove the image from system by using os.remove
+            # remove(imageLocation) 
         else:
             self.updateBackground(photo.getLocation())
 

@@ -6,4 +6,8 @@ import randimage as img
 # Convert tags into color maps, which will be used by randimage
 # Hook for PL
 def generateImage(tags):
+    #generate image using randimage
+    #save image using matplotlib
+    #return image location as string
     pass
+    
