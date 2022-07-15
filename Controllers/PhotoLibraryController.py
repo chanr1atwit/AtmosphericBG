@@ -1,21 +1,28 @@
 import sys
 import ctypes
 import random
+from os import remove
 
 from PyQt5 import QtWidgets as QtW
 
+# DBG library handles all the functionality behind temporary backgrounds.
+from PhotoLibrary import DynamicBackgroundGeneration as DBG
 from PhotoLibrary.Photo import *
 from PhotoLibrary.PhotoLibraryModel import *
 from Views.PhotoLibraryGUI import *
 
 class PhotoLibraryController:
     # Creates the models
-    def __init__(self):
+    def __init__(self, dynamic=True, pl=True):
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
         self.photoLabels = []
         self.selected = None
         self.num = 0
+
+        # If both are False, all PL user functionality is essentially disabled
+        self.enableDynamic = dynamic
+        self.enablePL = pl
 
         # Models
         self.photoLibrary = PhotoLibraryModel()
@@ -29,12 +36,17 @@ class PhotoLibraryController:
             self.photoLabels += [label]
 
     def getChoices(self, tags):
-        photos = self.photoLibrary.getPhotos()
+        photos = []
+        if self.enablePL:
+            photos = self.photoLibrary.getPhotos()
         choices = []
         for photo in photos:
             pTags = photo.getTags()
             if tags[0] in pTags and tags[1] in pTags:
                 choices.append(photo)
+        if self.enableDynamic:
+            # Signal Photo that should be discarded after use
+            choices.append(Photo("dynamic"))
         return choices
 
     # Request to change the background
@@ -43,7 +55,15 @@ class PhotoLibraryController:
         if len(choices) == 0:
             return
         photo = random.choice(choices)
-        self.updateBackground(photo.getLocation())
+        if photo.getLocation() == "dynamic":
+            # Generate temporary background
+            imageLocation = DBG.generateImage(tags)
+# Testing with actual photo a while ago, will remove comment when imagelocation is not none
+            # self.updateBackground(imageLocation)
+            # remove the image from system by using os.remove
+            # remove(imageLocation) 
+        else:
+            self.updateBackground(photo.getLocation())
 
     # Redraw every label
     def redrawWindow(self):
