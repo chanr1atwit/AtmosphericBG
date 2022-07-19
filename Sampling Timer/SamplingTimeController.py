@@ -5,7 +5,7 @@ import essentia
 import essentia.standard
 import essentia.streaming
 
-class SamplingTimeController:
+class SamplingTimer:
 
 t1 = threading.Thread(target=waitTime)
 t2 = threading.Thread(target=sampleBGM)
