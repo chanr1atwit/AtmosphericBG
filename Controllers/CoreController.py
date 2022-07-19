@@ -1,4 +1,3 @@
-# CoreController class, last edited 6/27/2022
 import sys
 from PyQt5.QtWidgets import QApplication
 

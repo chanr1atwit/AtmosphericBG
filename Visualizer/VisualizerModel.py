@@ -1,3 +1,4 @@
+#move control functions to controller
 class VisualizerModel:
    
     def __init__(self,visualizerList,chosenVisualizer):
