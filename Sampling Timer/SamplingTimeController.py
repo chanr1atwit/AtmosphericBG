@@ -8,7 +8,7 @@ import essentia.streaming
 class SamplingTimeController:
 
 t1 = threading.Thread(target=waitTime)
-
+t2 = threading.Thread(target=sampleBGM)
 
     def __init__(self,sampleTime,waitTime):
         self.sampleTime = sampleTime
@@ -31,7 +31,9 @@ t1 = threading.Thread(target=waitTime)
 
     def sampleBPM(audio):
         #returns the
-    #def sampleTime():
+
+    def sampleTime():
+        time.sleep(sampleTime)
 
 bool exit_flag = false
 while !exit_flag:
