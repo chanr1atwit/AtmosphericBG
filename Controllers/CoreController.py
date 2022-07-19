@@ -23,9 +23,9 @@ class CoreController:
         self.detectController = DetectController()
         #self.samplingTimerController = SamplingTimerController()
 
-        # All Views
+        # Connected Views
         self.mainGUI = MainGUI(self)
-        self.settingsGUI = SettingsGUI(self)
+        self.settingsGUI = SettingsGUI(self)  
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
@@ -35,19 +35,32 @@ class CoreController:
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
 
-    # Window should never be 'hidden' 
-    # unless it is minimized by user
-    def hide(self):
-        pass
+### Settings GUI functions
+    # Get enable state of PL
+    def getPLState(self):
+        return self.photoLibraryController.enablePL
 
-    # List of connected views that need methods
+    # Swap enable state of PL
+    def setPLState(self):
+        self.photoLibraryController.enablePL = not self.photoLibraryController.enablePL
+
+    # Get enable state of dyanmic generation
+    def getDynamicState(self):
+        return self.photoLibraryController.enableDynamic
+
+    # Swap enable state of dyanmic generation
+    def changeDynamicState(self):
+        self.photoLibraryController.enableDynamic = not self.photoLibraryController.enableDynamic
+
+### List of connected views that need methods
+    # Open Photo Library View
     def photoLibraryView(self):
         self.photoLibraryController.photoGUI.show()
 
+    # Open Selection View
     def selectionView(self):
         self.detectController.appSelectGUI.show()
 
+    # Open Settings View
     def settingsView(self):
-        # NEED TO UPDATE SETTINGS GUI TO A GUI SUBCLASS
-        # ALSO NEED TO MAKE SETTINGS CONTROLLER TO HOLD SETTINGS GUI
         self.settingsGUI.show()
