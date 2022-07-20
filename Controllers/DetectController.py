@@ -17,12 +17,15 @@ class DetectController:
         f = wmi.WMI()
         #use a set to remove duplicate 
         arr = set()
+        i = 250
         for process in f.Win32_Process():
             # do not read in all processes, just the musical ones
             if process.Name.lower() in self.execList:
                 print(f"adding process to list {process.ProcessID}")
                 detectButton = ProcessButton(process,self.appSelectGUI)
+                detectButton.setGeometry(350,i,131,40)      
                 detectButton.clicked.connect(lambda:self.selectSource(process.ProcessID))
+                i += 50
         
 
     def selectSource(self, source):
@@ -31,11 +34,12 @@ class DetectController:
     
     #displays list and allows user to select app
     # NOTE: For testing use only
+    def AudioToWav(self):
+        pass
+    
     def displaySources(self,set):
        for string in set:
             print(str(string.Name),end="\n\n\n")
     
-    def AudioToWav(self):
-        pass
-    
+
     

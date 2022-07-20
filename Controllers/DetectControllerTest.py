@@ -1,3 +1,3 @@
 from DetectController import DetectController
 detect = DetectController()
-detect.DisplaySources(detect.DetectSources())
+detect.displaySources(detect.detectSources())
