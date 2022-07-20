@@ -1,22 +1,28 @@
-# PhotoLibraryController class, last edited 6/27/2022
 import sys
 import ctypes
 import random
+from os import remove
 
 from PyQt5 import QtWidgets as QtW
 
+# DBG library handles all the functionality behind temporary backgrounds.
+from PhotoLibrary import DynamicBackgroundGeneration as DBG
 from PhotoLibrary.Photo import *
 from PhotoLibrary.PhotoLibraryModel import *
 from Views.PhotoLibraryGUI import *
 
-
 class PhotoLibraryController:
     # Creates the models
-    def __init__(self):
+    def __init__(self, dynamic=True, pl=True):
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
-
+        self.photoLabels = []
         self.selected = None
+        self.num = 0
+
+        # If both are False, all PL user functionality is essentially disabled
+        self.enableDynamic = dynamic
+        self.enablePL = pl
 
         # Models
         self.photoLibrary = PhotoLibraryModel()
@@ -24,46 +30,66 @@ class PhotoLibraryController:
         self.json = "Files/photolibrary.json"
         self.photoLibrary.readJSON(self.json)
 
-        self.cx = 30
-        self.cy = 50
-
         # Create images on view
         for picture in self.photoLibrary.getPhotos():
-            self.createPixmap(picture.getLocation())
+            label = self.createPixmap(picture.getLocation())
+            self.photoLabels += [label]
 
-    # Request to change the background
-    def requestChangeBackground(self, tags):
-        photos = self.photoLibrary.getPhotos()
+    def getChoices(self, tags):
+        photos = []
+        if self.enablePL:
+            photos = self.photoLibrary.getPhotos()
         choices = []
         for photo in photos:
             pTags = photo.getTags()
             if tags[0] in pTags and tags[1] in pTags:
                 choices.append(photo)
+        if self.enableDynamic:
+            # Signal Photo that should be discarded after use
+            choices.append(Photo("dynamic"))
+        return choices
+
+    # Request to change the background
+    def requestChangeBackground(self, tags):
+        choices = self.getChoices(tags)
         if len(choices) == 0:
             return
         photo = random.choice(choices)
-        self.updateBackground(photo.getLocation())
+        if photo.getLocation() == "dynamic":
+            # Generate temporary background
+            imageLocation = DBG.generateImage(tags)
+# Testing with actual photo a while ago, will remove comment when imagelocation is not none
+            # self.updateBackground(imageLocation)
+            # remove the image from system by using os.remove
+            # remove(imageLocation) 
+        else:
+            self.updateBackground(photo.getLocation())
 
-
+    # Redraw every label
+    def redrawWindow(self):
+        self.num = 0
+        self.photoGUI.initializeWindow()
+        links = []
+        for label in self.photoLabels:
+            links += [label.link]
+        for link in links:
+            self.createPixmap(link)
 
     # Create a new image to display on the PL GUI
     # NOTE: The new pixmap gets queued up to be displayed
     #       when the user closes the add window
     def createPixmap(self, link):
-        if self.photoGUI.num == 5:
-            self.cx = 30
-            self.cy += 250
-            self.photoGUI.num = 0
-            #self.photoGUI.addNewHBox()
-        self.photoGUI.num += 1
-        label = Image(link, parent=self.photoGUI.scrollContent)
-        label.setFixedSize(200, 200)
-        label.move(self.cx, self.cy)
-        self.cx += 260
+        if self.num == 5:
+            self.num = 0
+            self.photoGUI.addNewHBox()
+        self.num += 1
+        label = Image(link)
+        label.setFixedSize(260, 260)
         label.setScaledContents(True)
         label.setPixmap(QtG.QPixmap(link))
-        label.mousePressEvent = lambda e: self.setSelectedLabel(label.link)
-        #label.setStyleSheet("padding :30px")
+        label.mousePressEvent = lambda e: self.setSelectedLabel(label)
+        label.setStyleSheet("padding :30px")
+        self.photoGUI.hBoxLayout.addWidget(label)
         return label
 
     # Write all photos to the json file
@@ -77,7 +103,7 @@ class PhotoLibraryController:
 
     # Get tags from selected photo
     def getTags(self):
-        return self.findPhoto(self.selected).getTags()
+        return self.findPhoto(self.selected.link).getTags()
 
     # Convert the checkbox values into tags
     def convertTags(self, tags):
@@ -89,8 +115,8 @@ class PhotoLibraryController:
     
     # Find the photo based off selected
     def findPhoto(self, text):
-        print("intiate find")
-        for photo in self.photoLibrary.photos:
+        print("initiate find")
+        for photo in self.photoLibrary.getPhotos():
             if text == photo.getLocation():
                 print("found photo")
                 return photo
@@ -98,7 +124,11 @@ class PhotoLibraryController:
 
     # Return label of selected photo on gui
     def setSelectedLabel(self, label):
+        if self.selected is not None:
+            self.selected.setStyleSheet("padding :30px")
+        label.setStyleSheet("border: 2px solid red; padding :28px")
         self.selected = label
+        print(self.selected.link)
 
     # Try to add a photo to the model
     def addPhoto(self, location, tags, text):
@@ -109,25 +139,30 @@ class PhotoLibraryController:
         photo = Photo(location, checked)
         label = self.createPixmap(text)
         print(f"link {label.link}, photo {photo.getLocation()}")
+        self.photoLabels += [label]
         self.photoLibrary.addPhotos([photo])
         return True
 
     # Check if photo is selected and delete if so
     def removePhoto(self):
-        if self.selected == None:
+        if self.selected.link == None:
             return False
-        photo = self.findPhoto(self.selected)
+        photo = self.findPhoto(self.selected.link)
         if photo == None:
             return False
         self.photoLibrary.removePhotos([photo])
-        # Redraw box here
+        self.photoLabels.remove(self.selected)
+        self.redrawWindow()
         return True
 
     # Edit tags of request photo
     def editTags(self, tags):
-        if self.selected == None:
+        if self.selected.link == None:
             return False
-        photo = self.findPhoto(self.selected)
+        print(f"{self.selected.link}")
+        photo = self.findPhoto(self.selected.link)
+        if photo == None:
+            return False
         tags = self.convertTags(tags)
         self.photoLibrary.editTags(photo, tags)
         return True
@@ -139,6 +174,7 @@ class PhotoLibraryController:
         if self.addPhoto(text, tags, text):
             gui.hide()    
             self.photoGUI.success("added photo")
+            self.photoLibrary.writeJSON(self.json)
         else:
             gui.hide()
             self.photoGUI.failure("add photo")
@@ -149,6 +185,7 @@ class PhotoLibraryController:
         if self.editTags(tags):
             gui.hide()
             self.photoGUI.success("altered tags")
+            self.photoLibrary.writeJSON(self.json)
         else:
             gui.hide()
             self.photoGUI.failure("alter tags")
@@ -157,10 +194,11 @@ class PhotoLibraryController:
     def requestRemovePhoto(self):
         self.photoGUI.status = None
         ## Object has already been collected
-        #if self.findPhoto(self.selected) is None:
+        #if self.findPhoto(self.selected.link) is None:
         #    return
         if self.removePhoto():
             self.photoGUI.success("removed photo")
+            self.photoLibrary.writeJSON(self.json)
             # FORCE REDRAW IMAGES HERE
         else:
             self.photoGUI.failure("remove photo")

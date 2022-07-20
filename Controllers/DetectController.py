@@ -13,6 +13,7 @@ class DetectController:
     
     #reads in process names from taskmanager and adds to set
     def detectSources(self):
+
         print("beginning detection")
         f = wmi.WMI()
         #use a set to remove duplicate 
@@ -37,9 +38,9 @@ class DetectController:
     def AudioToWav(self):
         pass
     
+
     def displaySources(self,set):
        for string in set:
             print(str(string.Name),end="\n\n\n")
     
 
-    

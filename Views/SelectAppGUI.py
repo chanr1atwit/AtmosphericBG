@@ -2,6 +2,8 @@ from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from PyQt5.QtWidgets import QLineEdit
 import threading
+
+
 from Views.GUI import *
 
 class SelectAppGUI(GUI):
@@ -63,6 +65,7 @@ class ProcessButton(QtW.QPushButton):
     
     
     
+
 
 
         
