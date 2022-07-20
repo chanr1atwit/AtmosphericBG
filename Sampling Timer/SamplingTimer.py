@@ -7,12 +7,23 @@ import essentia.streaming
 
 class SamplingTimer:
 
-t1 = threading.Thread(target=waitTime)
-t2 = threading.Thread(target=sampleBGM)
-
     def __init__(self,sampleTime,waitTime):
         self.sampleTime = sampleTime
         self.waitTime = waitTime
+        self.t1 = threading.Thread(target=mainSample)
+
+    def mainSample():
+        self.exit_flag = False
+        while not self.exit_flag:
+            self.finished = False
+            threading.Thread(target=timer, args=(getSampleTime(),))
+            while not self.finished:
+                #Does actual sample
+                sampleTime()
+            self.finished = False
+            threading.Thread(target=timer, args=(getWaitTime(),))
+            while not self.finished:
+                continue
 
     def getSampleTime(self):
         return self.sampleTime
@@ -26,15 +37,15 @@ t2 = threading.Thread(target=sampleBGM)
     def setWaitTime(self,waitTime):
         self.waitTime = waitTime
 
-    def waitTime():
-        time.sleep(waitTime)
+    def sampleTime():
+
+        time.sleep(self.sampleTime)
 
     def sampleBPM(audio):
-        #returns the
+        #returns the bgm based data from essential
 
-    def sampleTime():
-        time.sleep(sampleTime)
+        pass
 
-bool exit_flag = false
-while !exit_flag:
-    waitTime()
+    def timer(timer):
+        time.sleep(timer)
+        self.finished = True
