@@ -2,7 +2,7 @@
 import time
 import threading
 import essentia
-import essentia.standard
+import essentia.standard as ess
 import essentia.streaming
 
 class SamplingTimer:
@@ -28,7 +28,7 @@ class SamplingTimer:
     def timer(timer):
         time.sleep(timer)
         self.finished = True
-        
+
     def getSampleTime(self):
         return self.sampleTime
 
