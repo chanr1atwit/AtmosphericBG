@@ -41,7 +41,7 @@ class CoreController:
         return self.photoLibraryController.enablePL
 
     # Swap enable state of PL
-    def setPLState(self):
+    def changePLState(self):
         self.photoLibraryController.enablePL = not self.photoLibraryController.enablePL
 
     # Get enable state of dyanmic generation
