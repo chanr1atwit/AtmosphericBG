@@ -25,6 +25,10 @@ class SamplingTimer:
             while not self.finished:
                 continue
 
+    def timer(timer):
+        time.sleep(timer)
+        self.finished = True
+        
     def getSampleTime(self):
         return self.sampleTime
 
@@ -43,9 +47,4 @@ class SamplingTimer:
 
     def sampleBPM(audio):
         #returns the bgm based data from essential
-
         pass
-
-    def timer(timer):
-        time.sleep(timer)
-        self.finished = True
