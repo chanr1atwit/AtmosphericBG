@@ -38,7 +38,6 @@ class CoreController:
 ### Settings GUI functions
     # Get enable state of PL
     def getPLState(self):
-        print(f"{self.photoLibraryController.enablePL}")
         return self.photoLibraryController.enablePL
 
     # Swap enable state of PL
@@ -52,6 +51,15 @@ class CoreController:
     # Swap enable state of dyanmic generation
     def setDynamicState(self, state):
         self.photoLibraryController.enableDynamic = state
+
+    # Set custom dimensions, check if valid
+    def setCustomDims(self, width, height):
+        dims = None
+        # Valid dims
+        if len(width) != 0  and len(height) != 0 and \
+            int(width) > 99 and int(height) > 99:
+            dims = [int(width), int(height)]
+        self.photoLibraryController.customDims = dims
 
 ### List of connected views that need methods
     # Open Photo Library View

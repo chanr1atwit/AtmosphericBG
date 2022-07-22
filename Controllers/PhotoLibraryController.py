@@ -13,7 +13,7 @@ from Views.PhotoLibraryGUI import *
 
 class PhotoLibraryController:
     # Creates the models
-    def __init__(self, dynamic=True, pl=True):
+    def __init__(self, dynamic=True, pl=True, dims=None):
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
         self.photoLabels = []
@@ -23,6 +23,9 @@ class PhotoLibraryController:
         # If both are False, all PL user functionality is essentially disabled
         self.enableDynamic = dynamic
         self.enablePL = pl
+
+        # Holds custom dims for image generation
+        self.customDims = dims
 
         # Models
         self.photoLibrary = PhotoLibraryModel()
@@ -57,7 +60,7 @@ class PhotoLibraryController:
         photo = random.choice(choices)
         if photo.getLocation() == "dynamic":
             # Generate temporary background
-            imageLocation = DBG.generateImage(tags)
+            imageLocation = DBG.generateImage(tags, self.customDims)
 # Testing with actual photo a while ago, will remove comment when imagelocation is not none
             # self.updateBackground(imageLocation)
             # remove the image from system by using os.remove
