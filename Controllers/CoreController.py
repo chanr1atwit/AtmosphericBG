@@ -38,19 +38,20 @@ class CoreController:
 ### Settings GUI functions
     # Get enable state of PL
     def getPLState(self):
+        print(f"{self.photoLibraryController.enablePL}")
         return self.photoLibraryController.enablePL
 
     # Swap enable state of PL
-    def changePLState(self):
-        self.photoLibraryController.enablePL = not self.photoLibraryController.enablePL
+    def setPLState(self, state):
+        self.photoLibraryController.enablePL = state
 
     # Get enable state of dyanmic generation
     def getDynamicState(self):
         return self.photoLibraryController.enableDynamic
 
     # Swap enable state of dyanmic generation
-    def changeDynamicState(self):
-        self.photoLibraryController.enableDynamic = not self.photoLibraryController.enableDynamic
+    def setDynamicState(self, state):
+        self.photoLibraryController.enableDynamic = state
 
 ### List of connected views that need methods
     # Open Photo Library View
