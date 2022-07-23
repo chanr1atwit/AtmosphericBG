@@ -10,22 +10,23 @@ class SamplingTimer:
     def __init__(self,sampleTime,waitTime):
         self.sampleTime = sampleTime
         self.waitTime = waitTime
-        self.t1 = threading.Thread(target=mainSample)
+        self.t1 = threading.Thread(target=self.mainSample)
+        self.loader = ess.MonoLoader
 
-    def mainSample():
+    def mainSample(self):
         self.exit_flag = False
         while not self.exit_flag:
             self.finished = False
-            threading.Thread(target=timer, args=(getSampleTime(),))
+            threading.Thread(target=self.timer, args=(self.getSampleTime(),))
             while not self.finished:
                 #Does actual sample
-                sampleTime()
+                self.performAnalysis()
             self.finished = False
-            threading.Thread(target=timer, args=(getWaitTime(),))
+            threading.Thread(target=self.timer, args=(self.getWaitTime(),))
             while not self.finished:
                 continue
 
-    def timer(timer):
+    def timer(self,timer):
         time.sleep(timer)
         self.finished = True
 
@@ -41,10 +42,10 @@ class SamplingTimer:
     def setWaitTime(self,waitTime):
         self.waitTime = waitTime
 
-    def sampleTime():
-
+    def performAnalysis(self):
         time.sleep(self.sampleTime)
 
-    def sampleBPM(audio):
+
+    def sampleBPM(self,audio):
         #returns the bgm based data from essential
         pass
