@@ -1,6 +1,5 @@
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
-from PyQt5.QtWidgets import QLineEdit
 import threading
 
 
@@ -20,13 +19,17 @@ class SelectAppGUI(GUI):
         backButton.setGeometry(QtC.QRect(275,200,131,40))  
         backButton.clicked.connect(self.mainView) 
 
-        
+        centralWidget = QtW.QWidget()
+        self.layout = QtW.QVBoxLayout(centralWidget)
+        self.setCentralWidget(centralWidget)
+       
+
 
         
-        
+
     def AddNew(self):
         self.textGUI = GUI(None, 250, 250,"Add New Source")
-        textbox = QLineEdit(self.textGUI)
+        textbox = QtW.QLineEdit(self.textGUI)
         textbox.setGeometry(QtC.QRect(75, 50, 100, 30))
         add = QtW.QPushButton("Add Button!", self.textGUI)
         add.setGeometry(QtC.QRect(65, 150, 131, 40))   
@@ -37,7 +40,8 @@ class SelectAppGUI(GUI):
 
     def show(self):
         super().show()
-        threading.Thread(target = self.controller.detectSources)
+        thread = threading.Thread(target = self.controller.detectSources)
+        thread.run()
         #print("execList",str (self.controller.execList))
         print("displaying sources")
         

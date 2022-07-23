@@ -26,15 +26,15 @@ class SettingsGUI(GUI):
         plLabel.setGeometry(QtC.QRect(50, 50, 471, 16))
 
         # Check boxes
-        plCB = QtW.QCheckBox("Enable Photo Library", self)
-        plCB.setGeometry(QtC.QRect(50, 75, 111, 20))
-        plCB.setChecked(self.controller.changePLState())
-        plCB.stateChanged.connect(self.controller.changePLState)
+        # plCB = QtW.QCheckBox("Enable Photo Library", self)
+        # plCB.setGeometry(QtC.QRect(50, 75, 111, 20))
+        # plCB.setChecked(self.controller.changePLState())
+        # plCB.stateChanged.connect(self.controller.changePLState)
 
-        dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
-        dynamicCB.setGeometry(QtC.QRect(50, 100, 111, 20))
-        dynamicCB.setChecked(self.controller.getDynamicState())
-        dynamicCB.stateChanged.connect(self.controller.changeDynamicState)
+        # dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
+        # dynamicCB.setGeometry(QtC.QRect(50, 100, 111, 20))
+        # dynamicCB.setChecked(self.controller.getDynamicState())
+        # dynamicCB.stateChanged.connect(self.controller.changeDynamicState)
 
     def mainView(self):
         self.hide()
