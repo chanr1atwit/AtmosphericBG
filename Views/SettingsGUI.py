@@ -1,6 +1,7 @@
 # SettingsGUI class, last edited 6/23/2022
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
+from PyQt5 import QtGui as QtG
 
 from Views.GUI import *
 
@@ -21,23 +22,54 @@ class SettingsGUI(GUI):
         backButton.setGeometry(QtC.QRect(600,700,131,40))
         backButton.clicked.connect(self.mainView)
 
+        # Scales for different sections
+        plX = 50
+        plY = 50
+
+
         # Labels
         plLabel = QtW.QLabel("Photo Library Settings", self)
-        plLabel.setGeometry(QtC.QRect(50, 50, 471, 16))
+        plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
+
+
+        xLabel = QtW.QLabel("X", self)
+        xLabel.move(plX+60,plY+117)
+        
+        sizeLabel = QtW.QLabel("Custom Size", self)
+        sizeLabel.setGeometry(QtC.QRect(plX,plY+75,100,16))
+
+        widthLabel = QtW.QLabel("Width", self)
+        widthLabel.setGeometry(QtC.QRect(plX,plY+100,100,16))
+
+        heightLabel = QtW.QLabel("Height", self)
+        heightLabel.setGeometry(QtC.QRect(plX+75,plY+100,100,16))
+
+        # Text boxes
+        self.width = QtW.QLineEdit(self)
+        self.width.setGeometry(QtC.QRect(plX,plY+125,50,16))
+        self.width.setValidator(QtG.QIntValidator(100,10000))
+
+        self.height = QtW.QLineEdit(self)
+        self.height.setGeometry(QtC.QRect(plX+75,plY+125,50,16))
+        self.height.setValidator(QtG.QIntValidator(100,10000))
 
         # Check boxes
         self.plCB = QtW.QCheckBox("Enable Photo Library", self)
-        self.plCB.setGeometry(QtC.QRect(50, 75, 170, 20))
+        self.plCB.setGeometry(QtC.QRect(plX, plY+25, 170, 20))
         self.plCB.toggled.connect(lambda: self.controller.setPLState(self.plCB.isChecked()))
 
         self.dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
-        self.dynamicCB.setGeometry(QtC.QRect(50, 100, 170, 20))
+        self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
 
     def show(self):
         super().show()
         self.plCB.setChecked(self.controller.getPLState())
         self.dynamicCB.setChecked(self.controller.getDynamicState())
+
+    def hide(self):
+        self.controller.setCustomDims(self.width.text(), self.height.text())
+        super().hide()
 
     def mainView(self):
         self.hide()
