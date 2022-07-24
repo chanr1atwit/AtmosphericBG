@@ -1,4 +1,4 @@
-import sys
+import sys, configparser
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
@@ -14,7 +14,10 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)        
+        self.app = QApplication(argv)      
+        
+        self.config = configparser.ConfigParser()
+        self.config.read("Files\\userconfig.ini")
 
         # Subcontrollers
         # Only using default settings for PLController atm,
@@ -35,6 +38,20 @@ class CoreController:
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
 
+### Configuration functions
+    # Get configuration setting
+    def getConfiguration(self, category, setting):
+        return self.config[category][setting]
+
+    # Set configuration setting
+    def setConfiguration(self, category, setting, value):
+        self.config[category][setting] = value
+
+    # Write current configuration to file
+    def writeConfiguration(self):
+        with open("Files\\userconfig.ini", "w") as file:
+            self.config.write(file)
+
 ### Settings GUI functions
     # Get enable state of PL
     def getPLState(self):
@@ -52,6 +69,12 @@ class CoreController:
     # Swap enable state of dyanmic generation
     def setDynamicState(self, state):
         self.photoLibraryController.enableDynamic = state
+
+### Function overrides
+    # Actions on app closure
+    def closeEvent(self, event):
+        self.writeConfiguration()
+        event.accept()
 
 ### List of connected views that need methods
     # Open Photo Library View
