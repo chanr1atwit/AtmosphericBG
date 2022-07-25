@@ -18,13 +18,19 @@ class CoreController:
         
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
+        val = self.getConfiguration("PhotoLibrary","Dynamic", bool)
+        print(f"{val}")
+        self.setConfiguration("PhotoLibrary","Dynamic", not val)
+        self.writeConfiguration()
+        print(f"{self.getConfiguration('PhotoLibrary','Dynamic', bool)}")
+        return
 
         # Subcontrollers
         # Only using default settings for PLController atm,
         # will be using config files for setup soon though
-        self.photoLibraryController = PhotoLibraryController()
-        self.detectController = DetectController()
-        #self.samplingTimerController = SamplingTimerController()
+        self.photoLibraryController = PhotoLibraryController(self)
+        self.detectController = DetectController(self)
+        #self.samplingTimerController = SamplingTimerController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -40,12 +46,23 @@ class CoreController:
 
 ### Configuration functions
     # Get configuration setting
-    def getConfiguration(self, category, setting):
-        return self.config[category][setting]
+    def getConfiguration(self, category, setting, confType):
+        returnValue = None
+        value = self.config[category][setting]
+        if confType == bool:
+            if value == "True":
+                returnValue = True
+            else:
+                returnValue = False
+        else:
+            returnValue = confType(self.config[category][setting])
+        #print(f"this one {self.config[category][setting]}, {type(self.config[category][setting])}")
+        #print(f"boolified {confType(self.config[category][setting])}, {type(confType(self.config[category][setting]))}")
+        return confType(returnValue)
 
     # Set configuration setting
     def setConfiguration(self, category, setting, value):
-        self.config[category][setting] = value
+        self.config[category][setting] = str(value)
 
     # Write current configuration to file
     def writeConfiguration(self):

@@ -13,7 +13,10 @@ from Views.PhotoLibraryGUI import *
 
 class PhotoLibraryController:
     # Creates the models
-    def __init__(self, dynamic=True, pl=True):
+    def __init__(self, core):
+        # Core allows reads and writes to configurations
+        self.core = core
+
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
         self.photoLabels = []
@@ -21,7 +24,7 @@ class PhotoLibraryController:
         self.num = 0
 
         # If both are False, all PL user functionality is essentially disabled
-        self.enableDynamic = dynamic
+        self.enableDynamic = self.core.getConfiguration("PhotoLibrary","Dynamic")
         self.enablePL = pl
 
         # Models
