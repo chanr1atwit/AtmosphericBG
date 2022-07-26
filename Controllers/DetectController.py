@@ -6,7 +6,10 @@ from Views.SelectAppGUI import *
 class DetectController:
     #executable list
     #constructor with one param
-    def __init__(self):
+    def __init__(self, core):
+        # Core allows reads and writes to configurations
+        self.core = core
+
         self.appSelectGUI = SelectAppGUI(self)
         
         self.execList = set(['spotify.exe','discord.exe','msedge.exe','chrome.exe'])

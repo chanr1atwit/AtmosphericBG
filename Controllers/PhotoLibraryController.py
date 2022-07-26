@@ -12,8 +12,10 @@ from PhotoLibrary.PhotoLibraryModel import *
 from Views.PhotoLibraryGUI import *
 
 class PhotoLibraryController:
-    # Creates the models
-    def __init__(self, dynamic=True, pl=True, dims=None):
+    def __init__(self, core):
+        # Core allows reads and writes to configurations
+        self.core = core
+
         # Views
         self.photoGUI = PhotoLibraryGUI(self)
         self.photoLabels = []
@@ -21,16 +23,23 @@ class PhotoLibraryController:
         self.num = 0
 
         # If both are False, all PL user functionality is essentially disabled
-        self.enableDynamic = dynamic
-        self.enablePL = pl
+        self.enableDynamic = self.core.getConfiguration("PhotoLibrary","dynamic", bool)
+        self.enablePL = self.core.getConfiguration("PhotoLibrary", "library", bool)
 
         # Holds custom dims for image generation
-        self.customDims = dims
+        dims = [self.core.getConfiguration("Settings", "width", str),
+                self.core.getConfiguration("Settings", "height", str)]
+        if dims[0] != "" and dims[1] != "":
+            dims[0] = int(dims[0])
+            dims[1] = int(dims[1])
+            self.customDims = dims
+        else:
+            self.customDims = None
 
         # Models
         self.photoLibrary = PhotoLibraryModel()
-        # For now, read from default file, eventually add config files to change
-        self.json = "Files/photolibrary.json"
+        # For now, read from default file, add file to settings gui later
+        self.json = self.core.getConfiguration("PhotoLibrary", "file", str)
         self.photoLibrary.readJSON(self.json)
 
         # Create images on view
@@ -98,6 +107,25 @@ class PhotoLibraryController:
     # Write all photos to the json file
     def updateJSON(self):
         self.photoLibrary.writeJSON(self.json)
+
+    # Update to a new JSON file
+    def updateLink(self, link):
+        # Save the current JSON
+        self.updateJSON()
+        # Update configuration and link to new file
+        self.json = link
+        self.core.setConfiguration("PhotoLibrary", "file", self.json)
+        # Clear the library
+        self.photoLibrary.clearPhotos()
+        self.photoLabels = []
+        # Fill the library
+        self.photoLibrary.readJSON(self.json)
+        # Redraw the window
+        self.redrawWindow()
+        # Create images on view
+        for picture in self.photoLibrary.getPhotos():
+            label = self.createPixmap(picture.getLocation())
+            self.photoLabels += [label]
 
     # Change the desktop background
     def updateBackground(self, link):
