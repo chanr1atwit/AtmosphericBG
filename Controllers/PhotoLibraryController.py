@@ -12,7 +12,6 @@ from PhotoLibrary.PhotoLibraryModel import *
 from Views.PhotoLibraryGUI import *
 
 class PhotoLibraryController:
-    # Creates the models
     def __init__(self, core):
         # Core allows reads and writes to configurations
         self.core = core
@@ -27,10 +26,20 @@ class PhotoLibraryController:
         self.enableDynamic = self.core.getConfiguration("PhotoLibrary","dynamic", bool)
         self.enablePL = self.core.getConfiguration("PhotoLibrary", "library", bool)
 
+        # Holds custom dims for image generation
+        dims = [self.core.getConfiguration("Settings", "width", str),
+                self.core.getConfiguration("Settings", "height", str)]
+        if dims[0] != "" and dims[1] != "":
+            dims[0] = int(dims[0])
+            dims[1] = int(dims[1])
+            self.customDims = dims
+        else:
+            self.customDims = None
+
         # Models
         self.photoLibrary = PhotoLibraryModel()
-        # For now, read from default file, eventually add config files to change
-        self.json = "Files/photolibrary.json"
+        # For now, read from default file, add file to settings gui later
+        self.json = self.core.getConfiguration("PhotoLibrary", "file", str)
         self.photoLibrary.readJSON(self.json)
 
         # Create images on view
@@ -60,7 +69,7 @@ class PhotoLibraryController:
         photo = random.choice(choices)
         if photo.getLocation() == "dynamic":
             # Generate temporary background
-            imageLocation = DBG.generateImage(tags)
+            imageLocation = DBG.generateImage(tags, self.customDims)
 # Testing with actual photo a while ago, will remove comment when imagelocation is not none
             # self.updateBackground(imageLocation)
             # remove the image from system by using os.remove
