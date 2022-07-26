@@ -59,3 +59,9 @@ class MainGUI(GUI):
         #visualizerButton = QtW.QPushButton("Select Visualizer", self)
         #visualizerButton.setGeometry(QtC.QRect(560, 400, 131, 40))
         #visualizerButton.clicked.connect(self.controller.visualizerView)
+
+    # Actions on window closure
+    # Signals end of program, write to config file
+    def closeEvent(self, event):
+        self.controller.writeConfiguration()
+        event.accept()

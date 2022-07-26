@@ -18,12 +18,12 @@ class CoreController:
         
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
-        val = self.getConfiguration("PhotoLibrary","Dynamic", bool)
-        print(f"{val}")
-        self.setConfiguration("PhotoLibrary","Dynamic", not val)
-        self.writeConfiguration()
-        print(f"{self.getConfiguration('PhotoLibrary','Dynamic', bool)}")
-        return
+        #val = self.getConfiguration("PhotoLibrary","Dynamic", bool)
+        #print(f"{val}")
+        #self.setConfiguration("PhotoLibrary","Dynamic", not val)
+        #self.writeConfiguration()
+        #print(f"{self.getConfiguration('PhotoLibrary','Dynamic', bool)}")
+        #return
 
         # Subcontrollers
         # Only using default settings for PLController atm,
@@ -56,8 +56,6 @@ class CoreController:
                 returnValue = False
         else:
             returnValue = confType(self.config[category][setting])
-        #print(f"this one {self.config[category][setting]}, {type(self.config[category][setting])}")
-        #print(f"boolified {confType(self.config[category][setting])}, {type(confType(self.config[category][setting]))}")
         return confType(returnValue)
 
     # Set configuration setting
@@ -78,6 +76,7 @@ class CoreController:
     # Swap enable state of PL
     def setPLState(self, state):
         self.photoLibraryController.enablePL = state
+        self.setConfiguration("PhotoLibrary", "library", state)
 
     # Get enable state of dyanmic generation
     def getDynamicState(self):
@@ -86,12 +85,8 @@ class CoreController:
     # Swap enable state of dyanmic generation
     def setDynamicState(self, state):
         self.photoLibraryController.enableDynamic = state
-
-### Function overrides
-    # Actions on app closure
-    def closeEvent(self, event):
-        self.writeConfiguration()
-        event.accept()
+        self.setConfiguration("PhotoLibrary", "dynamic", state)
+        print(f"{self.config['PhotoLibrary']['dynamic']}")
 
 ### List of connected views that need methods
     # Open Photo Library View

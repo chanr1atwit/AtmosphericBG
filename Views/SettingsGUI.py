@@ -29,10 +29,13 @@ class SettingsGUI(GUI):
         self.plCB = QtW.QCheckBox("Enable Photo Library", self)
         self.plCB.setGeometry(QtC.QRect(50, 75, 170, 20))
         self.plCB.toggled.connect(lambda: self.controller.setPLState(self.plCB.isChecked()))
+        self.plCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "library", bool))
 
         self.dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
         self.dynamicCB.setGeometry(QtC.QRect(50, 100, 170, 20))
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
+        self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
+
 
     def show(self):
         super().show()

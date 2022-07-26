@@ -24,8 +24,8 @@ class PhotoLibraryController:
         self.num = 0
 
         # If both are False, all PL user functionality is essentially disabled
-        self.enableDynamic = self.core.getConfiguration("PhotoLibrary","Dynamic")
-        self.enablePL = pl
+        self.enableDynamic = self.core.getConfiguration("PhotoLibrary","dynamic", bool)
+        self.enablePL = self.core.getConfiguration("PhotoLibrary", "library", bool)
 
         # Models
         self.photoLibrary = PhotoLibraryModel()
@@ -98,6 +98,25 @@ class PhotoLibraryController:
     # Write all photos to the json file
     def updateJSON(self):
         self.photoLibrary.writeJSON(self.json)
+
+    # Update to a new JSON file
+    def updateLink(self, link):
+        # Save the current JSON
+        self.updateJSON()
+        # Update configuration and link to new file
+        self.json = link
+        self.core.setConfiguration("PhotoLibrary", "file", self.json)
+        # Clear the library
+        self.photoLibrary.clearPhotos()
+        self.photoLabels = []
+        # Fill the library
+        self.photoLibrary.readJSON(self.json)
+        # Redraw the window
+        self.redrawWindow()
+        # Create images on view
+        for picture in self.photoLibrary.getPhotos():
+            label = self.createPixmap(picture.getLocation())
+            self.photoLabels += [label]
 
     # Change the desktop background
     def updateBackground(self, link):
