@@ -45,22 +45,31 @@ class SettingsGUI(GUI):
         heightLabel.setGeometry(QtC.QRect(plX+75,plY+100,100,16))
 
         # Text boxes
-        self.width = QtW.QLineEdit(self)
+        self.width = QtW.QLineEdit(self.controller.getConfiguration(
+            "Settings", "width", str), self)
         self.width.setGeometry(QtC.QRect(plX,plY+125,50,16))
         self.width.setValidator(QtG.QIntValidator(100,10000))
+        self.width.textChanged.connect(lambda: self.controller.setConfiguration(
+            "Settings", "width", self.width.text()))
 
-        self.height = QtW.QLineEdit(self)
+        self.height = QtW.QLineEdit(self.controller.getConfiguration(
+            "Settings", "height", str), self)
         self.height.setGeometry(QtC.QRect(plX+75,plY+125,50,16))
         self.height.setValidator(QtG.QIntValidator(100,10000))
+        self.height.textChanged.connect(lambda: self.controller.setConfiguration(
+            "Settings", "height", self.height.text()))
 
         # Check boxes
         self.plCB = QtW.QCheckBox("Enable Photo Library", self)
         self.plCB.setGeometry(QtC.QRect(plX, plY+25, 170, 20))
         self.plCB.toggled.connect(lambda: self.controller.setPLState(self.plCB.isChecked()))
+        self.plCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "library", bool))
 
         self.dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
         self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
+        self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
+
 
     def show(self):
         super().show()
