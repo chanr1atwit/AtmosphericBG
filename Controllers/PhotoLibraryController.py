@@ -1,7 +1,7 @@
 import sys
 import ctypes
 import random
-from os import remove
+from os import remove, getcwd
 
 from PyQt5 import QtWidgets as QtW
 
@@ -26,6 +26,9 @@ class PhotoLibraryController:
         self.enableDynamic = self.core.getConfiguration("PhotoLibrary","dynamic", bool)
         self.enablePL = self.core.getConfiguration("PhotoLibrary", "library", bool)
 
+        # When false, lock the sampling timer, photo is being generated
+        self.finished = True
+        
         # Holds custom dims for image generation
         dims = [self.core.getConfiguration("Settings", "width", str),
                 self.core.getConfiguration("Settings", "height", str)]
@@ -68,12 +71,21 @@ class PhotoLibraryController:
             return
         photo = random.choice(choices)
         if photo.getLocation() == "dynamic":
+            # Lock the sampling timer
+            self.finished = False
+            
             # Generate temporary background
-            imageLocation = DBG.generateImage(tags, self.customDims)
-# Testing with actual photo a while ago, will remove comment when imagelocation is not none
-            # self.updateBackground(imageLocation)
-            # remove the image from system by using os.remove
-            # remove(imageLocation) 
+            imageLocation = f"{getcwd()}\\TemporaryFiles\\photo.png"
+            DBG.generateImage(tags, imageLocation, self.customDims)
+
+            # Unlock the sampling timer
+            self.finished = true
+
+            # Update the background
+            self.updateBackground(imageLocation)
+
+            # Remove the image from system by using os.remove
+            remove(imageLocation) 
         else:
             self.updateBackground(photo.getLocation())
 
