@@ -19,10 +19,10 @@ class DetectController:
          temp_dir = "TemporaryFiles\\"
          #read in sound from speaker
          print(sd.query_devices())
-         #sd.default.device[0] = 8
-         fs = 44100 # Hz
+         sd.default.device[0] = 5
+         fs = 48000 # Hz
          length = 1 # s
-         recording = sd.rec(frames=fs * length, samplerate=fs, blocking=True, channels=1)
+         recording = sd.rec(frames=fs * length, samplerate=fs, blocking=True, channels=2)
          sd.wait()
          wavfile.write(temp_dir + 'song.wav', fs, recording)
         
