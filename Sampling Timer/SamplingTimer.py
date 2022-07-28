@@ -19,7 +19,7 @@ class SamplingTimer:
         self.mainThread = threading.Thread(target=self.mainSample)
         self.audio = ess.MonoLoader(filename=audio)
         self.model = TensorflowPredictEffnetDiscogs(graphFilename="discogs-effnet-bs64-1.pb")
-        self.activations = model(self.audio)
+
 
     #We need a lock
     def mainSample(self):
@@ -34,6 +34,9 @@ class SamplingTimer:
             threading.Thread(target=self.timer, args=(self.getWaitTime(),))
             while not self.finished:
                 continue
+
+    def audioOffset(self):
+        pass
 
     def timer(self,timer):
         time.sleep(timer)
@@ -52,7 +55,10 @@ class SamplingTimer:
         self.waitTime = waitTime
 
     def performAnalysis(self):
-        time.sleep(self.sampleTime)
+        #Uses the model
+        self.activations = model(self.audio)
+        #time.sleep(self.sampleTime)
+
 
     def sampleBPM(self):
         #returns the bgm based data from essential
