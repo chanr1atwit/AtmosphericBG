@@ -24,7 +24,7 @@ class CoreController:
         # will be using config files for setup soon though
         self.photoLibraryController = PhotoLibraryController()
         self.detectController = DetectController()
-        self.samplingController = SamplingController(15,5,48000)
+        self.samplingController = SamplingController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -38,13 +38,8 @@ class CoreController:
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
 
-### Sampling Timer functions
-    def retrieveTags():
-        self.detectController.AudioToWav
-        self.samplingController.appendAudio(f"{getcwd}\\TemporaryFiles")
-        self.samplingController.mainThread.start()
-        return self.samplingController.tags
-    def sendTags():
+### Inter-controller functions
+    def sendTags(self, tags):
         self.photoLibraryController.requestChangeBackground(retrieveTags())
 
 ### Settings GUI functions
@@ -64,8 +59,13 @@ class CoreController:
     def changeDynamicState(self):
         self.photoLibraryController.enableDynamic = not self.photoLibraryController.enableDynamic
 
-    def changeWaitTime(self,waitTime):
-        self.samplingController.waitTime = self.samplingController.setWaitTime(waitTime)
+    # Get wait time from sampling timer
+    def getWaitTime(self):
+        return self.samplingController.waitTime
+
+    # Set the wait time from user settings
+    def changeWaitTime(self, waitTime):
+        self.samplingController.waitTime = waitTime
 
 ### List of connected views that need methods
     # Open Photo Library View

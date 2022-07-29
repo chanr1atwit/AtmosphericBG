@@ -21,7 +21,23 @@ Tony's Tasks
 8. Send output of sampleBPM to visualizer
 '''
 class SamplingController:
-    def __init__(self,sampleTime,waitTime,samRate):
+   
+    # Shouldn't ever change
+    CONVERSIONS = {
+        "blu": "Blues", 
+        "cla": "Classic", 
+        "cou": "Country", 
+        "dis": "Disco", 
+        "hip": "Hip Hop", 
+        "jaz": "Jazz", 
+        "met": "Metal", 
+        "pop": "Pop", 
+        "reg": "Reggae", 
+        "roc": "Rock"
+    }
+
+    def __init__(self, core, sampleTime=15, waitTime=45, samRate=48000):
+        self.core = core
         self.samRate = samRate
         self.sampleTime = sampleTime
         self.waitTime = waitTime
@@ -31,7 +47,6 @@ class SamplingController:
         self.metadata = json.load(open('genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
         self.offset = 0
         self.array = np.zeros(self.samRate*15)
-        self.tags = np.array([])
 
     #We need a lock
     def mainSample(self):
@@ -85,19 +100,23 @@ class SamplingController:
         scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
         write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
         audio = ess.MonoLoader(filename=f"{getcwd()}\\TemporaryFiles\\audioResult.wav",sampleRate=self.samRate)
-        self.activations = self.model(audio)
-        parseTags(self.activations)
+        activations = self.model(audio)
+        tags = self.parseTags(activations)
+        self.core.sendTags(tags)
 
     #This function returns a set of output data related to BPM.
     def sampleBPM(self):
         #returns the bgm based data from essential
         self.rhythm_extractor = ess.RhythmExtractor2013(method="multifeature")
-        bpm, beats, beats_confidence, _, beats_intervals = rhythm_extractor(self.loader)
-        return bpm, beats, beats_confidence, _, beats_intervals
+        bpm, beats, beats_confidence, __, beats_intervals = rhythm_extractor(self.loader)
+        return bpm, beats, beats_confidence, beats_intervals
 
-    def parseTags(activations):
+    def parseTags(self, activations):
+        tags = []
         count = 0
         for x in activations:
-            if x * 100 > 50:
-                self.tags.append(self.metadata[count])
+            if int(float(x) * 100) > 50:
+                # Convert from metadata tag into actual tag
+                self.tags.append(self.CONVERSIONS[self.metadata[count]])
             count+=1
+        return tags
