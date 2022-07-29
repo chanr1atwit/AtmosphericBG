@@ -36,5 +36,17 @@ class SettingsGUI(GUI):
         # dynamicCB.setChecked(self.controller.getDynamicState())
         # dynamicCB.stateChanged.connect(self.controller.changeDynamicState)
 
+        #Buttons for SamplingTimer
+        self.waitTextBox = QtW.QLineEdit(self)
+        self.waitTextBox.setGeometry(QtC.QRect(100,100,225,20))
+        waitButton = QtW.QPushButton('Apply',self)
+        waitButton.setGeometry(QtC.QRect(100,120,225,20))
+        waitButton.clicked.connect(self.setWaitTimer)
+
+    def setWaitTimer(self):
+        textboxValue = self.waitTextBox.text()
+        self.controller.changeWaitTime(textboxValue)
+        self.waitTextBox.setText("")
+
     def mainView(self):
         self.hide()

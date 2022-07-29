@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
 from Controllers.DetectController import *
+from Controllers.SamplingController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
@@ -21,7 +22,7 @@ class CoreController:
         # will be using config files for setup soon though
         self.photoLibraryController = PhotoLibraryController()
         self.detectController = DetectController()
-        self.samplingController = SamplingController()
+        self.samplingController = SamplingController(15,5,48000)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -34,6 +35,13 @@ class CoreController:
 
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
+
+### Sampling Timer functions
+    def retrieveTags():
+        self.samplingController.mainThread.start()
+        return self.samplingController.tags
+    def sendTags():
+        self.photoLibraryController.requestChangeBackground(retrieveTags())
 
 ### Settings GUI functions
     # Get enable state of PL
@@ -51,6 +59,9 @@ class CoreController:
     # Swap enable state of dyanmic generation
     def changeDynamicState(self):
         self.photoLibraryController.enableDynamic = not self.photoLibraryController.enableDynamic
+
+    def changeWaitTime(self,waitTime):
+        self.samplingController.waitTime = self.samplingController.setWaitTime(waitTime)
 
 ### List of connected views that need methods
     # Open Photo Library View

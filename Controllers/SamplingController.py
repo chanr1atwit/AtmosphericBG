@@ -5,27 +5,33 @@ import essentia
 import essentia.standard as ess
 import essentia.streaming
 import numpy as np
+import json
 from os import getcwd
 from scipy.io.wavfile import write
 
 '''
-TASKS:
-
-
+Tony's Tasks
+1. Add code to CoreController ✅
+2. Initalize sampler in CoreController ✅
+3. Add input boxes for wait time in settings GUI ✅
+4. Add wait time to the config file
+5. Modify performAnalysis to parse activations into tags. ✅
+6. Output an array of tags using the requestChangeBackground(tags) from CoreController.photoLibraryController ✅
+7. Tell Rodney to run BPMThread alongside the mainThread
+8. Send output of sampleBPM to visualizer
 '''
 class SamplingController:
-
-
-    def __init__(self,sampleTime,waitTime):
-        self.samRate = 48000
+    def __init__(self,sampleTime,waitTime,samRate):
+        self.samRate = samRate
         self.sampleTime = sampleTime
         self.waitTime = waitTime
         self.mainThread = threading.Thread(target=self.mainSample)
         self.BPMThread = threading.Thraed(target=self.sampleBPM)
         self.model = TensorflowPredictMusiCNN(graphFilename="genre_tzanetakis-musicnn-msd-1.pb")
-        self.count = 0
+        self.metadata = json.load(open('genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
         self.offset = 0
-        self.array = np.zeros(48000*15)
+        self.array = np.zeros(self.samRate*15)
+        self.tags = np.array([])
 
     #We need a lock
     def mainSample(self):
@@ -38,7 +44,6 @@ class SamplingController:
                 #Does actual sample
                 if self.offset == 14 and not workdone:
                     self.performAnalysis()
-
             self.finished = False
             threading.Thread(target=self.timer, args=(self.getWaitTime(),)).start()
             while not self.finished:
@@ -57,28 +62,42 @@ class SamplingController:
     def timer(self,timer):
         time.sleep(timer)
         self.finished = True
+
     #Returns the sampleTime
     def getSampleTime(self):
         return self.sampleTime
+
     #Returns the waitTime
     def getWaitTime(self):
         return self.waitTime
+
     #Considerations of scrapping this function because the sampleTime will always be 15.
     def setSampleTime(self,sampleTime):
         self.sampleTime = sampleTime
+
     #waitTime can be configured in the
     def setWaitTime(self,waitTime):
         self.waitTime = waitTime
 
+    #It converts the array of wav files to a single wav file and the model analyzes the audioResult.wav.
     def performAnalysis(self):
         #Uses the model
         scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
         write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
         audio = ess.MonoLoader(filename=f"{getcwd()}\\TemporaryFiles\\audioResult.wav",sampleRate=self.samRate)
         self.activations = self.model(audio)
+        parseTags(self.activations)
 
+    #This function returns a set of output data related to BPM.
     def sampleBPM(self):
         #returns the bgm based data from essential
         self.rhythm_extractor = ess.RhythmExtractor2013(method="multifeature")
         bpm, beats, beats_confidence, _, beats_intervals = rhythm_extractor(self.loader)
         return bpm, beats, beats_confidence, _, beats_intervals
+
+    def parseTags(activations):
+        count = 0
+        for x in activations:
+            if x * 100 > 50:
+                self.tags.append(self.metadata[count])
+            count+=1
