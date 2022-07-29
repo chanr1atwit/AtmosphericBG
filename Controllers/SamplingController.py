@@ -23,6 +23,7 @@ Tony's Tasks
 class SamplingController:
    
     # Shouldn't ever change
+    # KVP since switches aren't a thing
     CONVERSIONS = {
         "blu": "Blues", 
         "cla": "Classic", 
@@ -36,11 +37,19 @@ class SamplingController:
         "roc": "Rock"
     }
 
-    def __init__(self, core, sampleTime=15, waitTime=45, samRate=48000):
+    def __init__(self, core, sampleTime=15, samRate=48000):
         self.core = core
         self.samRate = samRate
         self.sampleTime = sampleTime
-        self.waitTime = waitTime
+
+        # Set the wait time from configurations (if applicable),
+        # use default otherwise. 
+        waitTime = self.core.getConfiguration("Sampling", "wait", str)
+        if waitTime != "":
+            self.waitTime = int(waitTime)
+        else:
+            self.waitTime = 45
+
         self.mainThread = threading.Thread(target=self.mainSample)
         self.BPMThread = threading.Thraed(target=self.sampleBPM)
         self.model = TensorflowPredictMusiCNN(graphFilename="genre_tzanetakis-musicnn-msd-1.pb")
