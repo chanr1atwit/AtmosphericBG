@@ -18,19 +18,11 @@ class CoreController:
         
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
-        #val = self.getConfiguration("PhotoLibrary","Dynamic", bool)
-        #print(f"{val}")
-        #self.setConfiguration("PhotoLibrary","Dynamic", not val)
-        #self.writeConfiguration()
-        #print(f"{self.getConfiguration('PhotoLibrary','Dynamic', bool)}")
-        #return
 
         # Subcontrollers
-        # Only using default settings for PLController atm,
-        # will be using config files for setup soon though
         self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
-        #self.samplingTimerController = SamplingTimerController(self)
+        #self.samplingController = SamplingController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -85,7 +77,6 @@ class CoreController:
     def setDynamicState(self, state):
         self.photoLibraryController.enableDynamic = state
         self.setConfiguration("PhotoLibrary", "dynamic", state)
-        print(f"{self.config['PhotoLibrary']['dynamic']}")
 
     # Set custom dimensions, check if valid
     def setCustomDims(self, width, height):

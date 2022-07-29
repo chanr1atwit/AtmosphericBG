@@ -7,27 +7,23 @@ import randimage.randimage as randimage
 import random
 
 NUM_SAMPLES = 256
-MOODS = {
-    'acoustic'   : [196/256, 150/256, 105/256],
-    'aggressive' : [      1,       0,       0],
-    'electronic' : [ 67/256,       1,       0],
-    'happy'      : [      1, 140/256,  62/256],
-    'party'      : [      1,  17/256, 241/256],
-    'relaxed'    : [ 58/256,  65/256,       1],
-    'sad'        : [ 59/256,  63/256, 182/256]
+GENRES = {
+    'Blues'   : [59/256,  63/256,  182/256],
+    'Classic' : [196/256, 150/256, 105/256],
+    'Country' : [1,       140/256, 62/256],
+    'Disco'   : [58/256,  65/256,  1],
+    'Hip Hop' : [248/256, 242/256, 56/256],
+    'Jazz'    : [71/256,  16/256,  224/256],
+    'Metal'   : [1,       0,       0],
+    'Pop'     : [67/256,  1,       0],
+    'Reggae'  : [0,       207/256, 49/256],
+    'Rock'    : [1,       17/256,  241/256]
 }
+
 # tags: str[]
 # Generates a color map from matplotlib
 # based on provided tags. Uses white as
 # start and end. 
-# Colors: 
-#   Acoustic:   light brown
-#   Aggressive: red
-#   Electronic: yellow/green
-#   Happy:      orange
-#   Party:      pink
-#   Relaxed:    light blue
-#   Sad:        deep blue/purple
 def generateColormap(tags):
     # Number of colors based on present tags
     # +1 zone for white
@@ -51,10 +47,10 @@ def generateColormap(tags):
         end = (i + 1) * NUM_SAMPLES   
 
         # Get rbg values from mood dict
-        mood = MOODS[tags[i]]
-        r = mood[0]
-        g = mood[1]
-        b = mood[2]
+        genre = GENRES[tags[i]]
+        r = genre[0]
+        g = genre[1]
+        b = genre[2]
 
         # Eventually want to add check to see if
         # intersection of two colors is gross (gray)
@@ -86,8 +82,8 @@ def generateColormap(tags):
 def getDimensions(custom=None):
     if custom is not None and len(custom) == 2:
         return (custom[1], custom[0])
-    return (int(ctypes.windll.user32.GetSystemMetrics(1)/2),
-            int(ctypes.windll.user32.GetSystemMetrics(0)/2))
+    return (int(ctypes.windll.user32.GetSystemMetrics(1)/4),
+            int(ctypes.windll.user32.GetSystemMetrics(0)/4))
 
 # tags: str[]
 # Create a background and save it
@@ -95,7 +91,10 @@ def getDimensions(custom=None):
 def generateImage(tags, link, dimensions=None):
     # Get dimensions
     dims = getDimensions(dimensions)
-    
+
+    # Get random tag for spice
+    tags += [random.choice(list(GENRES.keys()))]
+
     # Generate color maps using randimage
     colormap, length = generateColormap(tags)
 

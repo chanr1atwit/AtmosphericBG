@@ -15,4 +15,3 @@ PyYAML==6.0
 randimage==1.2
 scipy==1.8.1
 six==1.16.0
-WMI==1.5.1

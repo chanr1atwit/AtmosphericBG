@@ -20,7 +20,6 @@ class SelectAppGUI(GUI):
         pass
 
     def show(self):
-        print("displaing sources")
         self.displaySources()
         super().show()
 

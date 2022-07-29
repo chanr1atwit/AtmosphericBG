@@ -1,6 +1,7 @@
 import sys
 import ctypes
 import random
+import threading
 from os import remove, getcwd
 
 from PyQt5 import QtWidgets as QtW
@@ -71,23 +72,20 @@ class PhotoLibraryController:
             return
         photo = random.choice(choices)
         if photo.getLocation() == "dynamic":
-            # Lock the sampling timer
-            self.finished = False
-            
             # Generate temporary background
             imageLocation = f"{getcwd()}\\TemporaryFiles\\photo.png"
-            DBG.generateImage(tags, imageLocation, self.customDims)
-
-            # Unlock the sampling timer
-            self.finished = true
-
-            # Update the background
-            self.updateBackground(imageLocation)
-
-            # Remove the image from system by using os.remove
-            remove(imageLocation) 
+            threading.Thread(target=self.generationTask, args=(tags, imageLocation, self.customDims,)).start()
         else:
             self.updateBackground(photo.getLocation())
+
+    # Generate image on a separate thread
+    def generationTask(self, tags, imageLocation, dims):
+        print("Generating new image...")
+        # Generate new image
+        DBG.generateImage(tags, imageLocation, dims)    
+        # Update the background
+        self.updateBackground(imageLocation) 
+        print("Finished generating image")
 
     # Redraw every label
     def redrawWindow(self):
@@ -158,10 +156,8 @@ class PhotoLibraryController:
     
     # Find the photo based off selected
     def findPhoto(self, text):
-        print("initiate find")
         for photo in self.photoLibrary.getPhotos():
             if text == photo.getLocation():
-                print("found photo")
                 return photo
         return None
 
@@ -171,7 +167,6 @@ class PhotoLibraryController:
             self.selected.setStyleSheet("padding :30px")
         label.setStyleSheet("border: 2px solid red; padding :28px")
         self.selected = label
-        print(self.selected.link)
 
     # Try to add a photo to the model
     def addPhoto(self, location, tags, text):
@@ -181,14 +176,13 @@ class PhotoLibraryController:
         checked = self.convertTags(tags)
         photo = Photo(location, checked)
         label = self.createPixmap(text)
-        print(f"link {label.link}, photo {photo.getLocation()}")
         self.photoLabels += [label]
         self.photoLibrary.addPhotos([photo])
         return True
 
     # Check if photo is selected and delete if so
     def removePhoto(self):
-        if self.selected.link == None:
+        if self.selected is None or self.selected.link is None:
             return False
         photo = self.findPhoto(self.selected.link)
         if photo == None:
@@ -202,7 +196,6 @@ class PhotoLibraryController:
     def editTags(self, tags):
         if self.selected.link == None:
             return False
-        print(f"{self.selected.link}")
         photo = self.findPhoto(self.selected.link)
         if photo == None:
             return False
