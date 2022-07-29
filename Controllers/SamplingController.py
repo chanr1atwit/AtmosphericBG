@@ -1,4 +1,4 @@
-#SamplingTimer class, last edited 7/25/2022
+#SamplingController class, last edited 7/29/2022
 import time
 import threading
 import essentia
@@ -21,20 +21,20 @@ Tony's Tasks
 8. Send output of sampleBPM to visualizer
 '''
 class SamplingController:
-   
+
     # Shouldn't ever change
     # KVP since switches aren't a thing
     CONVERSIONS = {
-        "blu": "Blues", 
-        "cla": "Classic", 
-        "cou": "Country", 
-        "dis": "Disco", 
-        "hip": "Hip Hop", 
-        "jaz": "Jazz", 
-        "met": "Metal", 
-        "pop": "Pop", 
-        "reg": "Reggae", 
-        "roc": "Rock"
+        "blues": "Blues",
+        "classic": "Classic",
+        "country": "Country",
+        "disco": "Disco",
+        "hip hop": "Hip Hop",
+        "jazz": "Jazz",
+        "metal": "Metal",
+        "pop": "Pop",
+        "reggae": "Reggae",
+        "rock": "Rock"
     }
 
     def __init__(self, core, sampleTime=15, samRate=48000):
@@ -43,7 +43,7 @@ class SamplingController:
         self.sampleTime = sampleTime
 
         # Set the wait time from configurations (if applicable),
-        # use default otherwise. 
+        # use default otherwise.
         waitTime = self.core.getConfiguration("Sampling", "wait", str)
         if waitTime != "":
             self.waitTime = int(waitTime)
@@ -123,9 +123,9 @@ class SamplingController:
     def parseTags(self, activations):
         tags = []
         count = 0
-        for x in activations:
-            if int(float(x) * 100) > 50:
+        for label, probability in zip(self.metadata['classes'], activations.mean(axis=0)):
+            if int(float(probability) * 100) > 50:
                 # Convert from metadata tag into actual tag
-                self.tags.append(self.CONVERSIONS[self.metadata[count]])
+                tags.append(self.CONVERSIONS[label])
             count+=1
         return tags
