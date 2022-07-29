@@ -19,7 +19,7 @@ class DetectController:
          #read in sound from speaker
          #print((sd.query_devices()))
          fs = 48000 # Hz
-         length = 0.5 # s
+         length = 10 # s
          recording = sd.rec(frames = (int)(fs * length), samplerate=fs,channels=2)
          sd.wait()
          wavfile.write(temp_dir + ('song({0}).wav').format(self.fileID), fs, recording)
