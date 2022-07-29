@@ -24,7 +24,8 @@ class DetectController:
          sd.wait()
          wavfile.write(temp_dir + ('song({0}).wav').format(self.fileID), fs, recording)
          self.fileID += 1
-
+         if fileID == 15:
+             self.fileID = 0
 
 
      #     rate, data = wavfile.read(temp_dir + "song.wav")

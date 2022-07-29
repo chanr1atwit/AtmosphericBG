@@ -1,4 +1,6 @@
 import sys
+
+from os import getcwd
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
@@ -38,6 +40,8 @@ class CoreController:
 
 ### Sampling Timer functions
     def retrieveTags():
+        self.detectController.AudioToWav
+        self.samplingController.appendAudio(f"{getcwd}\\TemporaryFiles")
         self.samplingController.mainThread.start()
         return self.samplingController.tags
     def sendTags():
