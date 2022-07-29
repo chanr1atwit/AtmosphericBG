@@ -1,13 +1,15 @@
+#move control functions to controller
 class VisualizerModel:
+   
     def __init__(self,visualizerList,chosenVisualizer):
         self.visualizerList = visualizerList
         self.chosenVisualizer = chosenVisualizer
     
     def setChosenVisualizer(self,type):
-        pass
+        self.chosenVisualizer = type
 
-    def activateVisualizer():
-        pass
+    def activateVisualizer(self,chosenVisualizer):
+       pass
     
-    def deactivate():
-        pass
+    def deactivate(self):
+       pass
