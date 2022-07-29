@@ -2,9 +2,6 @@
 import noisereduce as nr
 import sounddevice as sd
 from scipy.io import wavfile
-
-
-
 from Views.SelectAppGUI import *
 
 class DetectController:
@@ -12,6 +9,7 @@ class DetectController:
     #constructor with one param
     def __init__(self):
          self.appSelectGUI = SelectAppGUI(self)
+         self.fileID = 0
         # self.execList = set(['spotify.exe','discord.exe','msedge.exe','chrome.exe'])
         # self.selectedSource = None
     #read in from speaker and turn into WAV
@@ -21,15 +19,20 @@ class DetectController:
          #read in sound from speaker
          #print((sd.query_devices()))
          fs = 48000 # Hz
-         length = 1 # s
-         recording = sd.rec(frames = (fs * length), samplerate=fs,channels=2,blocking = True)
-         #sd.wait()
-         wavfile.write(temp_dir + 'song.wav', fs, recording)
+         length = 0.5 # s
+         recording = sd.rec(frames = (int)(fs * length), samplerate=fs,channels=2)
+         sd.wait()
+         wavfile.write(temp_dir + ('song({0}).wav').format(self.fileID), fs, recording)
+         self.fileID += 1
+   
+  
         
      #     rate, data = wavfile.read(temp_dir + "song.wav")
      #     # perform noise reduction
      #     reduced_noise = nr.reduce_noise(y=data, sr=rate)
      #     wavfile.write(temp_dir + "song.wav", rate, reduced_noise)
+
+  
 
         
 
