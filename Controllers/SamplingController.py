@@ -25,16 +25,16 @@ class SamplingController:
     # Shouldn't ever change
     # KVP since switches aren't a thing
     CONVERSIONS = {
-        "blues": "Blues",
-        "classic": "Classic",
-        "country": "Country",
-        "disco": "Disco",
-        "hip hop": "Hip Hop",
-        "jazz": "Jazz",
-        "metal": "Metal",
+        "blu": "Blues",
+        "cla": "Classic",
+        "cou": "Country",
+        "dis": "Disco",
+        "hip": "Hip Hop",
+        "jaz": "Jazz",
+        "met": "Metal",
         "pop": "Pop",
-        "reggae": "Reggae",
-        "rock": "Rock"
+        "reg": "Reggae",
+        "roc": "Rock"
     }
 
     def __init__(self, core, sampleTime=15, samRate=48000):
