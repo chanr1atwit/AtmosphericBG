@@ -59,10 +59,10 @@ class SelectAppGUI(GUI):
     #         button.clicked.connect(self.selectSource(app.processID))
     #         i += 50
 
-class ProcessButton(QtW.QPushButton):
-    def __init__(self,process,parent = None):
-        super(). __init__(process.Name,parent)
-        self.process = process
+# class ProcessButton(QtW.QPushButton):
+#     def __init__(self,process,parent = None):
+#         super(). __init__(process.Name,parent)
+#         self.process = process
        
 
         

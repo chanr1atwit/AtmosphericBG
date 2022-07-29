@@ -2,7 +2,7 @@
 import noisereduce as nr
 import sounddevice as sd
 from scipy.io import wavfile
-import wmi
+
 
 
 from Views.SelectAppGUI import *
@@ -15,24 +15,25 @@ class DetectController:
         # self.execList = set(['spotify.exe','discord.exe','msedge.exe','chrome.exe'])
         # self.selectedSource = None
     #read in from speaker and turn into WAV
+   
     def AudioToWav(self):
          temp_dir = "TemporaryFiles\\"
          #read in sound from speaker
-         print(sd.query_devices())
-         sd.default.device[0] = 5
+         #print((sd.query_devices()))
          fs = 48000 # Hz
          length = 1 # s
-         recording = sd.rec(frames=fs * length, samplerate=fs, blocking=True, channels=2)
-         sd.wait()
+         recording = sd.rec(frames = (fs * length), samplerate=fs,channels=2,blocking = True)
+         #sd.wait()
          wavfile.write(temp_dir + 'song.wav', fs, recording)
         
-         rate, data = wavfile.read(temp_dir + "song.wav")
-         # perform noise reduction
-         reduced_noise = nr.reduce_noise(y=data, sr=rate)
-         wavfile.write(temp_dir + "song.wav", rate, reduced_noise)
+     #     rate, data = wavfile.read(temp_dir + "song.wav")
+     #     # perform noise reduction
+     #     reduced_noise = nr.reduce_noise(y=data, sr=rate)
+     #     wavfile.write(temp_dir + "song.wav", rate, reduced_noise)
+
         
 
-         #turn to essentia
+         
 
     
     #reads in process names from taskmanager and adds to set
