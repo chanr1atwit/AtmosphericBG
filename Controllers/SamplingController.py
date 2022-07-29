@@ -15,7 +15,7 @@ TASKS:
 '''
 class SamplingController:
 
-    #the audio parameter is a string path to the audio file.
+
     def __init__(self,sampleTime,waitTime):
         self.samRate = 48000
         self.sampleTime = sampleTime
@@ -44,6 +44,7 @@ class SamplingController:
             while not self.finished:
                 continue
 
+    #the audioPath parameter is a string path to the audio file.
     def appendAudio(self, audioPath):
         if self.offset == 14:
             self.offset = 0
@@ -52,19 +53,20 @@ class SamplingController:
         self.array[self.offset*self.samRate:(self.offset+1)*self.samRate] = audio
         self.offset+=1
 
+    #Creates a time buffer for the while loop in mainSample to do work.
     def timer(self,timer):
         time.sleep(timer)
         self.finished = True
-
+    #Returns the sampleTime
     def getSampleTime(self):
         return self.sampleTime
-
+    #Returns the waitTime
     def getWaitTime(self):
         return self.waitTime
-
+    #Considerations of scrapping this function because the sampleTime will always be 15.
     def setSampleTime(self,sampleTime):
         self.sampleTime = sampleTime
-
+    #waitTime can be configured in the
     def setWaitTime(self,waitTime):
         self.waitTime = waitTime
 

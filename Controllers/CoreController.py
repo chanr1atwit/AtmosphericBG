@@ -14,18 +14,18 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)        
+        self.app = QApplication(argv)
 
         # Subcontrollers
         # Only using default settings for PLController atm,
         # will be using config files for setup soon though
         self.photoLibraryController = PhotoLibraryController()
         self.detectController = DetectController()
-        #self.samplingTimerController = SamplingTimerController()
+        self.samplingController = SamplingController()
 
         # Connected Views
         self.mainGUI = MainGUI(self)
-        self.settingsGUI = SettingsGUI(self)  
+        self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
