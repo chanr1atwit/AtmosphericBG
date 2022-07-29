@@ -1,8 +1,10 @@
 import sys, configparser
+
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
 from Controllers.DetectController import *
+from Controllers.SamplingController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
@@ -14,27 +16,18 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)      
-        
+        self.app = QApplication(argv)
+
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
-        #val = self.getConfiguration("PhotoLibrary","Dynamic", bool)
-        #print(f"{val}")
-        #self.setConfiguration("PhotoLibrary","Dynamic", not val)
-        #self.writeConfiguration()
-        #print(f"{self.getConfiguration('PhotoLibrary','Dynamic', bool)}")
-        #return
 
-        # Subcontrollers
-        # Only using default settings for PLController atm,
-        # will be using config files for setup soon though
         self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
-        #self.samplingTimerController = SamplingTimerController(self)
+        self.samplingController = SamplingController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
-        self.settingsGUI = SettingsGUI(self)  
+        self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
@@ -43,6 +36,10 @@ class CoreController:
 
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
+
+### Inter-controller functions
+    def sendTags(self, tags):
+        self.photoLibraryController.requestChangeBackground(tags)
 
 ### Configuration functions
     # Get configuration setting
@@ -74,9 +71,11 @@ class CoreController:
 
     # Swap enable state of PL
 
+
     def setPLState(self, state):
         self.photoLibraryController.enablePL = state
         self.setConfiguration("PhotoLibrary", "library", state)
+
 
 
     # Get enable state of dyanmic generation
@@ -98,6 +97,14 @@ class CoreController:
             dims = [int(width), int(height)]
         self.photoLibraryController.customDims = dims
 
+    # Get wait time from sampling timer
+    def getWaitTime(self):
+        return self.samplingController.waitTime
+
+    # Set the wait time from user settings
+    def setWaitTime(self, waitTime):
+        self.samplingController.waitTime = waitTime
+
 ### List of connected views that need methods
     # Open Photo Library View
     def photoLibraryView(self):
@@ -110,4 +117,3 @@ class CoreController:
     # Open Settings View
     def settingsView(self):
         self.settingsGUI.show()
-
