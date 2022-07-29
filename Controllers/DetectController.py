@@ -7,6 +7,7 @@ from Views.SelectAppGUI import *
 class DetectController:
     #executable list
     #constructor with one param
+
     def __init__(self):
          self.appSelectGUI = SelectAppGUI(self)
          self.fileID = 0
@@ -26,6 +27,7 @@ class DetectController:
          self.fileID += 1
    
   
+
         
      #     rate, data = wavfile.read(temp_dir + "song.wav")
      #     # perform noise reduction

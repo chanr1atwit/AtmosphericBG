@@ -1,4 +1,4 @@
-import sys
+import sys, configparser
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
@@ -14,14 +14,23 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)        
+        self.app = QApplication(argv)      
+        
+        self.config = configparser.ConfigParser()
+        self.config.read("Files\\userconfig.ini")
+        #val = self.getConfiguration("PhotoLibrary","Dynamic", bool)
+        #print(f"{val}")
+        #self.setConfiguration("PhotoLibrary","Dynamic", not val)
+        #self.writeConfiguration()
+        #print(f"{self.getConfiguration('PhotoLibrary','Dynamic', bool)}")
+        #return
 
         # Subcontrollers
         # Only using default settings for PLController atm,
         # will be using config files for setup soon though
-        self.photoLibraryController = PhotoLibraryController()
-        self.detectController = DetectController()
-        #self.samplingTimerController = SamplingTimerController()
+        self.photoLibraryController = PhotoLibraryController(self)
+        self.detectController = DetectController(self)
+        #self.samplingTimerController = SamplingTimerController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -35,22 +44,59 @@ class CoreController:
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
 
+### Configuration functions
+    # Get configuration setting
+    def getConfiguration(self, category, setting, confType):
+        returnValue = None
+        value = self.config[category][setting]
+        if confType == bool:
+            if value == "True":
+                returnValue = True
+            else:
+                returnValue = False
+        else:
+            returnValue = confType(self.config[category][setting])
+        return confType(returnValue)
+
+    # Set configuration setting
+    def setConfiguration(self, category, setting, value):
+        self.config[category][setting] = str(value)
+
+    # Write current configuration to file
+    def writeConfiguration(self):
+        with open("Files\\userconfig.ini", "w") as file:
+            self.config.write(file)
+
 ### Settings GUI functions
     # Get enable state of PL
     def getPLState(self):
         return self.photoLibraryController.enablePL
 
     # Swap enable state of PL
-    def changePLState(self):
-        self.photoLibraryController.enablePL = not self.photoLibraryController.enablePL
+
+    def setPLState(self, state):
+        self.photoLibraryController.enablePL = state
+        self.setConfiguration("PhotoLibrary", "library", state)
+
 
     # Get enable state of dyanmic generation
     def getDynamicState(self):
         return self.photoLibraryController.enableDynamic
 
     # Swap enable state of dyanmic generation
-    def changeDynamicState(self):
-        self.photoLibraryController.enableDynamic = not self.photoLibraryController.enableDynamic
+    def setDynamicState(self, state):
+        self.photoLibraryController.enableDynamic = state
+        self.setConfiguration("PhotoLibrary", "dynamic", state)
+        print(f"{self.config['PhotoLibrary']['dynamic']}")
+
+    # Set custom dimensions, check if valid
+    def setCustomDims(self, width, height):
+        dims = None
+        # Valid dims
+        if len(width) != 0  and len(height) != 0 and \
+            int(width) > 99 and int(height) > 99:
+            dims = [int(width), int(height)]
+        self.photoLibraryController.customDims = dims
 
 ### List of connected views that need methods
     # Open Photo Library View
