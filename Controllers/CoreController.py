@@ -16,8 +16,8 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)      
-        
+        self.app = QApplication(argv)
+
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
 
@@ -39,7 +39,7 @@ class CoreController:
 
 ### Inter-controller functions
     def sendTags(self, tags):
-        self.photoLibraryController.requestChangeBackground(retrieveTags())
+        self.photoLibraryController.requestChangeBackground(tags)
 
 ### Configuration functions
     # Get configuration setting
