@@ -1,6 +1,7 @@
 # SettingsGUI class, last edited 6/23/2022
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
+from PyQt5 import QtGui as QtG
 
 from Views.GUI import *
 
@@ -21,32 +22,72 @@ class SettingsGUI(GUI):
         backButton.setGeometry(QtC.QRect(600,700,131,40))
         backButton.clicked.connect(self.mainView)
 
+        # Scales for different sections
+        plX = 50
+        plY = 50
+
         # Labels
         plLabel = QtW.QLabel("Photo Library Settings", self)
-        plLabel.setGeometry(QtC.QRect(50, 50, 471, 16))
+        plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
+
+        #Widgets for SamplingTimer
+        waitLabel = QtW.QLabel(self)
+        waitLabel.setGeometry(QtC.QRect(300,80,225,20))
+
+        self.wait = QtW.QLineEdit(self.controller.getConfiguration(
+            "Sampling", "wait", str) , self)
+        self.wait.setGeometry(QtC.QRect(300,100,225,20))
+        self.wait.setValidator(QtG.QIntValidator(30,300))
+        self.wait.textChanged.connect(lambda: self.controller.setConfiguration(
+            "Sampling", "wait", self.wait.text()))
+
+        xLabel = QtW.QLabel("X", self)
+        xLabel.move(plX+60,plY+117)
+        
+        sizeLabel = QtW.QLabel("Custom Size", self)
+        sizeLabel.setGeometry(QtC.QRect(plX,plY+75,100,16))
+
+        widthLabel = QtW.QLabel("Width", self)
+        widthLabel.setGeometry(QtC.QRect(plX,plY+100,100,16))
+
+        heightLabel = QtW.QLabel("Height", self)
+        heightLabel.setGeometry(QtC.QRect(plX+75,plY+100,100,16))
+
+        # Text boxes
+        self.width = QtW.QLineEdit(self.controller.getConfiguration(
+            "Settings", "width", str), self)
+        self.width.setGeometry(QtC.QRect(plX,plY+125,50,16))
+        self.width.setValidator(QtG.QIntValidator(100,10000))
+        self.width.textChanged.connect(lambda: self.controller.setConfiguration(
+            "Settings", "width", self.width.text()))
+
+        self.height = QtW.QLineEdit(self.controller.getConfiguration(
+            "Settings", "height", str), self)
+        self.height.setGeometry(QtC.QRect(plX+75,plY+125,50,16))
+        self.height.setValidator(QtG.QIntValidator(100,10000))
+        self.height.textChanged.connect(lambda: self.controller.setConfiguration(
+            "Settings", "height", self.height.text()))
 
         # Check boxes
-        # plCB = QtW.QCheckBox("Enable Photo Library", self)
-        # plCB.setGeometry(QtC.QRect(50, 75, 111, 20))
-        # plCB.setChecked(self.controller.changePLState())
-        # plCB.stateChanged.connect(self.controller.changePLState)
+        self.plCB = QtW.QCheckBox("Enable Photo Library", self)
+        self.plCB.setGeometry(QtC.QRect(plX, plY+25, 170, 20))
+        self.plCB.toggled.connect(lambda: self.controller.setPLState(self.plCB.isChecked()))
+        self.plCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "library", bool))
 
-        # dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
-        # dynamicCB.setGeometry(QtC.QRect(50, 100, 111, 20))
-        # dynamicCB.setChecked(self.controller.getDynamicState())
-        # dynamicCB.stateChanged.connect(self.controller.changeDynamicState)
+        self.dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
+        self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
+        self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
+        self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
 
-        #Buttons for SamplingTimer
-        self.waitTextBox = QtW.QLineEdit(self)
-        self.waitTextBox.setGeometry(QtC.QRect(100,100,225,20))
-        waitButton = QtW.QPushButton('Apply',self)
-        waitButton.setGeometry(QtC.QRect(100,120,225,20))
-        waitButton.clicked.connect(self.setWaitTimer)
+    def show(self):
+        super().show()
+        self.plCB.setChecked(self.controller.getPLState())
+        self.dynamicCB.setChecked(self.controller.getDynamicState())
 
-    def setWaitTimer(self):
-        textboxValue = self.waitTextBox.text()
-        self.controller.changeWaitTime(textboxValue)
-        self.waitTextBox.setText("")
+    def hide(self):
+        self.controller.setCustomDims(self.width.text(), self.height.text())
+        self.controller.setWaitTime(self.wait.text())
+        super().hide()
 
     def mainView(self):
         self.hide()

@@ -7,6 +7,7 @@ from Views.SelectAppGUI import *
 class DetectController:
     #executable list
     #constructor with one param
+
     def __init__(self):
          self.appSelectGUI = SelectAppGUI(self)
          self.fileID = 0
@@ -14,7 +15,7 @@ class DetectController:
         # self.selectedSource = None
     #read in from speaker and turn into WAV
 
-    def AudioToWav(self):
+    def audioToWav(self):
          temp_dir = "TemporaryFiles\\"
          #read in sound from speaker
          #print((sd.query_devices()))
@@ -32,13 +33,6 @@ class DetectController:
      #     # perform noise reduction
      #     reduced_noise = nr.reduce_noise(y=data, sr=rate)
      #     wavfile.write(temp_dir + "song.wav", rate, reduced_noise)
-
-
-
-
-
-
-
 
     #reads in process names from taskmanager and adds to set
     # def detectSources(self):
