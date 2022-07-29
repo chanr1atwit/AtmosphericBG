@@ -13,7 +13,7 @@ TASKS:
 
 
 '''
-class SamplingTimer:
+class SamplingController:
 
     #the audio parameter is a string path to the audio file.
     def __init__(self,sampleTime,waitTime):
@@ -21,6 +21,7 @@ class SamplingTimer:
         self.sampleTime = sampleTime
         self.waitTime = waitTime
         self.mainThread = threading.Thread(target=self.mainSample)
+        self.BPMThread = threading.Thraed(target=self.sampleBPM)
         self.model = TensorflowPredictMusiCNN(graphFilename="genre_tzanetakis-musicnn-msd-1.pb")
         self.count = 0
         self.offset = 0
@@ -37,6 +38,7 @@ class SamplingTimer:
                 #Does actual sample
                 if self.offset == 14 and not workdone:
                     self.performAnalysis()
+
             self.finished = False
             threading.Thread(target=self.timer, args=(self.getWaitTime(),)).start()
             while not self.finished:
@@ -45,10 +47,9 @@ class SamplingTimer:
     def appendAudio(self, audioPath):
         if self.offset == 14:
             self.offset = 0
-        loader = ess.MonoLoader(filename=f"{audioPath}\\{self.offset}",sampleRate=self.samRate)
-        audio = loader()
+        self.loader = ess.MonoLoader(filename=f"{audioPath}\\{self.offset}.wav",sampleRate=self.samRate)
+        audio = self.loader()
         self.array[self.offset*self.samRate:(self.offset+1)*self.samRate] = audio
-        #np.append(self.array,audio)
         self.offset+=1
 
     def timer(self,timer):
@@ -70,13 +71,12 @@ class SamplingTimer:
     def performAnalysis(self):
         #Uses the model
         scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
-        write(f"{getcwd()}\\TemporaryFiles\\audioResult.wav",self.samRate, scaled)
+        write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
         audio = ess.MonoLoader(filename=f"{getcwd()}\\TemporaryFiles\\audioResult.wav",sampleRate=self.samRate)
         self.activations = self.model(audio)
-        #time.sleep(self.sampleTime)
 
     def sampleBPM(self):
         #returns the bgm based data from essential
         self.rhythm_extractor = ess.RhythmExtractor2013(method="multifeature")
-        bpm, beats, beats_confidence, _, beats_intervals = rhythm_extractor(self.array)
+        bpm, beats, beats_confidence, _, beats_intervals = rhythm_extractor(self.loader)
         return bpm, beats, beats_confidence, _, beats_intervals
