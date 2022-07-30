@@ -8,14 +8,15 @@ class DetectController:
     #executable list
     #constructor with one param
 
-    def __init__(self):
+    def __init__(self,core):
+         self.core = core
          self.appSelectGUI = SelectAppGUI(self)
          self.fileID = 0
         # self.execList = set(['spotify.exe','discord.exe','msedge.exe','chrome.exe'])
         # self.selectedSource = None
     #read in from speaker and turn into WAV
 
-    def audioToWav(self):
+    def AudioToWav(self):
          temp_dir = "TemporaryFiles\\"
          #read in sound from speaker
          #print((sd.query_devices()))

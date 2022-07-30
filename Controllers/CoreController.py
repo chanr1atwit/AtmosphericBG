@@ -19,7 +19,7 @@ class CoreController:
         self.app = QApplication(argv)
 
         self.config = configparser.ConfigParser()
-        self.config.read("Files\\userconfig.ini")
+        self.config.read("Files/userconfig.ini")
 
         self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
