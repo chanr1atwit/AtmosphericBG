@@ -2,13 +2,12 @@ import sys
 from PyQt5 import uic
 # from PySide2 import QtWidgets
 import subprocess
-from PyQt5.QtWidgets import QPushButton, QFileDialog, QMenu
+
+
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QPushButton, QFileDialog
 # from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QDialog, QApplication, QWidget, QMainWindow, QAction, QWidgetAction, QPushButton
 from qt_material import apply_stylesheet
-from PyQt5.QtCore import QSize 
 # create the application and the main window
 
 def open_a_program(self):
@@ -89,6 +88,9 @@ class UI(QtWidgets.QMainWindow):
 
     def dark_red(self):
         apply_stylesheet(app, theme='dark_red.xml')
+
+    def dynamic(self):
+        apply_stylesheet()
     
 if __name__ == "__main__":
         app = QtWidgets.QApplication(sys.argv)

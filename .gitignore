@@ -37,3 +37,5 @@ Thumbs.db
 # Custom #
 */__pycache__/
 .vs/
+*ABGvenv
+*.code-workspace

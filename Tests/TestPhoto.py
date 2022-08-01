@@ -63,7 +63,7 @@ def testAddTags():
     return ok
     
 def runTests():
-    swText("Testing Photo.py")
+    header("Testing Photo.py")
 
     if not testPhoto():
        sys.exit()
@@ -77,7 +77,7 @@ def runTests():
     if not testAddTags():
         sys.exit()
 
-    swText("Done testing Photo.py")
+    header("Done testing Photo.py")
 
 if __name__ == "__main__":
     runTests()
