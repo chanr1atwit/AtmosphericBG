@@ -61,7 +61,7 @@ class CoreController:
 
     # Write current configuration to file
     def writeConfiguration(self):
-        with open("Files\\userconfig.ini", "w") as file:
+        with open("Files/userconfig.ini", "w") as file:
             self.config.write(file)
 
 ### Settings GUI functions
