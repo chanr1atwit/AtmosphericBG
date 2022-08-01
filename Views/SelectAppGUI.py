@@ -1,5 +1,7 @@
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
+import threading
+
 
 from Views.GUI import *
 
@@ -7,34 +9,69 @@ class SelectAppGUI(GUI):
     #remember to add controller back
     def __init__(self, controller):
         # Access to controller functions that do the work
-        super().__init__(controller, 1500, 800, "Atmospheric BG - App Selection")
+        super().__init__(controller, 250, 250, "Atmospheric BG - App Selection")
 
-        addButton = QtW.QPushButton("Add New Soure App", self)
-        addButton.setGeometry(QtC.QRect(175, 100, 131, 40))             
         
-        backButton = QtW.QPushButton("Back", self)
-        backButton.setGeometry(QtC.QRect(175,200,131,40))
-        backButton.clicked.connect(self.mainView)
+        startRecord = QtW.QPushButton("Record Audio", self)
+        startRecord.setGeometry(QtC.QRect(55, 25, 131, 40))   
+        startRecord.clicked.connect(controller.AudioToWav)          
         
-    def addnew():
-        pass
+        backButton = QtW.QPushButton("Back", self) 
+        backButton.setGeometry(QtC.QRect(55,100,131,40))  
+        backButton.clicked.connect(self.mainView) 
+
+        # centralWidget = QtW.QWidget()
+        # self.layout = QtW.QVBoxLayout(centralWidget)
+        # self.setCentralWidget(centralWidget)
+       
+
+
+        
+
+    # def AddNew(self):
+    #     self.textGUI = GUI(None, 250, 250,"Add New Source")
+    #     textbox = QtW.QLineEdit(self.textGUI)
+    #     textbox.setGeometry(QtC.QRect(75, 50, 100, 30))
+    #     add = QtW.QPushButton("Add Button!", self.textGUI)
+    #     add.setGeometry(QtC.QRect(65, 150, 131, 40))   
+    #     add.clicked.connect(lambda: self.controller.execList.add(textbox.text))       
+    #     self.textGUI.show()
+        
+    
 
     def show(self):
         self.displaySources()
         super().show()
-
-
-    # List of connected views
+        # thread = threading.Thread(target = self.controller.detectSources)
+        # thread.run()
+        # #print("execList",str (self.controller.execList))
+        # print("displaying sources")
+        
+     # List of connected views
     def mainView(self):
         self.hide()
 
-    def displaySources(self):
-        arr = self.controller.detectSources()
-        i = 300
-        #for each application, make new buttons(loop works!)
-        for app in arr:
-            button = QtW.QPushButton(app.Name, self)  
-            button.setGeometry(175,i,131,40)          
-            button.clicked.connect(self.mainView)
-            i += 50
+    # def displaySources(self):
+    #     arr = self.controller.detectSources()
+    #     i = 300
+    #     for app in arr:
+    #         button = QtW.QPushButton(app.Name, self)  
+    #         button.setGeometry(175,i,131,40)          
+    #         button.clicked.connect(self.selectSource(app.processID))
+    #         i += 50
+
+# class ProcessButton(QtW.QPushButton):
+#     def __init__(self,process,parent = None):
+#         super(). __init__(process.Name,parent)
+#         self.process = process
+       
+
+        
+    
+    
+    
+    
+
+
+
         

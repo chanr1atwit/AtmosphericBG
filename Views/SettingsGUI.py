@@ -16,7 +16,7 @@ class SettingsGUI(GUI):
         self.setGeometry(0, 0, 500, 500)
         self.setWindowTitle("Atmospheric BG - Advanced Settings")
         self.setWindowModality(QtC.Qt.ApplicationModal)
-        
+
         # Buttons on View
         backButton = QtW.QPushButton("Back", self)
         backButton.setGeometry(QtC.QRect(600,700,131,40))
@@ -26,11 +26,20 @@ class SettingsGUI(GUI):
         plX = 50
         plY = 50
 
-
         # Labels
         plLabel = QtW.QLabel("Photo Library Settings", self)
         plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
 
+        #Widgets for SamplingTimer
+        waitLabel = QtW.QLabel(self)
+        waitLabel.setGeometry(QtC.QRect(300,80,225,20))
+
+        self.wait = QtW.QLineEdit(self.controller.getConfiguration(
+            "Sampling", "wait", str) , self)
+        self.wait.setGeometry(QtC.QRect(300,100,225,20))
+        self.wait.setValidator(QtG.QIntValidator(30,300))
+        self.wait.textChanged.connect(lambda: self.controller.setConfiguration(
+            "Sampling", "wait", self.wait.text()))
 
         xLabel = QtW.QLabel("X", self)
         xLabel.move(plX+60,plY+117)
@@ -70,7 +79,6 @@ class SettingsGUI(GUI):
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
 
-
     def show(self):
         super().show()
         self.plCB.setChecked(self.controller.getPLState())
@@ -78,6 +86,7 @@ class SettingsGUI(GUI):
 
     def hide(self):
         self.controller.setCustomDims(self.width.text(), self.height.text())
+        self.controller.setWaitTime(self.wait.text())
         super().hide()
 
     def mainView(self):

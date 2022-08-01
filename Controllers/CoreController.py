@@ -1,8 +1,10 @@
 import sys, configparser
+
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
-#from Controllers.DetectController import *
+from Controllers.DetectController import *
+from Controllers.SamplingController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
@@ -14,19 +16,18 @@ class CoreController:
     # Holds controller over what is shown
     def __init__(self, argv):
         # Core app that runs the GUI
-        self.app = QApplication(argv)      
-        
-        self.config = configparser.ConfigParser()
-        self.config.read("Files\\userconfig.ini")
+        self.app = QApplication(argv)
 
-        # Subcontrollers
+        self.config = configparser.ConfigParser()
+        self.config.read("Files/userconfig.ini")
+
         self.photoLibraryController = PhotoLibraryController(self)
-        #self.detectController = DetectController(self)
-        #self.samplingController = SamplingController(self)
+        self.detectController = DetectController(self)
+        self.samplingController = SamplingController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
-        self.settingsGUI = SettingsGUI(self)  
+        self.settingsGUI = SettingsGUI(self)
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
@@ -35,6 +36,10 @@ class CoreController:
 
         # Enable app, exit after window is closed
         sys.exit(self.app.exec_())
+
+### Inter-controller functions
+    def sendTags(self, tags):
+        self.photoLibraryController.requestChangeBackground(tags)
 
 ### Configuration functions
     # Get configuration setting
@@ -56,7 +61,7 @@ class CoreController:
 
     # Write current configuration to file
     def writeConfiguration(self):
-        with open("Files\\userconfig.ini", "w") as file:
+        with open("Files/userconfig.ini", "w") as file:
             self.config.write(file)
 
 ### Settings GUI functions
@@ -86,6 +91,14 @@ class CoreController:
             int(width) > 99 and int(height) > 99:
             dims = [int(width), int(height)]
         self.photoLibraryController.customDims = dims
+
+    # Get wait time from sampling timer
+    def getWaitTime(self):
+        return self.samplingController.waitTime
+
+    # Set the wait time from user settings
+    def setWaitTime(self, waitTime):
+        self.samplingController.waitTime = waitTime
 
 ### List of connected views that need methods
     # Open Photo Library View
