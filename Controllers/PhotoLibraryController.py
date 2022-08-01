@@ -58,7 +58,12 @@ class PhotoLibraryController:
         choices = []
         for photo in photos:
             pTags = photo.getTags()
-            if tags[0] in pTags and tags[1] in pTags:
+            allIn = True
+            for tag in tags:
+                if tag not in pTags:
+                    allIn = False
+                    break
+            if allIn:
                 choices.append(photo)
         if self.enableDynamic:
             # Signal Photo that should be discarded after use

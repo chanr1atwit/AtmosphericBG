@@ -11,6 +11,7 @@ class PhotoLibraryGUI(GUI):
         # Call to super init
         # Window and controller defined by GUI superclass
         super().__init__(controller, 1500, 800, "Atmospheric BG - Photo Library")
+        self.status = None
 
         self.hBoxLayout = None
 
@@ -104,8 +105,7 @@ class PhotoLibraryGUI(GUI):
         mainHBox.addWidget(scrollArea)
         mainHBox.addWidget(buttons)
 
-    # List of connected views
-
+### List of connected views
     # Close current gui and return to main
     def mainView(self):
         self.controller.updateJSON()
@@ -114,9 +114,10 @@ class PhotoLibraryGUI(GUI):
     # Use GUI to allow for adding photos
     def addPhotoView(self):
         addPhotoGUI = GUI(None, 600, 400, "Add a photo")
+        addPhotoGUI.setWindowModality(QtC.Qt.ApplicationModal)
 
         linkText = QtW.QTextEdit("Photo Directory", addPhotoGUI)
-        linkText.setGeometry(QtC.QRect(75,50,200,25))
+        linkText.setGeometry(QtC.QRect(75,50,400,25))
 
         blues = QtW.QCheckBox("Blues", addPhotoGUI)
         blues.setGeometry(QtC.QRect(75, 100, 111, 20))
@@ -147,7 +148,7 @@ class PhotoLibraryGUI(GUI):
         addButton.clicked.connect(lambda : self.controller.requestAddPhoto(addPhotoGUI, linkText, tags))
 
         browseButton = QtW.QPushButton("...", addPhotoGUI)
-        browseButton.setGeometry(QtC.QRect(300, 50, 50, 25))
+        browseButton.setGeometry(QtC.QRect(480, 50, 50, 25))
         browseButton.clicked.connect(lambda : self.controller.browseFiles(addPhotoGUI, linkText))
 
         backButton = QtW.QPushButton("Back", addPhotoGUI)
@@ -156,6 +157,7 @@ class PhotoLibraryGUI(GUI):
 
         addPhotoGUI.show()
 
+    # Open the edit tags view
     def editTagsView(self):
         if self.controller.selected is None or \
            self.controller.selected.link is None or \
@@ -163,6 +165,7 @@ class PhotoLibraryGUI(GUI):
             return
 
         editTagsGUI = GUI(None, 600, 400, "Edit tags")
+        editTagsGUI.setWindowModality(QtC.Qt.ApplicationModal)
 
         pTags = self.controller.getTags()
 
@@ -220,3 +223,8 @@ class PhotoLibraryGUI(GUI):
         failure = QtW.QLabel(f"Failed to {text}.", self.status)
         failure.setGeometry(QtC.QRect(0, 0, 200, 50))
         self.status.show()
+
+    def hide(self):
+        if self.status is not None:
+            self.status.close()
+        super().hide()

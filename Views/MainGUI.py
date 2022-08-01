@@ -13,8 +13,10 @@ class MainGUI(GUI):
         # Window and controller defined by GUI superclass
         super().__init__(controller, 900, 500, "Atmospheric BG")
         
-        # Objects on View
-        #self.picture = Qp.drawImage()
+        ## Objects on View
+        ## Future work, not necessary for the app to
+        ## function but would be cool nonetheless
+        #self.picture = label that updates on screen changing through app
         
         # Lines on View
         line = QtW.QFrame(self)
