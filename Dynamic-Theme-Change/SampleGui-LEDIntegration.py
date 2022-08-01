@@ -2,7 +2,7 @@ import sys
 from PyQt5 import uic
 # from PySide2 import QtWidgets
 import subprocess
-from PyQt5.QtWidgets import QPushButton, QFileDialog
+from PyQt5.QtWidgets import QPushButton, QFileDialog, QMenu
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtGui import QIcon
 # from PyQt5 import QtWidgets
@@ -65,7 +65,10 @@ class UI(QtWidgets.QMainWindow):
         self.actionOpen_File.setShortcut('Ctrl+O')
         self.actionOpen_File.triggered.connect(self.file_open)
         self.menuFile.addAction(self.actionOpen_File)
-    
+        self.radioButton.clicked.connect(self.light_teal)
+        self.radioButton_2.clicked.connect(self.light_blue)
+        self.radioButton_3.clicked.connect(self.dark_red)
+
     def open_a_program(self):
         self.w = open_a_program(self) # calling the open_a_program function
         
@@ -97,4 +100,3 @@ if hasattr(app, 'exec'):
     app.exec()
 else:
     app.exec_()
-
