@@ -116,7 +116,7 @@ class PhotoLibraryGUI(GUI):
         addPhotoGUI = GUI(None, 600, 400, "Add a photo")
 
         linkText = QtW.QTextEdit("Photo Directory", addPhotoGUI)
-        linkText.setGeometry(QtC.QRect(75,50,200,25))
+        linkText.setGeometry(QtC.QRect(75,50,400,25))
 
         blues = QtW.QCheckBox("Blues", addPhotoGUI)
         blues.setGeometry(QtC.QRect(75, 100, 111, 20))
@@ -147,7 +147,7 @@ class PhotoLibraryGUI(GUI):
         addButton.clicked.connect(lambda : self.controller.requestAddPhoto(addPhotoGUI, linkText, tags))
 
         browseButton = QtW.QPushButton("...", addPhotoGUI)
-        browseButton.setGeometry(QtC.QRect(300, 50, 50, 25))
+        browseButton.setGeometry(QtC.QRect(480, 50, 50, 25))
         browseButton.clicked.connect(lambda : self.controller.browseFiles(addPhotoGUI, linkText))
 
         backButton = QtW.QPushButton("Back", addPhotoGUI)

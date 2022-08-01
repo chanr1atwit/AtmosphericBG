@@ -2,7 +2,7 @@ import sys, configparser
 from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
-from Controllers.DetectController import *
+#from Controllers.DetectController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
@@ -21,7 +21,7 @@ class CoreController:
 
         # Subcontrollers
         self.photoLibraryController = PhotoLibraryController(self)
-        self.detectController = DetectController(self)
+        #self.detectController = DetectController(self)
         #self.samplingController = SamplingController(self)
 
         # Connected Views
