@@ -43,7 +43,7 @@ class SettingsGUI(GUI):
 
         xLabel = QtW.QLabel("X", self)
         xLabel.move(plX+60,plY+117)
-        
+
         sizeLabel = QtW.QLabel("Custom Size", self)
         sizeLabel.setGeometry(QtC.QRect(plX,plY+75,100,16))
 
