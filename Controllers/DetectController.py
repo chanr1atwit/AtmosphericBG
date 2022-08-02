@@ -2,29 +2,34 @@
 import noisereduce as nr
 import sounddevice as sd
 from scipy.io import wavfile
-from Views.SelectAppGUI import *
+#import SamplingController
+from Views.StartAudioGUI import *
 
 class DetectController:
     #executable list
     #constructor with one param
 
-    def __init__(self):
-         self.appSelectGUI = SelectAppGUI(self)
-         self.fileID = 0
+    def __init__(self,core):
+        self.core = core
+        self.appSelectGUI = SelectAppGUI(self)
+        self.fileID = 0
         # self.execList = set(['spotify.exe','discord.exe','msedge.exe','chrome.exe'])
         # self.selectedSource = None
     #read in from speaker and turn into WAV
 
+    
+
     def audioToWav(self):
-         temp_dir = "TemporaryFiles\\"
-         #read in sound from speaker
-         #print((sd.query_devices()))
-         fs = 48000 # Hz
-         length = 15 # s
-         recording = sd.rec(frames = (int)(fs * length), samplerate=fs,channels=2)
-         sd.wait()
-         wavfile.write(temp_dir + ('song({0}).wav').format(self.fileID), fs, recording)
-         self.fileID += 1
+        temp_dir = "TemporaryFiles\\"
+        #read in sound from speaker
+        #print((sd.query_devices()))
+        fs = 48000 # Hz
+        length = 1 # s
+        recording = sd.rec(frames = (int)(fs * length), samplerate=fs,channels=2)
+        sd.wait()
+        wavfile.write(temp_dir + ('song({0}).wav').format(self.fileID), fs, recording)
+        self.fileID += 1
+        
 
    
   

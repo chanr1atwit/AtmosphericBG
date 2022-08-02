@@ -4,11 +4,11 @@ from PyQt5.QtWidgets import QApplication
 
 from Controllers.PhotoLibraryController import *
 from Controllers.DetectController import *
-from Controllers.SamplingController import *
+#from Controllers.SamplingController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
-from Views.SelectAppGUI import *
+from Views.StartAudioGUI import *
 
 class CoreController:
     # Create all elements of the app
@@ -23,7 +23,7 @@ class CoreController:
 
         self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
-        self.samplingController = SamplingController(self)
+        #self.samplingController = SamplingController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -117,3 +117,5 @@ class CoreController:
     # Open Settings View
     def settingsView(self):
         self.settingsGUI.show()
+    
+    
