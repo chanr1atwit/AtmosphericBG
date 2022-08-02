@@ -1,26 +1,16 @@
 import sys
-from PyQt5 import uic
-# from PySide2 import QtWidgets
 import subprocess
 
+from PyQt5 import uic
+# from PySide2 import QtWidgets
 
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QPushButton, QFileDialog
 # from PyQt5 import QtWidgets
 from qt_material import apply_stylesheet
 # create the application and the main window
 
-def open_a_program(self):
-    try:
-        # browse for an application
-        path, _ = QFileDialog.getOpenFileName(self, 'Open a program', QtCore.QDir.rootPath(), '*.exe')
-
-        # if an application is selected, and not cancelled
-        if path != ('', ''):
-            # run application
-            subprocess.run([path])
-    except Exception as e:
-        print(e) # print exceptions
+###DISECTING THIS FILE AND TURNING INTO TWO PROPER CONTROLLERS
 
 class UI(QtWidgets.QMainWindow):
     def __init__(self):
@@ -66,19 +56,7 @@ class UI(QtWidgets.QMainWindow):
         self.menuFile.addAction(self.actionOpen_File)
         self.radioButton.clicked.connect(self.light_teal)
         self.radioButton_2.clicked.connect(self.light_blue)
-        self.radioButton_3.clicked.connect(self.dark_red)
-
-    def open_a_program(self):
-        self.w = open_a_program(self) # calling the open_a_program function
-        
-    def file_open(self):
-        name, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Open File', options=QtWidgets.QFileDialog.DontUseNativeDialog)
-        file = open(name, 'r')
-        with file:
-            text = file.read()
-            self.text_output.setText(text)
-
-        #Change theme when button is clicked
+        self.radioButton_3.clicked.connect(self.dark_red
         
     def light_teal(self):
         apply_stylesheet(app, theme='light_teal.xml')
@@ -91,14 +69,3 @@ class UI(QtWidgets.QMainWindow):
 
     def dynamic(self):
         apply_stylesheet()
-    
-if __name__ == "__main__":
-        app = QtWidgets.QApplication(sys.argv)
-        window = QtWidgets.QMainWindow()
-        UIWindow = UI()
-        UIWindow.show()
-        app.exec_()
-if hasattr(app, 'exec'):
-    app.exec()
-else:
-    app.exec_()

@@ -22,15 +22,8 @@ class SettingsGUI(GUI):
         backButton.setGeometry(QtC.QRect(600,700,131,40))
         backButton.clicked.connect(self.mainView)
 
-        # Scales for different sections
-        plX = 50
-        plY = 50
 
-        # Labels
-        plLabel = QtW.QLabel("Photo Library Settings", self)
-        plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
-
-        #Widgets for SamplingTimer
+### WIDGETS FOR SAMPLING TIMER
         waitLabel = QtW.QLabel(self)
         waitLabel.setGeometry(QtC.QRect(300,80,225,20))
 
@@ -40,6 +33,15 @@ class SettingsGUI(GUI):
         self.wait.setValidator(QtG.QIntValidator(30,300))
         self.wait.textChanged.connect(lambda: self.controller.setConfiguration(
             "Sampling", "wait", self.wait.text()))
+
+### WIDGETS FOR PHOTO LIBRARY
+        # Base location for sections
+        plX = 50
+        plY = 50
+
+        # Labels
+        plLabel = QtW.QLabel("Photo Library Settings", self)
+        plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
 
         xLabel = QtW.QLabel("X", self)
         xLabel.move(plX+60,plY+117)
@@ -78,6 +80,21 @@ class SettingsGUI(GUI):
         self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
+
+### WIDGETS FOR LED CONTROLLER
+        ledX = 50
+        ledY = 300
+
+        findProgram = QtW.QPushButton("Re-assign LED App", self)
+        findProgram.setGeometry(QtC.QRect(ledX, ledY, 170, 50))
+        findProgram.clicked.connect(self.controller.findLEDProgram)
+
+        runProgram = QtW.QPushButton("Run LED App", self)
+        runProgram.setGeometry(QtC.QRect(ledX, ledY + 75, 170, 50))
+        runProgram.clicked.connect(self.controller.runLEDApp)
+
+### WIDGETS FOR THEME CHANGER
+        
 
     def show(self):
         super().show()

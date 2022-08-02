@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication
 from Controllers.PhotoLibraryController import *
 from Controllers.DetectController import *
 from Controllers.SamplingController import *
+from Controllers.LEDController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
@@ -24,6 +25,7 @@ class CoreController:
         self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
         self.samplingController = SamplingController(self)
+        self.ledController = 
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -101,10 +103,20 @@ class CoreController:
     def setWaitTime(self, waitTime):
         self.samplingController.waitTime = waitTime
 
+    # Find the location of the LED app
+    def findLEDProgram(self):
+        self.ledController.findLEDProgram()
+
+    # Open the LED app
+    def runLEDApp(self):
+        self.ledController.runLEDApp()
+
 ### List of connected views that need methods
     # Open Photo Library View
     def photoLibraryView(self):
         self.photoLibraryController.photoGUI.show()
+        if self.ledController.path is not None:
+            self.setConfiguration("Settings", "ledprogram", str(path))
 
     # Open Selection View
     def selectionView(self):
