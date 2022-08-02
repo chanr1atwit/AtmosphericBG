@@ -88,7 +88,6 @@ class CoreController:
     def setDynamicState(self, state):
         self.photoLibraryController.enableDynamic = state
         self.setConfiguration("PhotoLibrary", "dynamic", state)
-        print(f"{self.config['PhotoLibrary']['dynamic']}")
 
     # Set custom dimensions, check if valid
     def setCustomDims(self, width, height):
