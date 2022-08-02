@@ -1,13 +1,10 @@
-import subprocess, os
+import subprocess
 
 import PyQt5.QtWidgets as QtW
 import PyQt5.QtCore as QtC
 
 
-class CoreController:
-    # Create all elements of the app
-    # Views, Controllers
-    # Holds controller over what is shown
+class LEDController:
     def __init__(self, core):
         # Reference to core controller
         self.core = core
@@ -27,6 +24,7 @@ class CoreController:
             # Check if application found
             if path == "":
                 return
+
             # Assign the path
             self.path = path
 

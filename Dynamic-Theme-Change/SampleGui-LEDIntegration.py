@@ -29,15 +29,15 @@ class UI(QtWidgets.QMainWindow):
         self.width = 300
         self.height = 200
 
-        # create and configure button
-        # also assigned shortcut Ctrl+O
-        self.pushButton1 = QPushButton("ABG - LED", self)
-        self.pushButton1.setShortcut("Ctrl+O")
-        self.pushButton1.move(100, 60)
-        self.pushButton1.setToolTip("ABG - LED")
+        ## create and configure button
+        ## also assigned shortcut Ctrl+O
+        #self.pushButton1 = QPushButton("ABG - LED", self)
+        #self.pushButton1.setShortcut("Ctrl+O")
+        #self.pushButton1.move(100, 60)
+        #self.pushButton1.setToolTip("ABG - LED")
 
-        # on click functions for each button
-        self.pushButton1.clicked.connect(self.open_a_program)
+        ## on click functions for each button
+        #self.pushButton1.clicked.connect(self.open_a_program)
 
         # initialize main window
         self.setWindowTitle(self.title)
@@ -48,11 +48,11 @@ class UI(QtWidgets.QMainWindow):
         self.actionLight.triggered.connect(self.light_teal)
         self.actionNeutral.triggered.connect(self.light_blue)
         self.actionDark.triggered.connect(self.dark_red)
-        self.actionOpen_File = QtWidgets.QAction(self)
-        self.actionOpen_File.setObjectName("actionOpen_File")
-        self.actionOpen_File.setStatusTip("Open File")
-        self.actionOpen_File.setShortcut('Ctrl+O')
-        self.actionOpen_File.triggered.connect(self.file_open)
+        #self.actionOpen_File = QtWidgets.QAction(self)
+        #self.actionOpen_File.setObjectName("actionOpen_File")
+        #self.actionOpen_File.setStatusTip("Open File")
+        #self.actionOpen_File.setShortcut('Ctrl+O')
+        #self.actionOpen_File.triggered.connect(self.file_open)
         self.menuFile.addAction(self.actionOpen_File)
         self.radioButton.clicked.connect(self.light_teal)
         self.radioButton_2.clicked.connect(self.light_blue)

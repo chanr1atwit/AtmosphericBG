@@ -1,4 +1,5 @@
 # SettingsGUI class, last edited 6/23/2022
+from subprocess import _TXT
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from PyQt5 import QtGui as QtG
@@ -94,10 +95,41 @@ class SettingsGUI(GUI):
         runProgram.clicked.connect(self.controller.runLEDApp)
 
 ### WIDGETS FOR THEME CHANGER
+        tX = 400
+        tY = 300
+
+        self.tealTheme = QtW.QRadioButton("Teal", self)
+        self.tealTheme.setGeometry(QtC.QRect(tX, tY, 170, 50))
+        self.tealTheme.toggled.connect(lambda : self.controller.setTheme('light_teal.xml'))
+
+        self.blueTheme = QtW.QRadioButton("Teal", self)
+        self.blueTheme.setGeometry(QtC.QRect(tX, tY+20, 170, 50))
+        self.blueTheme.toggled.connect(lambda : self.controller.setTheme('light_blue.xml'))
         
+        self.redTheme = QtW.QRadioButton("Teal", self)
+        self.redTheme.setGeometry(QtC.QRect(tX, tY+40, 170, 50))
+        self.redTheme.toggled.connect(lambda : self.controller.setTheme('dark_red.xml'))
+
+        self.dynamicTheme = QtW.QRadioButton("Dynamic", self)
+        self.dynamicTheme.setGeometry(QtC.QRect(tX, tY+60, 170, 50))
+        self.dynamicTheme.toggled.connect(lambda : self.controller.setTheme('default'))
+
+    # Sets the radio button to the proper theme
+    # Doesn't actually set the theme, that is
+    # done in the core controller
+    def setOpenTheme(self, theme):
+        if theme == 'light_teal.xml':
+            self.tealTheme.setChecked(True)
+        elif theme == 'light_blue.xml':
+            self.blueTheme.setChecked(True)
+        elif theme == 'dark_red.xml':
+            self.redTheme.setChecked(True)
+        else:
+            self.dynamicTheme.setChecked(True)
 
     def show(self):
         super().show()
+        self.setOpenTheme(self.controller.getTheme())
         self.plCB.setChecked(self.controller.getPLState())
         self.dynamicCB.setChecked(self.controller.getDynamicState())
 
