@@ -1,5 +1,4 @@
-# SettingsGUI class, last edited 6/23/2022
-from subprocess import _TXT
+# SettingsGUI class, last edited 6/23/2022 
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from PyQt5 import QtGui as QtG
@@ -16,7 +15,10 @@ class SettingsGUI(GUI):
         # Window setup
         self.setGeometry(0, 0, 500, 500)
         self.setWindowTitle("Atmospheric BG - Advanced Settings")
-        self.setWindowModality(QtC.Qt.ApplicationModal)
+
+        # First time open var to prevent theme
+        # from changing when using dynamic mode
+        self.open = True
 
         # Buttons on View
         backButton = QtW.QPushButton("Back", self)
@@ -102,16 +104,16 @@ class SettingsGUI(GUI):
         self.tealTheme.setGeometry(QtC.QRect(tX, tY, 170, 50))
         self.tealTheme.toggled.connect(lambda : self.controller.setTheme('light_teal.xml'))
 
-        self.blueTheme = QtW.QRadioButton("Teal", self)
-        self.blueTheme.setGeometry(QtC.QRect(tX, tY+20, 170, 50))
+        self.blueTheme = QtW.QRadioButton("Blue", self)
+        self.blueTheme.setGeometry(QtC.QRect(tX, tY+30, 170, 50))
         self.blueTheme.toggled.connect(lambda : self.controller.setTheme('light_blue.xml'))
         
-        self.redTheme = QtW.QRadioButton("Teal", self)
-        self.redTheme.setGeometry(QtC.QRect(tX, tY+40, 170, 50))
+        self.redTheme = QtW.QRadioButton("Red", self)
+        self.redTheme.setGeometry(QtC.QRect(tX, tY+60, 170, 50))
         self.redTheme.toggled.connect(lambda : self.controller.setTheme('dark_red.xml'))
 
         self.dynamicTheme = QtW.QRadioButton("Dynamic", self)
-        self.dynamicTheme.setGeometry(QtC.QRect(tX, tY+60, 170, 50))
+        self.dynamicTheme.setGeometry(QtC.QRect(tX, tY+90, 170, 50))
         self.dynamicTheme.toggled.connect(lambda : self.controller.setTheme('default'))
 
     # Sets the radio button to the proper theme
@@ -129,13 +131,15 @@ class SettingsGUI(GUI):
 
     def show(self):
         super().show()
-        self.setOpenTheme(self.controller.getTheme())
+        if self.open:
+            self.setOpenTheme(self.controller.getTheme())
+            self.open = False
         self.plCB.setChecked(self.controller.getPLState())
         self.dynamicCB.setChecked(self.controller.getDynamicState())
 
     def hide(self):
         self.controller.setCustomDims(self.width.text(), self.height.text())
-        self.controller.setWaitTime(self.wait.text())
+        #self.controller.setWaitTime(self.wait.text())
         super().hide()
 
     def mainView(self):

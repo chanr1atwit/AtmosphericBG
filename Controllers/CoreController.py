@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import QApplication
 from qt_material import apply_stylesheet
 
 from Controllers.PhotoLibraryController import *
-from Controllers.DetectController import *
-from Controllers.SamplingController import *
+#from Controllers.DetectController import *
+#from Controllers.SamplingController import *
 from Controllers.LEDController import *
 
 from Views.MainGUI import *
@@ -24,8 +24,8 @@ class CoreController:
         self.config.read("Files\\userconfig.ini")
 
         self.photoLibraryController = PhotoLibraryController(self)
-        self.detectController = DetectController(self)
-        self.samplingController = SamplingController(self)
+        #self.detectController = DetectController(self)
+        #self.samplingController = SamplingController(self)
         self.ledController = LEDController(self)
 
         # Connected Views
@@ -34,6 +34,7 @@ class CoreController:
 
         # Handle theme changing
         self.theme = self.getConfiguration("Settings", "theme", str)
+        self.setTheme(self.theme)
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
@@ -114,12 +115,13 @@ class CoreController:
     def setTheme(self, theme, tags=None):
         # Save the configuration if no tags
         if tags is None:
+            self.theme = theme
             self.setConfiguration("Settings", "theme", theme)
             apply_stylesheet(self.app, theme)
             return
 
         theme = self.chooseTheme(tags)
-        apply_stylesheet(self.app, theme
+        apply_stylesheet(self.app, theme)
 
     # Find the location of the LED app
     def findLEDProgram(self):
