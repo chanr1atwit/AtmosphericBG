@@ -1,5 +1,5 @@
 import argparse
-from src.stream_analyzer import Stream_Analyzer
+from stream_analyzer import Stream_Analyzer
 import time
 
 def parse_args():

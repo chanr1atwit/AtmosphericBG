@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPainter as Qp
 from PyQt5 import QtCore as QtC
 from Views.GUI import *
 
+
 class MainGUI(GUI):
     # This function sets up the MainGUI view
     # NOTE: Uses a reference to the controller
@@ -39,7 +40,9 @@ class MainGUI(GUI):
         # Check boxes
         self.visualizerCB = QtW.QCheckBox("Enable Visualizer", self)
         self.visualizerCB.setGeometry(QtC.QRect(570, 360, 111, 20))
+        #self.visualizerCB.clicked.connect()
         
+
         self.visualizerDemoCD = QtW.QCheckBox("Visualizer Demo", self)
         self.visualizerDemoCD.setGeometry(QtC.QRect(740, 360, 111, 20))
         

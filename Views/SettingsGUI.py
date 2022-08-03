@@ -5,6 +5,7 @@ from PyQt5 import QtGui as QtG
 
 from Views.GUI import *
 
+
 class SettingsGUI(GUI):
     # This function sets up the SettingsGIU view
     # NOTE: Uses a reference to the controller
@@ -79,6 +80,9 @@ class SettingsGUI(GUI):
         self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
+
+        
+
 
     def show(self):
         super().show()

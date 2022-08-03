@@ -3,7 +3,7 @@ import numpy as np
 import time, sys, math
 import pygame
 from collections import deque
-from src.utils import Button
+from utils import Button
 from matplotlib import cm
 
 class Spectrum_Visualizer:
@@ -51,7 +51,7 @@ class Spectrum_Visualizer:
     def toggle_history_mode(self):
         #edit this
         if self.plot_audio_history:
-            self.bg_color           = 10    #Background color
+            self.bg_color           = 10   #Background color
             self.decay_speed        = 0.10  #Vertical decay of slow bars
             self.inter_bar_distance = 0
             self.avg_energy_height  = 0.1125
