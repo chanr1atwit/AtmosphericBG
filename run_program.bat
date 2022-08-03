@@ -1,4 +1,4 @@
 @echo off
-.\ABGvenv\Scripts\python.exe Visualizer\run_FFT_analyzer.py
+.\ABGvenv\Scripts\python.exe main.py
 
 cmd /k
