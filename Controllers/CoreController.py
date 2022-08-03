@@ -1,4 +1,4 @@
-import sys, configparser
+import sys, configparser, threading
 
 from PyQt5.QtWidgets import QApplication
 
@@ -9,6 +9,8 @@ from Controllers.DetectController import *
 from Views.MainGUI import *
 from Views.SettingsGUI import *
 from Views.StartAudioGUI import *
+
+import Visualizer.run_FFT_analyzer as visual
 
 class CoreController:
     # Create all elements of the app
@@ -25,9 +27,20 @@ class CoreController:
         self.detectController = DetectController(self)
         #self.samplingController = SamplingController(self)
 
+        self.enableVisualizer = self.getConfiguration("Visualizer","enabled", bool)
+        if self.enableVisualizer:
+            self.visualizerThread = threading.Thread(target=visual.run_FFT_analyzer)
+            visual.setKill(False)
+            self.visualizerThread.start()
+        else:
+            visual.setKill(True)
+            self.visualizerThread = None
+
         # Connected Views
         self.mainGUI = MainGUI(self)
         self.settingsGUI = SettingsGUI(self)
+
+        
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
@@ -76,8 +89,6 @@ class CoreController:
         self.photoLibraryController.enablePL = state
         self.setConfiguration("PhotoLibrary", "library", state)
 
-
-
     # Get enable state of dyanmic generation
     def getDynamicState(self):
         return self.photoLibraryController.enableDynamic
@@ -105,6 +116,14 @@ class CoreController:
     def setWaitTime(self, waitTime):
         self.samplingController.waitTime = waitTime
 
+    def setVisualizerState(self, state):
+        if state:
+            self.visualizerThread = threading.Thread(target=visual.run_FFT_analyzer)
+            self.visualizerThread.start()
+        else:
+            visual.setKill(True)
+            self.visualizerThread.join()
+            self.visualizerThread = None
 ### List of connected views that need methods
     # Open Photo Library View
     def photoLibraryView(self):

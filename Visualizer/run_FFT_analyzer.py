@@ -1,5 +1,5 @@
 import argparse
-from stream_analyzer import Stream_Analyzer
+from Visualizer.stream_analyzer import Stream_Analyzer
 import time
 
 def parse_args():
@@ -27,6 +27,11 @@ def convert_window_ratio(window_ratio):
         return float_ratio
     raise ValueError('window_ratio should be in the format: float/float')
 
+kill = False
+
+def setKill(state):
+    kill = state
+
 def run_FFT_analyzer():
     args = parse_args()
     window_ratio = convert_window_ratio(args.window_ratio)
@@ -46,7 +51,7 @@ def run_FFT_analyzer():
 
     fps = 60  #How often to update the FFT features + display
     last_update = time.time()
-    while True:
+    while not kill:
         if (time.time() - last_update) > (1./fps):
             last_update = time.time()
             raw_fftx, raw_fft, binned_fftx, binned_fft = ear.get_audio_features()

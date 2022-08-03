@@ -3,8 +3,8 @@ import time, math, scipy
 from collections import deque
 from scipy.signal import savgol_filter
 
-from fft import getFFT
-from utils import *
+from Visualizer.fft import getFFT
+from Visualizer.utils import *
 
 class Stream_Analyzer:
     """
@@ -41,14 +41,14 @@ class Stream_Analyzer:
 
         #modified to use sound device library
         try:
-            from stream_reader_sounddevice import Stream_Reader
+            from Visualizer.stream_reader_sounddevice import Stream_Reader
             self.stream_reader = Stream_Reader(
                 device  = device,
                 rate    = rate,
                 updates_per_second  = updates_per_second,
                 verbose = verbose)
         except:
-            from stream_reader_sounddevice import Stream_Reader
+            from Visualizer.stream_reader_sounddevice import Stream_Reader
             self.stream_reader = Stream_Reader(
                 device  = device,
                 rate    = rate,
@@ -65,7 +65,7 @@ class Stream_Analyzer:
         if self.apply_frequency_smoothing:
             self.filter_width = round_up_to_even(0.03*self.n_frequency_bins) - 1
         if self.visualize:
-            from visualizer import Spectrum_Visualizer
+            from Visualizer.visualizer import Spectrum_Visualizer
 
         self.FFT_window_size = round_up_to_even(self.rate * FFT_window_size_ms / 1000)
         self.FFT_window_size_ms = 1000 * self.FFT_window_size / self.rate

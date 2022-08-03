@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import noisereduce as nr
 import sounddevice as sd
 from scipy.io import wavfile
 #import SamplingController

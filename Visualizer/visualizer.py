@@ -3,7 +3,7 @@ import numpy as np
 import time, sys, math
 import pygame
 from collections import deque
-from utils import Button
+from Visualizer.utils import Button
 from matplotlib import cm
 
 class Spectrum_Visualizer:

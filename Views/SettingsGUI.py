@@ -81,7 +81,12 @@ class SettingsGUI(GUI):
         self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
 
-        
+        self.visualCB = QtW.QCheckBox("Enable Visualizer", self)
+        self.visualCB.setGeometry(QtC.QRect(400, 600, 300, 30))
+        self.visualCB.toggled.connect(lambda: self.controller.setVisualizerState(self.visualCB.isChecked()))
+        self.visualCB.setChecked(self.controller.enableVisualizer)
+
+
 
 
     def show(self):
