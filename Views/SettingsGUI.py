@@ -39,8 +39,8 @@ class SettingsGUI(GUI):
 
 ### WIDGETS FOR PHOTO LIBRARY
         # Base location for sections
-        plX = 50
-        plY = 50
+        plX = 20
+        plY = 20
 
         # Labels
         plLabel = QtW.QLabel("Photo Library Settings", self)
@@ -85,15 +85,15 @@ class SettingsGUI(GUI):
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
 
 ### WIDGETS FOR LED CONTROLLER
-        ledX = 50
+        ledX = 20
         ledY = 300
 
-        findProgram = QtW.QPushButton("Re-assign LED App", self)
-        findProgram.setGeometry(QtC.QRect(ledX, ledY, 170, 50))
+        findProgram = QtW.QPushButton("Assign LED App", self)
+        findProgram.setGeometry(QtC.QRect(ledX, ledY, 180, 50))
         findProgram.clicked.connect(self.controller.findLEDProgram)
 
         runProgram = QtW.QPushButton("Run LED App", self)
-        runProgram.setGeometry(QtC.QRect(ledX, ledY + 75, 170, 50))
+        runProgram.setGeometry(QtC.QRect(ledX, ledY + 75, 180, 50))
         runProgram.clicked.connect(self.controller.runLEDApp)
 
 ### WIDGETS FOR THEME CHANGER
