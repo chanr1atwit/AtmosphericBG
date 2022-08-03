@@ -47,7 +47,7 @@ class PhotoLibraryGUI(GUI):
 
 
         mood = QtW.QComboBox()
-        mood.addItems(["Blues","Hip Hop",'Metal',"Rock","Reggae","Jazz"])
+        mood.addItems(["Blues","Classic","Country","Disco","Hip Hop","Jazz","Metal","Pop","Reggae","Rock"])
         mood.resize(131,60)
 
         changeButton = QtW.QPushButton("Change")
