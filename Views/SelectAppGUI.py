@@ -40,6 +40,7 @@ class SelectAppGUI(GUI):
     
 
     def show(self):
+        self.displaySources()
         super().show()
         # thread = threading.Thread(target = self.controller.detectSources)
         # thread.run()

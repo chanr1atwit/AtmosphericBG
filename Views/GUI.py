@@ -15,7 +15,7 @@ class GUI(QtW.QMainWindow):
         # Window setup
         self.setFixedSize(x, y)
         self.setWindowTitle(name)
-        self.setWindowModality(QtC.Qt.ApplicationModal)
+        self.setWindowModality(QtC.Qt.NonModal)
         
         sizePolicy = QtW.QSizePolicy(QtW.QSizePolicy.Fixed, QtW.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
