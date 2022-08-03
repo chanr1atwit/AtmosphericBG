@@ -78,7 +78,7 @@ class SamplingController:
     def appendAudio(self, audioPath):
         if self.offset == 14:
             self.offset = 0
-        self.loader = ess.MonoLoader(filename=f"{audioPath}\\song{self.offset}.wav",sampleRate=self.samRate)
+        self.loader = ess.MonoLoader(filename=audioPath,sampleRate=self.samRate)
         audio = self.loader()
         self.array[self.offset*self.samRate:(self.offset+1)*self.samRate] = audio
         self.offset+=1

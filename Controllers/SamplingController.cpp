@@ -1,4 +1,5 @@
-#include <essentia.h>
+#include <essentia/algorithmfactory.h>
+#include <essentia/essentiamath.h>
 #include <json/value.h>
 #include <stdbool.h>
 #include <vector>
@@ -39,23 +40,23 @@ class SamplingController
 
     void mainSample()
     {
-        this.exit_flag = false;
-        while (!this.exit_flag)
+        this->exit_flag = false;
+        while (!this->exit_flag)
         {
-            this.finished = false;
+            this->finished = false;
             //INCLUDE THREAD CODE HERE
             bool workdone = false;
-            while (!this.finished)
+            while (!this->finished)
             {
-                if(!this.offset == 14 && !workdone)
+                if(this->offset == 14 && !workdone)
                 {
-                    this.performAnalysis();
+                    this->performAnalysis();
                     workdone = true;
                 }
             }
-            this.finished = false;
+            this->finished = false;
             //INCLUDE THREAD CODE HERE
-            while (!this.finished)
+            while (!this->finished)
             {
                 continue;
             }
@@ -64,41 +65,52 @@ class SamplingController
 
     void appendAudio(string audioPath)
     {
-        if (this.offset == 14)
+        if (this->offset == 14)
         {
-            this.offset = 0;
+            this->offset = 0;
         }
-        //ESSENTIA LOADER
+
+
+        // Factory for loader
+        AlgorithmFactory& factory = standard::AlgorithmFactory::instance();
+        
+        // Create loader from factory
+        Algorithm* audio = factory.create("MonoLoader", "filename", audioPath,
+            "sampleRate", this->sampleRate);
+
+        audiofile->output("audio").set(audio);
+
+        
         //std::vector<int> audio = essentia loader;
-        IntegerVector idx = IntegerVector::create(this.offset*this.sampleRate, (this.offset+1)*this.sampleRate);
+        IntegerVector idx = IntegerVector::create(this->offset*this->sampleRate, (this->offset+1)*this->sampleRate);
         //self.array[idx] = audio;
-        this.offset++;
+        this->offset++;
     }
 
     void timer(int timer)
     {
         //c++ threading sleep function here
-        this.finished = true;
+        this->finished = true;
     }
 
     int getSampleTime()
     {
-        return this.sampleTime;
+        return this->sampleTime;
     }
 
     int getWaitTime()
     {
-        return this.waitTime;
+        return this->waitTime;
     }
 
     void setSampleTime(int sampleTime)
     {
-        this.sampleTime = sampleTime;
+        this->sampleTime = sampleTime;
     }
 
     void setWaitTime(int waitTime)
     {
-        this.waitTime = waitTime;
+        this->waitTime = waitTime;
     }
 
     void performAnalysis()
@@ -111,10 +123,10 @@ class SamplingController
     {
         std::vector<string> tags;
         int count = 0;
-        for (int i = 0; i < this.metadata.length; i++)
+        for (int i = 0; i < this->metadata.size(); i++)
         {
             double probability = activations[i];
-            string label = this.metadata[i];
+            string label = this->metadata[i];
             if ((int) ((float) probability * 100) > 50)
             {
                 tags.push_back(parseTag(label));
