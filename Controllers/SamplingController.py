@@ -68,6 +68,7 @@ class SamplingController:
                 #Does actual sample
                 if self.offset == 14 and not workdone:
                     self.performAnalysis()
+                    workdone = True
             self.finished = False
             threading.Thread(target=self.timer, args=(self.getWaitTime(),)).start()
             while not self.finished:
@@ -114,12 +115,13 @@ class SamplingController:
         self.core.sendTags(tags)
 
     #This function returns a set of output data related to BPM.
+
     def sampleBPM(self):
         #returns the bgm based data from essential
         self.rhythm_extractor = ess.RhythmExtractor2013(method="multifeature")
         bpm, beats, beats_confidence, __, beats_intervals = rhythm_extractor(self.loader)
         return bpm, beats, beats_confidence, beats_intervals
-
+    
     def parseTags(self, activations):
         tags = []
         count = 0
