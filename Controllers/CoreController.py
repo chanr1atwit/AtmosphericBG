@@ -28,13 +28,7 @@ class CoreController:
         #self.samplingController = SamplingController(self)
 
         self.enableVisualizer = self.getConfiguration("Visualizer","enabled", bool)
-        if self.enableVisualizer:
-            self.visualizerThread = threading.Thread(target=visual.run_FFT_analyzer)
-            visual.setKill(False)
-            self.visualizerThread.start()
-        else:
-            visual.setKill(True)
-            self.visualizerThread = None
+        self.visualizer = visual.VisualizerObject(self.enableVisualizer)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
@@ -114,14 +108,10 @@ class CoreController:
 
     def setVisualizerState(self, state):
         self.enableVisualizer = state
-        if state:
-            visual.setKill(False)
-            self.visualizerThread = threading.Thread(target=visual.run_FFT_analyzer)
-            self.visualizerThread.start()
+        if self.enableVisualizer:
+            self.visualizer.run()
         else:
-            visual.setKill(True)
-            self.visualizerThread.join()
-            self.visualizerThread = None
+            self.visualizer.stop()
 
 ### List of connected views that need methods
     # Open Photo Library View
