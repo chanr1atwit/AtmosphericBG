@@ -1,10 +1,12 @@
 import sys, configparser
 
 from PyQt5.QtWidgets import QApplication
+from qt_material import apply_stylesheet
 
 from Controllers.PhotoLibraryController import *
-from Controllers.DetectController import *
-from Controllers.SamplingController import *
+#from Controllers.DetectController import *
+#from Controllers.SamplingController import *
+from Controllers.LEDController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
@@ -19,15 +21,20 @@ class CoreController:
         self.app = QApplication(argv)
 
         self.config = configparser.ConfigParser()
-        self.config.read("Files/userconfig.ini")
+        self.config.read("Files\\userconfig.ini")
 
         self.photoLibraryController = PhotoLibraryController(self)
-        self.detectController = DetectController(self)
-        self.samplingController = SamplingController(self)
+        #self.detectController = DetectController(self)
+        #self.samplingController = SamplingController(self)
+        self.ledController = LEDController(self)
 
         # Connected Views
         self.mainGUI = MainGUI(self)
         self.settingsGUI = SettingsGUI(self)
+
+        # Handle theme changing
+        self.theme = self.getConfiguration("Settings", "theme", str)
+        self.setTheme(self.theme)
 
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
@@ -61,7 +68,7 @@ class CoreController:
 
     # Write current configuration to file
     def writeConfiguration(self):
-        with open("Files/userconfig.ini", "w") as file:
+        with open("Files\\userconfig.ini", "w") as file:
             self.config.write(file)
 
 ### Settings GUI functions
@@ -100,10 +107,36 @@ class CoreController:
     def setWaitTime(self, waitTime):
         self.samplingController.waitTime = waitTime
 
+    # Get the current theme
+    def getTheme(self):
+        return self.theme
+
+    # Sets the current theme in configurations
+    def setTheme(self, theme, tags=None):
+        # Save the configuration if no tags
+        if tags is None:
+            self.theme = theme
+            self.setConfiguration("Settings", "theme", theme)
+            apply_stylesheet(self.app, theme)
+            return
+
+        theme = self.chooseTheme(tags)
+        apply_stylesheet(self.app, theme)
+
+    # Find the location of the LED app
+    def findLEDProgram(self):
+        self.ledController.findLEDProgram()
+
+    # Open the LED app
+    def runLEDApp(self):
+        self.ledController.runLEDApp()
+
 ### List of connected views that need methods
     # Open Photo Library View
     def photoLibraryView(self):
         self.photoLibraryController.photoGUI.show()
+        if self.ledController.path is not None:
+            self.setConfiguration("Settings", "ledprogram", str(path))
 
     # Open Selection View
     def selectionView(self):
