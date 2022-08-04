@@ -1,4 +1,4 @@
-# SettingsGUI class, last edited 6/23/2022
+# SettingsGUI class, last edited 6/23/2022 
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from PyQt5 import QtGui as QtG
@@ -16,22 +16,18 @@ class SettingsGUI(GUI):
         # Window setup
         self.setGeometry(0, 0, 500, 500)
         self.setWindowTitle("Atmospheric BG - Advanced Settings")
-        self.setWindowModality(QtC.Qt.ApplicationModal)
+
+        # First time open var to prevent theme
+        # from changing when using dynamic mode
+        self.open = True
 
         # Buttons on View
         backButton = QtW.QPushButton("Back", self)
         backButton.setGeometry(QtC.QRect(600,700,131,40))
         backButton.clicked.connect(self.mainView)
 
-        # Scales for different sections
-        plX = 50
-        plY = 50
 
-        # Labels
-        plLabel = QtW.QLabel("Photo Library Settings", self)
-        plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
-
-        #Widgets for SamplingTimer
+### WIDGETS FOR SAMPLING TIMER
         waitLabel = QtW.QLabel(self)
         waitLabel.setGeometry(QtC.QRect(300,80,225,20))
 
@@ -41,6 +37,15 @@ class SettingsGUI(GUI):
         self.wait.setValidator(QtG.QIntValidator(30,300))
         self.wait.textChanged.connect(lambda: self.controller.setConfiguration(
             "Sampling", "wait", self.wait.text()))
+
+### WIDGETS FOR PHOTO LIBRARY
+        # Base location for sections
+        plX = 20
+        plY = 20
+
+        # Labels
+        plLabel = QtW.QLabel("Photo Library Settings", self)
+        plLabel.setGeometry(QtC.QRect(plX, plY, 471, 16))
 
         xLabel = QtW.QLabel("X", self)
         xLabel.move(plX+60,plY+117)
@@ -86,8 +91,56 @@ class SettingsGUI(GUI):
         self.visualCB.setChecked(self.controller.enableVisualizer)
         self.visualCB.toggled.connect(lambda: self.controller.setVisualizerState(self.visualCB.isChecked()))
 
+### WIDGETS FOR LED CONTROLLER
+        ledX = 20
+        ledY = 300
+
+        findProgram = QtW.QPushButton("Assign LED App", self)
+        findProgram.setGeometry(QtC.QRect(ledX, ledY, 180, 50))
+        findProgram.clicked.connect(self.controller.findLEDProgram)
+
+        runProgram = QtW.QPushButton("Run LED App", self)
+        runProgram.setGeometry(QtC.QRect(ledX, ledY + 75, 180, 50))
+        runProgram.clicked.connect(self.controller.runLEDApp)
+
+### WIDGETS FOR THEME CHANGER
+        tX = 400
+        tY = 300
+
+        self.tealTheme = QtW.QRadioButton("Teal", self)
+        self.tealTheme.setGeometry(QtC.QRect(tX, tY, 170, 50))
+        self.tealTheme.toggled.connect(lambda : self.controller.setTheme('light_teal.xml'))
+
+        self.blueTheme = QtW.QRadioButton("Blue", self)
+        self.blueTheme.setGeometry(QtC.QRect(tX, tY+30, 170, 50))
+        self.blueTheme.toggled.connect(lambda : self.controller.setTheme('light_blue.xml'))
+        
+        self.redTheme = QtW.QRadioButton("Red", self)
+        self.redTheme.setGeometry(QtC.QRect(tX, tY+60, 170, 50))
+        self.redTheme.toggled.connect(lambda : self.controller.setTheme('dark_red.xml'))
+
+        self.dynamicTheme = QtW.QRadioButton("Dynamic", self)
+        self.dynamicTheme.setGeometry(QtC.QRect(tX, tY+90, 170, 50))
+        self.dynamicTheme.toggled.connect(lambda : self.controller.setTheme('default'))
+
+    # Sets the radio button to the proper theme
+    # Doesn't actually set the theme, that is
+    # done in the core controller
+    def setOpenTheme(self, theme):
+        if theme == 'light_teal.xml':
+            self.tealTheme.setChecked(True)
+        elif theme == 'light_blue.xml':
+            self.blueTheme.setChecked(True)
+        elif theme == 'dark_red.xml':
+            self.redTheme.setChecked(True)
+        else:
+            self.dynamicTheme.setChecked(True)
+
     def show(self):
         super().show()
+        if self.open:
+            self.setOpenTheme(self.controller.getTheme())
+            self.open = False
         self.plCB.setChecked(self.controller.getPLState())
         self.dynamicCB.setChecked(self.controller.getDynamicState())
 

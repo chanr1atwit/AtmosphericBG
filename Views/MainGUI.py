@@ -21,44 +21,29 @@ class MainGUI(GUI):
         
         # Lines on View
         line = QtW.QFrame(self)
-        line.setGeometry(QtC.QRect(520, 0, 2, 500))
+        line.setGeometry(QtC.QRect(0, 400, 900, 2))
         line.setFrameShadow(QtW.QFrame.Plain)
         line.setLineWidth(2)
-        line.setFrameShape(QtW.QFrame.VLine)
-
-        line2 = QtW.QFrame(self)
-        line2.setGeometry(QtC.QRect(0, 410, 520, 2))
-        line2.setFrameShadow(QtW.QFrame.Plain)
-        line2.setLineWidth(2)
-        line2.setFrameShape(QtW.QFrame.HLine)
+        line.setFrameShape(QtW.QFrame.HLine)
 
         # Labels on View
         self.imageLabel = QtW.QLabel("Currently Chosen Image:", self)
         self.imageLabel.setGeometry(QtC.QRect(30, 10, 471, 16))
 
-        self.visualizerLabel = QtW.QLabel("Selected App:", self)
-        self.visualizerLabel.setGeometry(QtC.QRect(50, 450, 291, 16))
-
-        # Check boxes
-        self.visualizerCB = QtW.QCheckBox("Enable Visualizer", self)
-        self.visualizerCB.setGeometry(QtC.QRect(570, 360, 111, 20))
-        #self.visualizerCB.clicked.connect()
-        
-
-        self.visualizerDemoCD = QtW.QCheckBox("Visualizer Demo", self)
-        self.visualizerDemoCD.setGeometry(QtC.QRect(740, 360, 111, 20))
+        #self.visualizerLabel = QtW.QLabel("Selected App:", self)
+        #self.visualizerLabel.setGeometry(QtC.QRect(50, 450, 291, 16))
         
         # Buttons on View
         libraryButton = QtW.QPushButton("Photo Library", self)
-        libraryButton.setGeometry(QtC.QRect(30, 340, 131, 40))
+        libraryButton.setGeometry(QtC.QRect(40, 440, 180, 40))
         libraryButton.clicked.connect(self.controller.photoLibraryView)
 
         settingsButton = QtW.QPushButton("Advanced Settings", self)
-        settingsButton.setGeometry(QtC.QRect(360, 340, 131, 40))
+        settingsButton.setGeometry(QtC.QRect(360, 440, 180, 40))
         settingsButton.clicked.connect(self.controller.settingsView)
         
         selectionButton = QtW.QPushButton("Selection Menu", self)
-        selectionButton.setGeometry(QtC.QRect(360, 440, 131, 40))
+        selectionButton.setGeometry(QtC.QRect(680, 440, 180, 40))
         selectionButton.clicked.connect(self.controller.selectionView)
 
 
