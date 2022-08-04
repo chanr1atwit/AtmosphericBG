@@ -21,7 +21,7 @@ class CoreController:
         self.app = QApplication(argv)
 
         self.config = configparser.ConfigParser()
-        self.config.read("Files\\userconfig.ini")
+        self.config.read("Files/userconfig.ini")
 
         self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
@@ -66,7 +66,7 @@ class CoreController:
 
     # Write current configuration to file
     def writeConfiguration(self):
-        with open("Files\\userconfig.ini", "w") as file:
+        with open("Files/userconfig.ini", "w") as file:
             self.config.write(file)
 
 ### Settings GUI functions
@@ -87,7 +87,6 @@ class CoreController:
     def setDynamicState(self, state):
         self.photoLibraryController.enableDynamic = state
         self.setConfiguration("PhotoLibrary", "dynamic", state)
-        print(f"{self.config['PhotoLibrary']['dynamic']}")
 
     # Set custom dimensions, check if valid
     def setCustomDims(self, width, height):

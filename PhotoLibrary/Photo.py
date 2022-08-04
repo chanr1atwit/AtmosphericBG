@@ -42,7 +42,6 @@ class Photo:
     # Checks the equality of two photos
     def __eq__(self, other):
         if other is None:
-            print("other is none")
             return False
         eq = self.__fileLocation == other.getLocation()
         return eq and set(self.__photoTags) == set(other.getTags())
