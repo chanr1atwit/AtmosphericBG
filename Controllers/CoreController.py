@@ -119,7 +119,7 @@ class CoreController:
 
     # Open Selection View
     def selectionView(self):
-        self.detectController.appSelectGUI.show()
+        self.detectController.audioGUI.show()
 
     # Open Settings View
     def settingsView(self):
