@@ -27,12 +27,15 @@ def convert_window_ratio(window_ratio):
         return float_ratio
     raise ValueError('window_ratio should be in the format: float/float')
 
+global kill
 kill = False
 
 def setKill(state):
+    global kill
     kill = state
 
 def run_FFT_analyzer():
+    global kill
     args = parse_args()
     window_ratio = convert_window_ratio(args.window_ratio)
 
@@ -51,12 +54,15 @@ def run_FFT_analyzer():
 
     fps = 60  #How often to update the FFT features + display
     last_update = time.time()
-    while not kill:
+    while True:
+        print(f"{kill}")
         if (time.time() - last_update) > (1./fps):
             last_update = time.time()
             raw_fftx, raw_fft, binned_fftx, binned_fft = ear.get_audio_features()
         elif args.sleep_between_frames:
             time.sleep(((1./fps)-(time.time()-last_update)) * 0.99)
+        if kill:
+            break
 
 if __name__ == '__main__':
     run_FFT_analyzer()

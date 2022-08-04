@@ -40,8 +40,6 @@ class CoreController:
         self.mainGUI = MainGUI(self)
         self.settingsGUI = SettingsGUI(self)
 
-        
-
         # On initialization, show the Main GUI
         # If it closes, the app shuts down
         # Other windows will open as dialogs
@@ -83,8 +81,6 @@ class CoreController:
         return self.photoLibraryController.enablePL
 
     # Swap enable state of PL
-
-
     def setPLState(self, state):
         self.photoLibraryController.enablePL = state
         self.setConfiguration("PhotoLibrary", "library", state)
@@ -117,13 +113,16 @@ class CoreController:
         self.samplingController.waitTime = waitTime
 
     def setVisualizerState(self, state):
+        self.enableVisualizer = state
         if state:
+            visual.setKill(False)
             self.visualizerThread = threading.Thread(target=visual.run_FFT_analyzer)
             self.visualizerThread.start()
         else:
             visual.setKill(True)
             self.visualizerThread.join()
             self.visualizerThread = None
+
 ### List of connected views that need methods
     # Open Photo Library View
     def photoLibraryView(self):

@@ -78,27 +78,23 @@ class SettingsGUI(GUI):
 
         self.dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
         self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
-        self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
+        self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
 
         self.visualCB = QtW.QCheckBox("Enable Visualizer", self)
         self.visualCB.setGeometry(QtC.QRect(400, 600, 300, 30))
-        self.visualCB.toggled.connect(lambda: self.controller.setVisualizerState(self.visualCB.isChecked()))
         self.visualCB.setChecked(self.controller.enableVisualizer)
-
-
-
+        self.visualCB.toggled.connect(lambda: self.controller.setVisualizerState(self.visualCB.isChecked()))
 
     def show(self):
         super().show()
         self.plCB.setChecked(self.controller.getPLState())
         self.dynamicCB.setChecked(self.controller.getDynamicState())
 
-    def hide(self):
+    def close(self):
         self.controller.setCustomDims(self.width.text(), self.height.text())
-        self.controller.setWaitTime(self.wait.text())
-        super().hide()
-
+        #self.controller.setWaitTime(self.wait.text())
+        super().close()
 
     def mainView(self):
         self.hide()
