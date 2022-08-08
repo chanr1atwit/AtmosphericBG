@@ -46,9 +46,7 @@ class VisualizerObject():
             elif args.sleep_between_frames:
                 time.sleep(((1./fps)-(time.time()-last_update)) * 0.99)
             if self.kill:
-                ear.stream_reader.stream.stop()
-                ear.stream_reader.terminate()
-
+                ear.visualizer.stop()
                 break
 
 def parse_args():
