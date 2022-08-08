@@ -2,6 +2,7 @@ import sys
 import ctypes
 import random
 import threading
+import win32con
 from os import remove, getcwd
 
 from PyQt5 import QtWidgets as QtW
@@ -29,6 +30,7 @@ class PhotoLibraryController:
 
         # When false, lock the sampling timer, photo is being generated
         self.finished = True
+        self.background = self.getWallpaper()
         
         # Holds custom dims for image generation
         dims = [self.core.getConfiguration("Settings", "width", str),
@@ -82,6 +84,11 @@ class PhotoLibraryController:
             threading.Thread(target=self.generationTask, args=(tags, imageLocation, self.customDims,)).start()
         else:
             self.updateBackground(photo.getLocation())
+
+    def getWallpaper(self):
+        ubuf = ctypes.create_unicode_buffer(512)
+        ctypes.windll.user32.SystemParametersInfoW(win32con.SPI_GETDESKWALLPAPER,len(ubuf),ubuf,0)
+        return ubuf.value
 
     # Generate image on a separate thread
     def generationTask(self, tags, imageLocation, dims):
