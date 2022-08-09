@@ -1,28 +1,23 @@
-#SamplingController class, last edited 7/29/2022
-import time
-import threading
-#import essentia
-#import essentia.standard as ess
-#import essentia.streaming
+# This version of Sampling Controller is part of the main application
+
 import numpy as np
 import json
 from os import getcwd
 from scipy.io.wavfile import write
 from ctypes import cdll
 
-'''
-Tony's Tasks
-1. Add code to CoreController ✅
-2. Initalize sampler in CoreController ✅
-3. Add input boxes for wait time in settings GUI ✅
-4. Add wait time to the config file
-5. Modify performAnalysis to parse activations into tags. ✅
-6. Output an array of tags using the requestChangeBackground(tags) from CoreController.photoLibraryController ✅
-7. Tell Rodney to run BPMThread alongside the mainThread
-8. Send output of sampleBPM to visualizer
-'''
 
-lib = cdll.LoadLibrary('essentia/build/src/libessentia.so')
+#from multiprocessing.connection import Client
+
+#address = ('localhost', 6000)
+#conn = Client(address, authkey=b'secret password')
+#conn.send('close')
+## can also send arbitrary objects:
+## conn.send(['a', 2.5, None, int, sum])
+#conn.close()
+
+
+
 class SamplingController:
 
     # Shouldn't ever change
@@ -56,43 +51,9 @@ class SamplingController:
         #self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files/genre_tzanetakis-musicnn-msd-1.pb")
         self.metadata =  ["blu", "cla", "cou", "dis", "hip", "jaz", "met", "pop", "reg", "roc"]
 
-    #We need a lock
-    '''def mainSample(self):
-        self.exit_flag = False
-        while not self.exit_flag:
-            self.finished = False
-            threading.Thread(target=self.timer, args=(self.getSampleTime(),)).start()
-            workdone = False
-            while not self.finished:
-                #Does actual
-                continue
-            self.performAnalysis()
-            self.finished = False
-            threading.Thread(target=self.timer, args=(self.getWaitTime(),)).start()
-            while not self.finished:
-                continue'''
-
-    #the audioPath parameter is a string path to the audio file.
-    '''def appendAudio(self, audioPath):
-        if self.offset == 14:
-            self.offset = 0
-        self.loader = ess.MonoLoader(filename=audioPath,sampleRate=self.samRate)
-        audio = self.loader()
-        self.array[self.offset*self.samRate:(self.offset+1)*self.samRate] = audio
-        self.offset+=1'''
-
-    #Creates a time buffer for the while loop in mainSample to do work.
-    '''def timer(self,timer):
-        time.sleep(timer)
-        self.finished = True'''
-
     #Returns the sampleTime
     def getSampleTime(self):
         return self.sampleTime
-
-    #Returns the waitTime
-    def getWaitTime(self):
-        return self.waitTime
 
     #Considerations of scrapping this function because the sampleTime will always be 15.
     def setSampleTime(self,sampleTime):
@@ -101,6 +62,14 @@ class SamplingController:
     #waitTime can be configured in the
     def setWaitTime(self,waitTime):
         self.waitTime = waitTime
+
+    #Returns the waitTime
+    def getWaitTime(self):
+        return self.waitTime
+
+
+
+
 
     #It converts the array of wav files to a single wav file and the model analyzes the audioResult.wav.
     def performAnalysis(self, audioFile):
