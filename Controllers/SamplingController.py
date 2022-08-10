@@ -44,14 +44,17 @@ class SamplingController:
         self.socket.send('song.wav')
         self.socket.recv()
         data = self.socket.recv()
+        
         activations = data
-        while data:
-            data = self.socket.recv()
+        while True:
             activations += data
-            if 'OK' in data:
+            if data[len(data)-2:len(data)] == "]]":
                 break
+            data = self.socket.recv()
+
         
         # Remove OK
+        print(activations)
         activations = activations[0:len(activations)-2]
 
         activations = activations.replace(']', ' ')
@@ -61,7 +64,7 @@ class SamplingController:
         activationsLists = []
         current = []
         for item in activations.split(' '):
-            if item == '':
+            if item == '' or item == '\n' or item == '\r':
                 continue
             count += 1
             current += [item]

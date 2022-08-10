@@ -30,23 +30,21 @@ def send(connection, msg):
 
 socket = Socket(6000, "bind", host='127.0.0.1')
 socket.listen(1)
+print("Waiting for main application")
 connection, address = socket.accept()
-print("found connection")
+print("Main application found")
 while True:
     msg = recv(connection)
     print(msg)
     send(connection, 'OK')
     # Functions on message, causes another recv in some cases
     if msg == 'read':
-        print("read received")
         second = recv(connection)
         send(connection, 'OK')
-        string = f"{getcwd()}/TemporaryFiles/song.wav"
         activations = performAnalysis("TemporaryFiles/song.wav")
         send(connection, activations)
 
     elif msg == 'set':
-        print("set received")
         send(connection, 'OK')
         second = recv(connection)
         sampleRate = int(second)
@@ -54,14 +52,11 @@ while True:
     # Realistically this won't be used, but just in case
     # we decide to implement
     elif msg == 'get':
-        print("get received")
         send(connection, 'OK')
         send(connection, str(sampleRate))
 
     elif msg == 'close':
-        print("close received")
         send(connection, 'OK')
         connection.close()
         break
-    print("end of iteration")
 socket.close()

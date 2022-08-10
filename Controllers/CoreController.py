@@ -1,4 +1,4 @@
-import sys, configparser, random
+import sys, configparser, random, threading
 
 from PyQt5.QtWidgets import QApplication
 from qt_material import apply_stylesheet
@@ -52,6 +52,7 @@ class CoreController:
 ### Inter-controller functions
     # Send tags from sampling timer to all controllers that need them
     def sendTags(self, tags):
+        print(tags)
         self.photoLibraryController.requestChangeBackground(tags)
         self.setTheme(None, tags)
 
@@ -61,6 +62,7 @@ class CoreController:
             self.photoLibraryController.background)
 
     def requestAnalysis(self):
+
         self.samplingController.requestPerformAnalysis()
 
     # Tell the sampling timer to shut down socket comms
@@ -72,7 +74,7 @@ class CoreController:
     def hideAll(self):
         self.photoLibraryController.hideAll()
         self.settingsGUI.hide()
-        #self.detectController.hideAll()
+        self.detectController.hideAll()
 
 ### Configuration functions
     # Get configuration setting
@@ -154,12 +156,13 @@ class CoreController:
             apply_stylesheet(self.app, theme)
             return
 
-        theme = self.chooseTheme(tags)
-        apply_stylesheet(self.app, theme)
+        #theme = self.chooseTheme(tags)
+        #print(theme)
+        #apply_stylesheet(self.app, theme)
     
     # Choose a theme 
     def chooseTheme(self, tags):
-        themes = []
+        themes = ['default']
 
         if "Metal" in tags or "Rock" in tags:
             themes += ['dark_red.xml']
@@ -169,7 +172,6 @@ class CoreController:
         if "Classic" in tags or "Hip Hop" in tags \
             or "Pop" in tags or "Reggae" in tags:
             themes += ['light_teal.xml']
-
         return random.choice(themes)
 
     # Find the location of the LED app

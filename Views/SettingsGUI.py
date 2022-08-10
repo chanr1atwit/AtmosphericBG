@@ -153,7 +153,5 @@ class SettingsGUI(GUI):
         #self.controller.setWaitTime(self.wait.text())
         super().hide()
 
-
     def mainView(self):
         self.hide()
-   

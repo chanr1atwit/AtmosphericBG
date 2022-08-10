@@ -1,5 +1,6 @@
 from os import remove
 import threading
+from time import sleep
 import sounddevice as sd
 from scipy.io import wavfile
 from Views.StartAudioGUI import *
@@ -43,6 +44,9 @@ class DetectController:
                 pass
             wavfile.write(temp_dir + 'song.wav', fs, recording)
             self.core.requestAnalysis()
-    
+            if self.kill:
+                break
+            sleep(30)
+           
     def hideAll(self):
-        self.appSelectGUI.hide()
+        self.audioGUI.hide()
