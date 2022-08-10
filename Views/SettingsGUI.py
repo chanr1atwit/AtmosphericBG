@@ -4,6 +4,8 @@ from PyQt5 import QtWidgets as QtW
 from PyQt5 import QtGui as QtG
 
 from Views.GUI import *
+from Visualizer.visualizer import Spectrum_Visualizer as visuals
+
 
 class SettingsGUI(GUI):
     # This function sets up the SettingsGIU view
@@ -81,8 +83,17 @@ class SettingsGUI(GUI):
 
         self.dynamicCB = QtW.QCheckBox("Enable Dynamic Backgrounds", self)
         self.dynamicCB.setGeometry(QtC.QRect(plX, plY+50, 170, 20))
-        self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
         self.dynamicCB.setChecked(self.controller.getConfiguration("PhotoLibrary", "dynamic", bool))
+        self.dynamicCB.toggled.connect(lambda: self.controller.setDynamicState(self.dynamicCB.isChecked()))
+
+        self.visualCB = QtW.QCheckBox("Enable Visualizer", self)
+        self.visualCB.setGeometry(QtC.QRect(400, 550, 300, 30))
+        self.visualCB.setChecked(self.controller.enableVisualizer)
+        self.visualCB.toggled.connect(lambda: self.controller.setVisualizerState(self.visualCB.isChecked()))
+
+        # self.changeColor = QtW.QPushButton("Change Color",self)
+        # self.changeColor.setGeometry(400,600,150,50)
+        
 
 ### WIDGETS FOR LED CONTROLLER
         ledX = 20
@@ -142,5 +153,7 @@ class SettingsGUI(GUI):
         #self.controller.setWaitTime(self.wait.text())
         super().hide()
 
+
     def mainView(self):
         self.hide()
+   

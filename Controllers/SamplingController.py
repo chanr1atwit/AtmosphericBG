@@ -34,6 +34,14 @@ class SamplingController:
         else:
             self.waitTime = 45
         self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
+#=======
+#        self.mainThread = threading.Thread(target=self.mainSample)
+#        self.BPMThread = threading.Thread(target=self.sampleBPM)
+#        self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files\\genre_tzanetakis-musicnn-msd-1.pb")
+#        self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
+#        self.offset = 0
+#        self.array = np.zeros(self.samRate*15)
+#>>>>>>> main
 
         #addressSend = ('localhost', 6000)
         #self.sendConn = Client(addressSend, authkey=b'cpwrd')

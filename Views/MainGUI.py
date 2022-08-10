@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPainter as Qp
 from PyQt5 import QtCore as QtC
 from Views.GUI import *
 
+
 class MainGUI(GUI):
     # This function sets up the MainGUI view
     # NOTE: Uses a reference to the controller
@@ -31,10 +32,6 @@ class MainGUI(GUI):
 
         #self.visualizerLabel = QtW.QLabel("Selected App:", self)
         #self.visualizerLabel.setGeometry(QtC.QRect(50, 450, 291, 16))
-
-        ## Check boxes
-        #self.visualizerCB = QtW.QCheckBox("Enable Visualizer", self)
-        #self.visualizerCB.setGeometry(QtC.QRect(570, 360, 111, 20))
         
         # Buttons on View
         libraryButton = QtW.QPushButton("Photo Library", self)
@@ -59,6 +56,7 @@ class MainGUI(GUI):
     # Close sockets to WSL
     def closeEvent(self, event):
         self.controller.writeConfiguration()
+        self.controller.resetBackground()
         self.controller.requestClose()
         self.controller.hideAll()
         event.accept()

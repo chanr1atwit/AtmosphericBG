@@ -1,16 +1,18 @@
-import sys, configparser
+import sys, configparser, random
 
 from PyQt5.QtWidgets import QApplication
 from qt_material import apply_stylesheet
 
 from Controllers.PhotoLibraryController import *
-#from Controllers.DetectController import *
+from Controllers.DetectController import *
 from Controllers.SamplingController import *
 from Controllers.LEDController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
-from Views.SelectAppGUI import *
+from Views.StartAudioGUI import *
+
+import Visualizer.run_FFT_analyzer as visual
 
 class CoreController:
     # Create all elements of the app
@@ -23,8 +25,11 @@ class CoreController:
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
 
+
+        self.enableVisualizer = self.getConfiguration("Visualizer","enabled", bool)
+        self.visualizer = visual.VisualizerObject(self.enableVisualizer)
         self.photoLibraryController = PhotoLibraryController(self)
-        #self.detectController = DetectController(self)
+        self.detectController = DetectController(self)
         self.samplingController = SamplingController(self)
         self.ledController = LEDController(self)
 
@@ -45,9 +50,16 @@ class CoreController:
         sys.exit(self.app.exec_())
 
 ### Inter-controller functions
-    # Distribute tags to where they are needed
+    # Send tags from sampling timer to all controllers that need them
     def sendTags(self, tags):
         self.photoLibraryController.requestChangeBackground(tags)
+        # Send the tags to change the theme
+        #self.
+
+    # Reset background to before app was opened
+    def resetBackground(self):
+        self.photoLibraryController.updateBackground(
+            self.photoLibraryController.background)
 
     # Tell the sampling timer to shut down socket comms
     def requestClose(self):
@@ -119,6 +131,13 @@ class CoreController:
     def setWaitTime(self, waitTime):
         self.samplingController.waitTime = waitTime
 
+    def setVisualizerState(self, state):
+        self.enableVisualizer = state
+        if self.enableVisualizer:
+            self.visualizer.run()
+        else:
+            self.visualizer.stop()
+
     # Get the current theme
     def getTheme(self):
         return self.theme
@@ -126,6 +145,7 @@ class CoreController:
     # Sets the current theme in configurations
     def setTheme(self, theme, tags=None):
         # Save the configuration if no tags
+        # Non dynamic themes should always return here
         if tags is None:
             self.theme = theme
             self.setConfiguration("Settings", "theme", theme)
@@ -134,6 +154,21 @@ class CoreController:
 
         theme = self.chooseTheme(tags)
         apply_stylesheet(self.app, theme)
+    
+    # Choose a theme 
+    def chooseTheme(self, tags):
+        themes = []
+
+        if "Metal" in tags or "Rock" in tags:
+            themes += ['dark_red.xml']
+        if "Blues" in tags or "Country" in tags \
+            or "Disco" in tags or "Jazz" in tags:
+            themes += ['light_blue.xml']
+        if "Classic" in tags or "Hip Hop" in tags \
+            or "Pop" in tags or "Reggae" in tags:
+            themes += ['light_teal.xml']
+
+        return random.choice(themes)
 
     # Find the location of the LED app
     def findLEDProgram(self):
@@ -152,8 +187,9 @@ class CoreController:
 
     # Open Selection View
     def selectionView(self):
-        self.detectController.appSelectGUI.show()
+        self.detectController.audioGUI.show()
 
     # Open Settings View
     def settingsView(self):
         self.settingsGUI.show()
+    
