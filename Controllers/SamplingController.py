@@ -1,22 +1,8 @@
 # This version of Sampling Controller is part of the main application
 
-import numpy as np
 import json
 from os import getcwd
-from scipy.io.wavfile import write
-from ctypes import cdll
-
-
-#from multiprocessing.connection import Client
-
-#address = ('localhost', 6000)
-#conn = Client(address, authkey=b'secret password')
-#conn.send('close')
-## can also send arbitrary objects:
-## conn.send(['a', 2.5, None, int, sum])
-#conn.close()
-
-
+from multiprocessing.connection import Client, Listener
 
 class SamplingController:
 
@@ -35,9 +21,9 @@ class SamplingController:
         "roc": "Rock"
     }
 
-    def __init__(self, core, sampleTime=15, samRate=48000):
+    def __init__(self, core, sampleTime=15, sampleRate=48000):
         self.core = core
-        self.samRate = samRate
+        self.sampleRate = sampleRate
         self.sampleTime = sampleTime
 
         # Set the wait time from configurations (if applicable),
@@ -47,9 +33,29 @@ class SamplingController:
             self.waitTime = int(waitTime)
         else:
             self.waitTime = 45
-        self.obj = lib.SamplingControlerCPP_new();
-        #self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files/genre_tzanetakis-musicnn-msd-1.pb")
-        self.metadata =  ["blu", "cla", "cou", "dis", "hip", "jaz", "met", "pop", "reg", "roc"]
+        self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
+
+        #addressSend = ('localhost', 6000)
+        #self.sendConn = Client(addressSend, authkey=b'cpwrd')
+
+        #addressRecv = ('localhost', 6001)
+        #self.listener = Listener(addressRecv, authkey=b'lpwrd')
+        #self.recvConn = self.listener.accept()
+
+    # Tell essentia main to anaylze the provided file
+    def requestPerformAnalysis(self):
+        self.sendConn.send(['read', f'{getcwd()}/TemporaryFiles/audioResult.wav'])
+        activations = self.recvConn.recv()
+        tags = self.parseTags(activations)
+        self.core.sendTags(tags)
+
+    # Alert essentia main that app is shutting down
+    def requestClose(self):
+        pass
+        #self.sendConn(['close'])
+        #self.sendConn.close()
+        #self.recvConn.close()
+        #self.listener.close()
 
     #Returns the sampleTime
     def getSampleTime(self):
@@ -61,36 +67,14 @@ class SamplingController:
 
     #waitTime can be configured in the
     def setWaitTime(self,waitTime):
+        self.sendConn.send(['set', waitTime])
         self.waitTime = waitTime
 
     #Returns the waitTime
     def getWaitTime(self):
         return self.waitTime
 
-
-
-
-
-    #It converts the array of wav files to a single wav file and the model analyzes the audioResult.wav.
-    def performAnalysis(self, audioFile):
-        #Uses the model
-        '''scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
-        write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
-        audio = ess.MonoLoader(filename=f"{getcwd()}\\TemporaryFiles\\audioResult.wav",sampleRate=self.samRate)
-        activations = self.model(audio)'''
-        #send audiofile to c++ code called performAnalysis
-        activations = lib.SamplingControlerCPP_performAnalysis(self.obj,audioFile);
-        tags = self.parseTags(activations)
-        self.core.sendTags(tags)
-
-    #This function returns a set of output data related to BPM.
-
-    '''def sampleBPM(self):
-        #returns the bgm based data from essential
-        self.rhythm_extractor = ess.RhythmExtractor2013(method="multifeature")
-        bpm, beats, beats_confidence, __, beats_intervals = rhythm_extractor(self.loader)
-        return bpm, beats, beats_confidence, beats_intervals'''
-
+    # Parse tags provided by essentia
     def parseTags(self, activations):
         tags = []
         count = 0

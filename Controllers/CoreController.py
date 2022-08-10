@@ -5,7 +5,7 @@ from qt_material import apply_stylesheet
 
 from Controllers.PhotoLibraryController import *
 #from Controllers.DetectController import *
-#from Controllers.SamplingController import *
+from Controllers.SamplingController import *
 from Controllers.LEDController import *
 
 from Views.MainGUI import *
@@ -25,7 +25,7 @@ class CoreController:
 
         self.photoLibraryController = PhotoLibraryController(self)
         #self.detectController = DetectController(self)
-        #self.samplingController = SamplingController(self)
+        self.samplingController = SamplingController(self)
         self.ledController = LEDController(self)
 
         # Connected Views
@@ -45,8 +45,20 @@ class CoreController:
         sys.exit(self.app.exec_())
 
 ### Inter-controller functions
+    # Distribute tags to where they are needed
     def sendTags(self, tags):
         self.photoLibraryController.requestChangeBackground(tags)
+
+    # Tell the sampling timer to shut down socket comms
+    def requestClose(self):
+        self.samplingController.requestClose()
+
+    # Hide all GUIs so that app can shut down
+    # Called from MainGUI, so exclude that one
+    def hideAll(self):
+        self.photoLibraryController.hideAll()
+        self.settingsGUI.hide()
+        #self.detectController.hideAll()
 
 ### Configuration functions
     # Get configuration setting

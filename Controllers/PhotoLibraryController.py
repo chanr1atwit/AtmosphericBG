@@ -50,6 +50,9 @@ class PhotoLibraryController:
         for picture in self.photoLibrary.getPhotos():
             label = self.createPixmap(picture.getLocation())
             self.photoLabels += [label]
+    # Hide all photo library related GUIs
+    def hideAll(self):
+        self.photoGUI.hide()
 
     def getChoices(self, tags):
         photos = []

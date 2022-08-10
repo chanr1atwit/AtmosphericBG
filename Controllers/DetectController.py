@@ -28,7 +28,9 @@ class DetectController:
          self.fileID += 1
          if fileID == 15:
              self.fileID = 0
-
+    
+    def hideAll(self):
+        self.appSelectGUI.hide()
 
      #     rate, data = wavfile.read(temp_dir + "song.wav")
      #     # perform noise reduction

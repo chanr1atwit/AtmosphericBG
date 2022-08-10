@@ -17,6 +17,10 @@ class PhotoLibraryGUI(GUI):
 
         self.initializeWindow()
 
+        self.addPhotoGUI = None
+
+        self.editTagsGUI = None
+
     def createButtons(self):
 
         vBoxWidget = QtW.QWidget()
@@ -113,49 +117,49 @@ class PhotoLibraryGUI(GUI):
 
     # Use GUI to allow for adding photos
     def addPhotoView(self):
-        addPhotoGUI = GUI(None, 600, 400, "Add a photo")
-        addPhotoGUI.setWindowModality(QtC.Qt.ApplicationModal)
+        self.addPhotoGUI = GUI(None, 600, 400, "Add a photo")
+        self.addPhotoGUI.setWindowModality(QtC.Qt.ApplicationModal)
 
-        linkText = QtW.QTextEdit("Photo Directory", addPhotoGUI)
+        linkText = QtW.QTextEdit("Photo Directory", self.addPhotoGUI)
         linkText.setGeometry(QtC.QRect(75,50,400,25))
 
-        blues = QtW.QCheckBox("Blues", addPhotoGUI)
+        blues = QtW.QCheckBox("Blues", self.addPhotoGUI)
         blues.setGeometry(QtC.QRect(75, 100, 111, 20))
-        classic = QtW.QCheckBox("Classic", addPhotoGUI)
+        classic = QtW.QCheckBox("Classic", self.addPhotoGUI)
         classic.setGeometry(QtC.QRect(75, 130, 111, 20))
-        country = QtW.QCheckBox("Country", addPhotoGUI)
+        country = QtW.QCheckBox("Country", self.addPhotoGUI)
         country.setGeometry(QtC.QRect(75, 160, 111, 20))
-        disco = QtW.QCheckBox("Disco", addPhotoGUI)
+        disco = QtW.QCheckBox("Disco", self.addPhotoGUI)
         disco.setGeometry(QtC.QRect(75, 190, 111, 20))
-        hiphop = QtW.QCheckBox("Hip Hop", addPhotoGUI)
+        hiphop = QtW.QCheckBox("Hip Hop", self.addPhotoGUI)
         hiphop.setGeometry(QtC.QRect(75, 220, 111, 20))
-        jazz = QtW.QCheckBox("Jazz", addPhotoGUI)
+        jazz = QtW.QCheckBox("Jazz", self.addPhotoGUI)
         jazz.setGeometry(QtC.QRect(75, 250, 111, 20))
-        metal = QtW.QCheckBox("Metal", addPhotoGUI)
+        metal = QtW.QCheckBox("Metal", self.addPhotoGUI)
         metal.setGeometry(QtC.QRect(75, 280, 111, 20))
-        pop = QtW.QCheckBox("Pop", addPhotoGUI)
+        pop = QtW.QCheckBox("Pop", self.addPhotoGUI)
         pop.setGeometry(QtC.QRect(75, 310, 111, 20))
-        reggae = QtW.QCheckBox("Reggae", addPhotoGUI)
+        reggae = QtW.QCheckBox("Reggae", self.addPhotoGUI)
         reggae.setGeometry(QtC.QRect(75, 340, 111, 20))
-        rock = QtW.QCheckBox("Rock", addPhotoGUI)
+        rock = QtW.QCheckBox("Rock", self.addPhotoGUI)
         rock.setGeometry(QtC.QRect(75, 370, 111, 20))
 
 
         tags = [blues, classic, country, disco, hiphop, jazz, metal, pop, reggae, rock]
 
-        addButton = QtW.QPushButton("Add", addPhotoGUI)
+        addButton = QtW.QPushButton("Add", self.addPhotoGUI)
         addButton.setGeometry(QtC.QRect(400, 100, 131, 40))
-        addButton.clicked.connect(lambda : self.controller.requestAddPhoto(addPhotoGUI, linkText, tags))
+        addButton.clicked.connect(lambda : self.controller.requestAddPhoto(self.addPhotoGUI, linkText, tags))
 
-        browseButton = QtW.QPushButton("...", addPhotoGUI)
+        browseButton = QtW.QPushButton("...", self.addPhotoGUI)
         browseButton.setGeometry(QtC.QRect(480, 50, 50, 25))
-        browseButton.clicked.connect(lambda : self.controller.browseFiles(addPhotoGUI, linkText))
+        browseButton.clicked.connect(lambda : self.controller.browseFiles(self.addPhotoGUI, linkText))
 
-        backButton = QtW.QPushButton("Back", addPhotoGUI)
+        backButton = QtW.QPushButton("Back", self.addPhotoGUI)
         backButton.setGeometry(QtC.QRect(400, 200, 131, 40))
-        backButton.clicked.connect(lambda : addPhotoGUI.hide())
+        backButton.clicked.connect(lambda : self.addPhotoGUI.hide())
 
-        addPhotoGUI.show()
+        self.addPhotoGUI.show()
 
     # Open the edit tags view
     def editTagsView(self):
@@ -164,53 +168,53 @@ class PhotoLibraryGUI(GUI):
            self.controller.findPhoto(self.controller.selected.link) is None:
             return
 
-        editTagsGUI = GUI(None, 600, 400, "Edit tags")
-        editTagsGUI.setWindowModality(QtC.Qt.ApplicationModal)
+        self.editTagsGUI = GUI(None, 600, 400, "Edit tags")
+        self.editTagsGUI.setWindowModality(QtC.Qt.ApplicationModal)
 
         pTags = self.controller.getTags()
 
-        blues = QtW.QCheckBox("Blues", editTagsGUI)
+        blues = QtW.QCheckBox("Blues", self.editTagsGUI)
         blues.setGeometry(QtC.QRect(75, 100, 111, 20))
         blues.setChecked("Blues" in pTags)
-        classic = QtW.QCheckBox("Classic", editTagsGUI)
+        classic = QtW.QCheckBox("Classic", self.editTagsGUI)
         classic.setGeometry(QtC.QRect(75, 130, 111, 20))
         classic.setChecked("Classic" in pTags)
-        country = QtW.QCheckBox("Country", editTagsGUI)
+        country = QtW.QCheckBox("Country", self.editTagsGUI)
         country.setGeometry(QtC.QRect(75, 160, 111, 20))
         country.setChecked("Country" in pTags)
-        disco = QtW.QCheckBox("Disco", editTagsGUI)
+        disco = QtW.QCheckBox("Disco", self.editTagsGUI)
         disco.setGeometry(QtC.QRect(75, 190, 111, 20))
         disco.setChecked("Disco" in pTags)
-        hiphop = QtW.QCheckBox("Hip Hop", editTagsGUI)
+        hiphop = QtW.QCheckBox("Hip Hop", self.editTagsGUI)
         hiphop.setGeometry(QtC.QRect(75, 220, 111, 20))
         hiphop.setChecked("Hip Hop" in pTags)
-        jazz = QtW.QCheckBox("Jazz", editTagsGUI)
+        jazz = QtW.QCheckBox("Jazz", self.editTagsGUI)
         jazz.setGeometry(QtC.QRect(75, 250, 111, 20))
         jazz.setChecked("Jazz" in pTags)
-        metal = QtW.QCheckBox("Metal", editTagsGUI)
+        metal = QtW.QCheckBox("Metal", self.editTagsGUI)
         metal.setGeometry(QtC.QRect(75, 280, 111, 20))
         metal.setChecked("Metal" in pTags)
-        pop = QtW.QCheckBox("Pop", editTagsGUI)
+        pop = QtW.QCheckBox("Pop", self.editTagsGUI)
         pop.setGeometry(QtC.QRect(75, 310, 111, 20))
         pop.setChecked("Pop" in pTags)
-        reggae = QtW.QCheckBox("Reggae", editTagsGUI)
+        reggae = QtW.QCheckBox("Reggae", self.editTagsGUI)
         reggae.setGeometry(QtC.QRect(75, 340, 111, 20))
         reggae.setChecked("Reggae" in pTags)
-        rock = QtW.QCheckBox("Rock", editTagsGUI)
+        rock = QtW.QCheckBox("Rock", self.editTagsGUI)
         rock.setGeometry(QtC.QRect(75, 370, 111, 20))
         rock.setChecked("Rock" in pTags)
 
         tags = [blues, classic, country, disco, hiphop, jazz, metal, pop, reggae, rock]
 
-        editButton = QtW.QPushButton("Edit", editTagsGUI)
+        editButton = QtW.QPushButton("Edit", self.editTagsGUI)
         editButton.setGeometry(QtC.QRect(400, 100, 131, 40))
-        editButton.clicked.connect(lambda : self.controller.requestEditTags(editTagsGUI, tags))
+        editButton.clicked.connect(lambda : self.controller.requestEditTags(self.editTagsGUI, tags))
 
-        backButton = QtW.QPushButton("Back", editTagsGUI)
+        backButton = QtW.QPushButton("Back", self.editTagsGUI)
         backButton.setGeometry(QtC.QRect(400, 200, 131, 40))
-        backButton.clicked.connect(lambda : editTagsGUI.hide())
+        backButton.clicked.connect(lambda : self.editTagsGUI.hide())
 
-        editTagsGUI.show()
+        self.editTagsGUI.show()
 
     def success(self, text):
         self.status = GUI(None, 200, 50, "Success!")
@@ -227,4 +231,8 @@ class PhotoLibraryGUI(GUI):
     def hide(self):
         if self.status is not None:
             self.status.close()
+        if self.addPhotoGUI is not None:
+            self.addPhotoGUI.hide()
+        if self.editTagsGUI is not None:
+            self.editTagsGUI.hide()
         super().hide()
