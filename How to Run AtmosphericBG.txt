@@ -8,6 +8,8 @@ pip install tensorflow
 pip install essentia-tensorflow
 pip install -r requirements2.txt
 pip install noisereduce
+pip install qt_material
+pip install pygame
 sudo apt-get install libsndfile1
 sudo apt-get install libportaudio2
 sudo apt-get install -y python3-opencv
