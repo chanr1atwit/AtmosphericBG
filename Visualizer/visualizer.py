@@ -20,7 +20,7 @@ class Spectrum_Visualizer:
         self.HEIGHT = round(self.HEIGHT)
         self.WIDTH  = round(window_ratio*self.HEIGHT)
         self.y_ext = [round(0.05*self.HEIGHT), self.HEIGHT]
-        self.cm = cm.plasma
+        self.cm = cm.winter
         #self.cm = cm.inferno
 
         self.toggle_history_mode()
@@ -222,4 +222,6 @@ class Spectrum_Visualizer:
 
         #Draw everything:
         self.screen.blit(pygame.transform.rotate(self.screen, 180), (0, 0))
+    
+   
 

@@ -11,6 +11,7 @@ class StartAudioGUI(GUI):
         # Access to controller functions that do the work
         super().__init__(controller, 250, 250, "Atmospheric BG - App Selection")
 
+        #GUI to record/stop recording
         self.thread = None
         startRecord = QtW.QPushButton("Record Audio", self)
         startRecord.setGeometry(QtC.QRect(55, 25, 131, 40))   
@@ -23,7 +24,8 @@ class StartAudioGUI(GUI):
         backButton = QtW.QPushButton("Back", self) 
         backButton.setGeometry(QtC.QRect(55,125,131,40))  
         backButton.clicked.connect(self.mainView) 
-
+        
+    #runs detection on a thread
     def startFunction(self):
         self.thread = threading.Thread(target = self.controller.audioToWav)
         self.thread.start()
