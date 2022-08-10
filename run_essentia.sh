@@ -1,1 +1,1 @@
-./ABGvenv/Scripts/python.exe essentia_main.py
+python3.10 ./essentia_main.py

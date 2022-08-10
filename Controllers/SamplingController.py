@@ -1,8 +1,6 @@
-# This version of Sampling Controller is part of the main application
-
 import json
 from os import getcwd
-from multiprocessing.connection import Client, Listener
+from Socket.Socket import *
 
 class SamplingController:
 
@@ -34,36 +32,22 @@ class SamplingController:
         else:
             self.waitTime = 45
         self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
-#=======
-#        self.mainThread = threading.Thread(target=self.mainSample)
-#        self.BPMThread = threading.Thread(target=self.sampleBPM)
-#        self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files\\genre_tzanetakis-musicnn-msd-1.pb")
-#        self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
-#        self.offset = 0
-#        self.array = np.zeros(self.samRate*15)
-#>>>>>>> main
 
-        #addressSend = ('localhost', 6000)
-        #self.sendConn = Client(addressSend, authkey=b'cpwrd')
-
-        #addressRecv = ('localhost', 6001)
-        #self.listener = Listener(addressRecv, authkey=b'lpwrd')
-        #self.recvConn = self.listener.accept()
+        self.socket = Socket(6000, "connect", host='127.0.0.1')
 
     # Tell essentia main to anaylze the provided file
     def requestPerformAnalysis(self):
-        self.sendConn.send(['read', f'{getcwd()}/TemporaryFiles/audioResult.wav'])
-        activations = self.recvConn.recv()
+        self.socket.send('read')
+        self.socket.send(f'{getcwd()}/TemporaryFiles/song.wav')
+        activationsString = self.socket.recv()
+        activations = activationsString.strip('[]').split(', ')
         tags = self.parseTags(activations)
         self.core.sendTags(tags)
 
     # Alert essentia main that app is shutting down
     def requestClose(self):
-        pass
-        #self.sendConn(['close'])
-        #self.sendConn.close()
-        #self.recvConn.close()
-        #self.listener.close()
+        self.socket.send('close')
+        self.socket.close()
 
     #Returns the sampleTime
     def getSampleTime(self):
@@ -75,7 +59,8 @@ class SamplingController:
 
     #waitTime can be configured in the
     def setWaitTime(self,waitTime):
-        self.sendConn.send(['set', waitTime])
+        self.socket.send('set')
+        self.socket.send(str(waitTime))
         self.waitTime = waitTime
 
     #Returns the waitTime
