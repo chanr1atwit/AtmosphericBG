@@ -55,4 +55,5 @@ class MainGUI(GUI):
     # Signals end of program, write to config file
     def closeEvent(self, event):
         self.controller.writeConfiguration()
+        self.controller.resetBackground()
         event.accept()
