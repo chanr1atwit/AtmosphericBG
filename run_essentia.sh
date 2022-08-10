@@ -1,1 +1,1 @@
-python3.10 ./essentia_main.py
+./ABG-WSLvenv/bin/python3.10 ./essentia_main.py

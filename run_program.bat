@@ -1,3 +1,4 @@
 @echo off
-start run_essentia.sh ubuntu.exe
+wsl "./run_essentia.sh" &
+timeout 3
 .\ABGvenv\Scripts\python.exe main.py
