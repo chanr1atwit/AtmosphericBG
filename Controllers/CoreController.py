@@ -1,16 +1,18 @@
-import sys, configparser
+import sys, configparser, threading
 
 from PyQt5.QtWidgets import QApplication
 from qt_material import apply_stylesheet
 
 from Controllers.PhotoLibraryController import *
-#from Controllers.DetectController import *
+from Controllers.DetectController import *
 #from Controllers.SamplingController import *
 from Controllers.LEDController import *
 
 from Views.MainGUI import *
 from Views.SettingsGUI import *
-from Views.SelectAppGUI import *
+from Views.StartAudioGUI import *
+
+import Visualizer.run_FFT_analyzer as visual
 
 class CoreController:
     # Create all elements of the app
@@ -24,7 +26,9 @@ class CoreController:
         self.config.read("Files\\userconfig.ini")
 
         self.photoLibraryController = PhotoLibraryController(self)
-        #self.detectController = DetectController(self)
+        self.enableVisualizer = self.getConfiguration("Visualizer","enabled", bool)
+        self.visualizer = visual.VisualizerObject(self.enableVisualizer)
+        self.detectController = DetectController(self)
         #self.samplingController = SamplingController(self)
         self.ledController = LEDController(self)
 
@@ -107,6 +111,13 @@ class CoreController:
     def setWaitTime(self, waitTime):
         self.samplingController.waitTime = waitTime
 
+    def setVisualizerState(self, state):
+        self.enableVisualizer = state
+        if self.enableVisualizer:
+            self.visualizer.run()
+        else:
+            self.visualizer.stop()
+
     # Get the current theme
     def getTheme(self):
         return self.theme
@@ -140,8 +151,9 @@ class CoreController:
 
     # Open Selection View
     def selectionView(self):
-        self.detectController.appSelectGUI.show()
+        self.detectController.audioGUI.show()
 
     # Open Settings View
     def settingsView(self):
         self.settingsGUI.show()
+    
