@@ -1,14 +1,14 @@
 #SamplingController class, last edited 7/29/2022
 import time
 import threading
-#import essentia
-#import essentia.standard as ess
-#import essentia.streaming
+import essentia
+import essentia.standard as ess
+import essentia.streaming
 import numpy as np
 import json
 from os import getcwd
 from scipy.io.wavfile import write
-from ctypes import cdll
+#from ctypes import cdll
 
 '''
 Tony's Tasks
@@ -22,7 +22,7 @@ Tony's Tasks
 8. Send output of sampleBPM to visualizer
 '''
 
-lib = cdll.LoadLibrary('essentia/build/src/libessentia.so')
+#lib = cdll.LoadLibrary('essentia/build/src/libessentia.so')
 class SamplingController:
 
     # Shouldn't ever change
@@ -52,8 +52,8 @@ class SamplingController:
             self.waitTime = int(waitTime)
         else:
             self.waitTime = 45
-        self.obj = lib.SamplingControlerCPP_new();
-        #self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files/genre_tzanetakis-musicnn-msd-1.pb")
+        #self.obj = lib.SamplingControlerCPP_new();
+        self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files/genre_tzanetakis-musicnn-msd-1.pb")
         self.metadata =  ["blu", "cla", "cou", "dis", "hip", "jaz", "met", "pop", "reg", "roc"]
 
     #We need a lock
@@ -103,14 +103,14 @@ class SamplingController:
         self.waitTime = waitTime
 
     #It converts the array of wav files to a single wav file and the model analyzes the audioResult.wav.
-    def performAnalysis(self, audioFile):
+    def performAnalysis(self):
         #Uses the model
-        '''scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
-        write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
+        #scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
+        #write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
         audio = ess.MonoLoader(filename=f"{getcwd()}\\TemporaryFiles\\audioResult.wav",sampleRate=self.samRate)
-        activations = self.model(audio)'''
+        activations = self.model(audio)
         #send audiofile to c++ code called performAnalysis
-        activations = lib.SamplingControlerCPP_performAnalysis(self.obj,audioFile);
+        #activations = lib.SamplingControlerCPP_performAnalysis(self.obj,audioFile);
         tags = self.parseTags(activations)
         self.core.sendTags(tags)
 
