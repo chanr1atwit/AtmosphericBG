@@ -10,7 +10,7 @@ class PhotoLibraryGUI(GUI):
     def __init__(self, controller):
         # Call to super init
         # Window and controller defined by GUI superclass
-        super().__init__(controller, 1500, 800, "Atmospheric BG - Photo Library")
+        super().__init__(controller, 1600, 800, "Atmospheric BG - Photo Library")
         self.status = None
 
         self.hBoxLayout = None
@@ -47,7 +47,7 @@ class PhotoLibraryGUI(GUI):
 
 
         mood = QtW.QComboBox()
-        mood.addItems(["Blues","Hip Hop",'Metal',"Rock","Reggae","Jazz"])
+        mood.addItems(["Blues","Classic","Country","Disco","Hip Hop","Jazz","Metal","Pop","Reggae","Rock"])
         mood.resize(131,60)
 
         changeButton = QtW.QPushButton("Change")

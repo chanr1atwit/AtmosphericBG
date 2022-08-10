@@ -247,10 +247,10 @@ class PhotoLibraryController:
     # Browse files on system
     def browseFiles(self, gui, text):
         # Not putting this in the GUI file as it is so short
-        file = QtW.QFileDialog.getOpenFileName(gui, 'Open file','C://',"Image files (*.jpg *.png)")
-        if file[0] == "":
+        fileName = QtW.QFileDialog.getOpenFileName(gui, 'Open file','C://',"Image files (*.jpg *.png)")
+        if fileName[0] == "":
             return
-        text.setText(str(file[0]))
+        text.setText(str(fileName[0]))
 
 class Image(QtW.QLabel):
     def __init__(self, link, parent=None):
