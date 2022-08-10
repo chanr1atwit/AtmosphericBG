@@ -19,7 +19,7 @@ def performAnalysis(audioFile):
 
     #remove(string)
 
-    return ["dis"] # activations
+    return [0.7] # activations
 
 def recv(connection):
     return connection.recv(1024).decode()
@@ -57,5 +57,5 @@ if __name__ == "__main__":
             print("close received")
             connection.close()
             break
-
+        print("end of iteration")
     socket.close()

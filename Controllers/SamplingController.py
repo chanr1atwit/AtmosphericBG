@@ -40,7 +40,9 @@ class SamplingController:
         self.socket.send('read')
         self.socket.send(f'{getcwd()}/TemporaryFiles/song.wav')
         activationsString = self.socket.recv()
-        activations = activationsString.strip('[]').split(', ')
+        activationsFloats = activationsString.strip('[]').split(', ')
+        activations = [float(i) for i in activationsFloats]
+        
         tags = self.parseTags(activations)
         self.core.sendTags(tags)
 
@@ -71,7 +73,7 @@ class SamplingController:
     def parseTags(self, activations):
         tags = []
         count = 0
-        for label, probability in zip(self.metadata, activations.mean(axis=0)):
+        for label, probability in zip(self.metadata, activations):
             if int(float(probability) * 100) > 50:
                 # Convert from metadata tag into actual tag
                 tags.append(self.CONVERSIONS[label])

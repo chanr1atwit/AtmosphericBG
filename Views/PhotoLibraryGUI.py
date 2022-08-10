@@ -55,7 +55,8 @@ class PhotoLibraryGUI(GUI):
         mood.resize(131,60)
 
         changeButton = QtW.QPushButton("Change")
-        changeButton.clicked.connect(lambda : self.controller.requestChangeBackground([mood.currentText()]))
+        changeButton.clicked.connect(lambda : self.controller.core.samplingController.requestPerformAnalysis())
+                                     #self.controller.requestChangeBackground([mood.currentText()]))
         changeButton.resize(131,60)
 
         vBox.addWidget(addButton)
