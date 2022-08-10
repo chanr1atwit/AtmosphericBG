@@ -1,5 +1,7 @@
 import json
+import ast
 from os import getcwd
+
 from Socket.Socket import *
 
 class SamplingController:
@@ -31,24 +33,38 @@ class SamplingController:
             self.waitTime = int(waitTime)
         else:
             self.waitTime = 45
-        self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))['classes']
+        self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))
 
         self.socket = Socket(6000, "connect", host='127.0.0.1')
 
     # Tell essentia main to anaylze the provided file
     def requestPerformAnalysis(self):
         self.socket.send('read')
-        self.socket.send(f'{getcwd()}/TemporaryFiles/song.wav')
-        activationsString = self.socket.recv()
-        activationsFloats = activationsString.strip('[]').split(', ')
-        activations = [float(i) for i in activationsFloats]
+        self.socket.recv()
+        self.socket.send('song.wav')
+        self.socket.recv()
+        data = self.socket.recv()
+        activations = data
+        while data:
+            data = self.socket.recv()
+            activations += data
+            if 'OK' in data:
+                break
         
-        tags = self.parseTags(activations)
+        # Remove OK
+        activations = activations[0:len(activations)-2]
+        activationFloats = ast.literal_eval(activations)
+      
+        print(activationFloats)
+
+        tags = self.parseTags(activationFloats)
         self.core.sendTags(tags)
 
     # Alert essentia main that app is shutting down
     def requestClose(self):
         self.socket.send('close')
+        self.socket.recv()
+        self.socket.recv()
         self.socket.close()
 
     #Returns the sampleTime
@@ -62,6 +78,7 @@ class SamplingController:
     #waitTime can be configured in the
     def setWaitTime(self,waitTime):
         self.socket.send('set')
+        self.socket.recv()
         self.socket.send(str(waitTime))
         self.waitTime = waitTime
 
@@ -73,7 +90,7 @@ class SamplingController:
     def parseTags(self, activations):
         tags = []
         count = 0
-        for label, probability in zip(self.metadata, activations):
+        for label, probability in zip(self.metadata['classes'], activations.mean(axis=0)):
             if int(float(probability) * 100) > 50:
                 # Convert from metadata tag into actual tag
                 tags.append(self.CONVERSIONS[label])

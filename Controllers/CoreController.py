@@ -61,6 +61,9 @@ class CoreController:
         self.photoLibraryController.updateBackground(
             self.photoLibraryController.background)
 
+    def requestAnalysis(self):
+        self.samplingController.requestPerformAnalysis()
+
     # Tell the sampling timer to shut down socket comms
     def requestClose(self):
         self.samplingController.requestClose()
