@@ -16,18 +16,17 @@ def performAnalysis(audioFile):
     print(f"in perform")
     loader = ess.MonoLoader(filename=audioFile, sampleRate=sampleRate)
     audio = loader()
-    activations = pickle.dumps(model(audio))
-
-
+    activations = model(audio)
+    
     #remove(string)
 
-    return activations # activations
+    return str(activations) # activations
 
 def recv(connection):
-    return connection.recv(4096)
+    return connection.recv(1024).decode()
 
 def send(connection, msg):
-    connection.send(msg)
+    connection.send(msg.encode())
 
 socket = Socket(6000, "bind", host='127.0.0.1')
 socket.listen(1)
@@ -35,6 +34,7 @@ connection, address = socket.accept()
 print("found connection")
 while True:
     msg = recv(connection)
+    print(msg)
     send(connection, 'OK')
     # Functions on message, causes another recv in some cases
     if msg == 'read':
@@ -43,7 +43,7 @@ while True:
         send(connection, 'OK')
         string = f"{getcwd()}/TemporaryFiles/song.wav"
         activations = performAnalysis("TemporaryFiles/song.wav")
-        connection.send(activations)
+        send(connection, activations)
 
     elif msg == 'set':
         print("set received")

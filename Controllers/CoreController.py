@@ -53,8 +53,7 @@ class CoreController:
     # Send tags from sampling timer to all controllers that need them
     def sendTags(self, tags):
         self.photoLibraryController.requestChangeBackground(tags)
-        # Send the tags to change the theme
-        #self.
+        self.setTheme(None, tags)
 
     # Reset background to before app was opened
     def resetBackground(self):
@@ -149,7 +148,7 @@ class CoreController:
     def setTheme(self, theme, tags=None):
         # Save the configuration if no tags
         # Non dynamic themes should always return here
-        if tags is None:
+        if tags is None and theme is not None:
             self.theme = theme
             self.setConfiguration("Settings", "theme", theme)
             apply_stylesheet(self.app, theme)

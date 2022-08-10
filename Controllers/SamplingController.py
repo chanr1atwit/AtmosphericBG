@@ -1,5 +1,5 @@
 import json
-import ast
+import numpy as np
 from os import getcwd
 
 from Socket.Socket import *
@@ -53,9 +53,23 @@ class SamplingController:
         
         # Remove OK
         activations = activations[0:len(activations)-2]
-        activationFloats = ast.literal_eval(activations)
-      
-        print(activationFloats)
+
+        activations = activations.replace(']', ' ')
+        activations = activations.replace('[', ' ')
+
+        count = 0
+        activationsLists = []
+        current = []
+        for item in activations.split(' '):
+            if item == '':
+                continue
+            count += 1
+            current += [item]
+            if count % 10 == 0:
+                activationsLists += [current]
+                current = []
+
+        activationFloats = np.array(activationsLists).astype(np.float32)
 
         tags = self.parseTags(activationFloats)
         self.core.sendTags(tags)
