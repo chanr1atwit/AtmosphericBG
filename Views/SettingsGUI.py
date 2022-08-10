@@ -1,4 +1,4 @@
-# SettingsGUI class, last edited 6/23/2022 
+# SettingsGUI class, last edited 6/23/2022
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
 from PyQt5 import QtGui as QtG
@@ -50,7 +50,7 @@ class SettingsGUI(GUI):
 
         xLabel = QtW.QLabel("X", self)
         xLabel.move(plX+60,plY+117)
-        
+
         sizeLabel = QtW.QLabel("Custom Size", self)
         sizeLabel.setGeometry(QtC.QRect(plX,plY+75,100,16))
 
@@ -94,7 +94,7 @@ class SettingsGUI(GUI):
 
         # self.changeColor = QtW.QPushButton("Change Color",self)
         # self.changeColor.setGeometry(400,600,150,50)
-        
+
 
 ### WIDGETS FOR LED CONTROLLER
         ledX = 20
@@ -119,7 +119,7 @@ class SettingsGUI(GUI):
         self.blueTheme = QtW.QRadioButton("Blue", self)
         self.blueTheme.setGeometry(QtC.QRect(tX, tY+30, 170, 50))
         self.blueTheme.toggled.connect(lambda : self.controller.setTheme('light_blue.xml'))
-        
+
         self.redTheme = QtW.QRadioButton("Red", self)
         self.redTheme.setGeometry(QtC.QRect(tX, tY+60, 170, 50))
         self.redTheme.toggled.connect(lambda : self.controller.setTheme('dark_red.xml'))
@@ -156,4 +156,3 @@ class SettingsGUI(GUI):
 
     def mainView(self):
         self.hide()
-   

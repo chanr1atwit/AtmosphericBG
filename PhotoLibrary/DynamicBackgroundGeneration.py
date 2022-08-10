@@ -1,9 +1,9 @@
-# Provides overhead for the randimage library by setting 
+# Provides overhead for the randimage library by setting
 import ctypes
 import numpy as np
 import matplotlib
 from matplotlib.colors import ListedColormap
-import randimage.randimage as randimage
+import randimage as randimage
 import random
 
 NUM_SAMPLES = 256
@@ -23,11 +23,11 @@ GENRES = {
 # tags: str[]
 # Generates a color map from matplotlib
 # based on provided tags. Uses white as
-# start and end. 
+# start and end.
 def generateColormap(tags):
     # Number of colors based on present tags
     # +1 zone for white
-    N = (len(tags) + 1) * NUM_SAMPLES    
+    N = (len(tags) + 1) * NUM_SAMPLES
 
     # Shuffle the tags for a random order
     random.shuffle(tags)
@@ -36,15 +36,15 @@ def generateColormap(tags):
     vals = np.ones((N, 4))
 
     # Store previous end values for next iteration,
-    # begin at white 
+    # begin at white
     lastR = 1
     lastG = 1
     lastB = 1
 
     for i in range(len(tags)):
         # Get indicies for range
-        begin = i * NUM_SAMPLES 
-        end = (i + 1) * NUM_SAMPLES   
+        begin = i * NUM_SAMPLES
+        end = (i + 1) * NUM_SAMPLES
 
         # Get rbg values from mood dict
         genre = GENRES[tags[i]]
@@ -76,7 +76,7 @@ def generateColormap(tags):
     return ListedColormap(vals), N
 
 # custom: int[2]
-# Return either the custom dimensions of the photo or 
+# Return either the custom dimensions of the photo or
 # the current size of the users display (manually downscaled).
 # Output reversed to (height, width).
 def getDimensions(custom=None):
