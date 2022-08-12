@@ -1,1 +1,0 @@
-./ABG-WSLvenv/bin/python3.10 ./essentia_main.py
