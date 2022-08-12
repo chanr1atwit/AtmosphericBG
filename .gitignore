@@ -35,7 +35,8 @@ ehthumbs.db
 Thumbs.db
 
 # Custom #
-*/__pycache__/
+*__pycache__
 .vs/
-*ABGvenv
+*ABG*
 *.code-workspace
+*essentia

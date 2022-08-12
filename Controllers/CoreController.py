@@ -1,11 +1,11 @@
-import sys, configparser, random
+import sys, configparser, random, threading
 
 from PyQt5.QtWidgets import QApplication
 from qt_material import apply_stylesheet
 
 from Controllers.PhotoLibraryController import *
 from Controllers.DetectController import *
-#from Controllers.SamplingController import *
+from Controllers.SamplingController import *
 from Controllers.LEDController import *
 
 from Views.MainGUI import *
@@ -25,11 +25,12 @@ class CoreController:
         self.config = configparser.ConfigParser()
         self.config.read("Files\\userconfig.ini")
 
-        self.photoLibraryController = PhotoLibraryController(self)
+
         self.enableVisualizer = self.getConfiguration("Visualizer","enabled", bool)
         self.visualizer = visual.VisualizerObject(self.enableVisualizer)
+        self.photoLibraryController = PhotoLibraryController(self)
         self.detectController = DetectController(self)
-        #self.samplingController = SamplingController(self)
+        self.samplingController = SamplingController(self)
         self.ledController = LEDController(self)
 
         # Connected Views
@@ -51,14 +52,29 @@ class CoreController:
 ### Inter-controller functions
     # Send tags from sampling timer to all controllers that need them
     def sendTags(self, tags):
+        print(tags)
         self.photoLibraryController.requestChangeBackground(tags)
-        # Send the tags to change the theme
-        #self.
+        self.setTheme(None, tags)
 
     # Reset background to before app was opened
     def resetBackground(self):
         self.photoLibraryController.updateBackground(
             self.photoLibraryController.background)
+
+    def requestAnalysis(self):
+
+        self.samplingController.requestPerformAnalysis()
+
+    # Tell the sampling timer to shut down socket comms
+    def requestClose(self):
+        self.samplingController.requestClose()
+
+    # Hide all GUIs so that app can shut down
+    # Called from MainGUI, so exclude that one
+    def hideAll(self):
+        self.photoLibraryController.hideAll()
+        self.settingsGUI.hide()
+        self.detectController.hideAll()
 
 ### Configuration functions
     # Get configuration setting
@@ -134,18 +150,19 @@ class CoreController:
     def setTheme(self, theme, tags=None):
         # Save the configuration if no tags
         # Non dynamic themes should always return here
-        if tags is None:
+        if tags is None and theme is not None:
             self.theme = theme
             self.setConfiguration("Settings", "theme", theme)
             apply_stylesheet(self.app, theme)
             return
 
-        theme = self.chooseTheme(tags)
-        apply_stylesheet(self.app, theme)
+        #theme = self.chooseTheme(tags)
+        #print(theme)
+        #apply_stylesheet(self.app, theme)
     
     # Choose a theme 
     def chooseTheme(self, tags):
-        themes = []
+        themes = ['default']
 
         if "Metal" in tags or "Rock" in tags:
             themes += ['dark_red.xml']
@@ -155,7 +172,6 @@ class CoreController:
         if "Classic" in tags or "Hip Hop" in tags \
             or "Pop" in tags or "Reggae" in tags:
             themes += ['light_teal.xml']
-
         return random.choice(themes)
 
     # Find the location of the LED app

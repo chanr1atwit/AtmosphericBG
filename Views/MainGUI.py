@@ -51,9 +51,12 @@ class MainGUI(GUI):
         #visualizerButton.setGeometry(QtC.QRect(560, 400, 131, 40))
         #visualizerButton.clicked.connect(self.controller.visualizerView)
 
-    # Actions on window closure
+    # Perform all necessary closing actions
     # Signals end of program, write to config file
+    # Close sockets to WSL
     def closeEvent(self, event):
         self.controller.writeConfiguration()
         self.controller.resetBackground()
+        self.controller.requestClose()
+        self.controller.hideAll()
         event.accept()

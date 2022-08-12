@@ -1,7 +1,5 @@
 from PyQt5 import QtCore as QtC
 from PyQt5 import QtWidgets as QtW
-import threading
-
 
 from Views.GUI import *
 
@@ -13,30 +11,20 @@ class StartAudioGUI(GUI):
 
         #GUI to record/stop recording
         self.thread = None
-        startRecord = QtW.QPushButton("Record Audio", self)
-        startRecord.setGeometry(QtC.QRect(55, 25, 131, 40))   
-        startRecord.clicked.connect(self.startFunction)
+        self.startRecord = QtW.QPushButton("Record Audio", self)
+        self.startRecord.setGeometry(QtC.QRect(55, 25, 131, 40))   
+        self.startRecord.clicked.connect(self.controller.start)
 
-        endRecord = QtW.QPushButton("End Recording", self)
-        endRecord.setGeometry(QtC.QRect(55, 75, 131, 40)) 
-        endRecord.clicked.connect(self.endFunction)    
+        self.endRecord = QtW.QPushButton("End Recording", self)
+        self.endRecord.setGeometry(QtC.QRect(55, 75, 131, 40)) 
+        self.endRecord.setEnabled(False)
+        self.endRecord.clicked.connect(self.controller.stop)   
+        
         
         backButton = QtW.QPushButton("Back", self) 
         backButton.setGeometry(QtC.QRect(55,125,131,40))  
         backButton.clicked.connect(self.mainView) 
         
-    #runs detection on a thread
-    def startFunction(self):
-        self.thread = threading.Thread(target = self.controller.audioToWav)
-        self.thread.start()
-
-    def endFunction(self):
-        if self.thread is None:
-                return
-        else:
-            pass
-            #self.thread.stop()
-
      # List of connected views
     def mainView(self):
         self.hide()

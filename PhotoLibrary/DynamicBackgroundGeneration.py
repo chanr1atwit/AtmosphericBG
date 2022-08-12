@@ -3,7 +3,7 @@ import ctypes
 import numpy as np
 import matplotlib
 from matplotlib.colors import ListedColormap
-import randimage as randimage
+import randimage.randimage as randimage
 import random
 
 NUM_SAMPLES = 256

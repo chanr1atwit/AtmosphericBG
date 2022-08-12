@@ -1,28 +1,9 @@
-#SamplingController class, last edited 7/29/2022
-import time
-import threading
-import essentia
-import essentia.standard as ess
-import essentia.streaming
-import numpy as np
 import json
+import numpy as np
 from os import getcwd
-from scipy.io.wavfile import write
-#from ctypes import cdll
 
-'''
-Tony's Tasks
-1. Add code to CoreController ✅
-2. Initalize sampler in CoreController ✅
-3. Add input boxes for wait time in settings GUI ✅
-4. Add wait time to the config file
-5. Modify performAnalysis to parse activations into tags. ✅
-6. Output an array of tags using the requestChangeBackground(tags) from CoreController.photoLibraryController ✅
-7. Tell Rodney to run BPMThread alongside the mainThread
-8. Send output of sampleBPM to visualizer
-'''
+from Socket.Socket import *
 
-#lib = cdll.LoadLibrary('essentia/build/src/libessentia.so')
 class SamplingController:
 
     # Shouldn't ever change
@@ -40,9 +21,9 @@ class SamplingController:
         "roc": "Rock"
     }
 
-    def __init__(self, core, sampleTime=15, samRate=48000):
+    def __init__(self, core, sampleTime=15, sampleRate=48000):
         self.core = core
-        self.samRate = samRate
+        self.sampleRate = sampleRate
         self.sampleTime = sampleTime
 
         # Set the wait time from configurations (if applicable),
@@ -52,47 +33,61 @@ class SamplingController:
             self.waitTime = int(waitTime)
         else:
             self.waitTime = 45
-        #self.obj = lib.SamplingControlerCPP_new();
-        self.model = ess.TensorflowPredictMusiCNN(graphFilename="Files/genre_tzanetakis-musicnn-msd-1.pb")
-        self.metadata =  ["blu", "cla", "cou", "dis", "hip", "jaz", "met", "pop", "reg", "roc"]
+        self.metadata = json.load(open('Files\\genre_tzanetakis-musicnn-msd-1.json', 'r'))
 
-    #We need a lock
-    '''def mainSample(self):
-        self.exit_flag = False
-        while not self.exit_flag:
-            self.finished = False
-            threading.Thread(target=self.timer, args=(self.getSampleTime(),)).start()
-            workdone = False
-            while not self.finished:
-                #Does actual
+        self.socket = Socket(6000, "connect", host='127.0.0.1')
+
+    # Tell essentia main to anaylze the provided file
+    def requestPerformAnalysis(self):
+        self.socket.send('read')
+        self.socket.recv()
+        self.socket.send('song.wav')
+        self.socket.recv()
+        data = self.socket.recv()
+        
+        activations = data
+        while True:
+            activations += data
+            if data[len(data)-2:len(data)] == "]]":
+                break
+            data = self.socket.recv()
+
+        
+        # Remove OK
+        print(activations)
+        activations = activations[0:len(activations)-2]
+
+        activations = activations.replace(']', ' ')
+        activations = activations.replace('[', ' ')
+
+        count = 0
+        activationsLists = []
+        current = []
+        for item in activations.split(' '):
+            if item == '' or item == '\n' or item == '\r':
                 continue
-            self.performAnalysis()
-            self.finished = False
-            threading.Thread(target=self.timer, args=(self.getWaitTime(),)).start()
-            while not self.finished:
-                continue'''
+            count += 1
+            
+            current += [item]
+            if count % 10 == 0:
+                activationsLists += [current]
+                current = []
 
-    #the audioPath parameter is a string path to the audio file.
-    '''def appendAudio(self, audioPath):
-        if self.offset == 14:
-            self.offset = 0
-        self.loader = ess.MonoLoader(filename=audioPath,sampleRate=self.samRate)
-        audio = self.loader()
-        self.array[self.offset*self.samRate:(self.offset+1)*self.samRate] = audio
-        self.offset+=1'''
+        activationFloats = np.array(activationsLists).astype(np.float32)
 
-    #Creates a time buffer for the while loop in mainSample to do work.
-    '''def timer(self,timer):
-        time.sleep(timer)
-        self.finished = True'''
+        tags = self.parseTags(activationFloats)
+        self.core.sendTags(tags)
+
+    # Alert essentia main that app is shutting down
+    def requestClose(self):
+        self.socket.send('close')
+        self.socket.recv()
+        self.socket.recv()
+        self.socket.close()
 
     #Returns the sampleTime
     def getSampleTime(self):
         return self.sampleTime
-
-    #Returns the waitTime
-    def getWaitTime(self):
-        return self.waitTime
 
     #Considerations of scrapping this function because the sampleTime will always be 15.
     def setSampleTime(self,sampleTime):
@@ -100,34 +95,26 @@ class SamplingController:
 
     #waitTime can be configured in the
     def setWaitTime(self,waitTime):
+        self.socket.send('set')
+        self.socket.recv()
+        self.socket.send(str(waitTime))
         self.waitTime = waitTime
 
-    #It converts the array of wav files to a single wav file and the model analyzes the audioResult.wav.
-    def performAnalysis(self):
-        #Uses the model
-        #scaled = np.int16(self.array/np.max(np.abs(self.array)) * 32767)
-        #write(f"{getcwd()}\\TemporaryFiles\\tempAudio.wav",self.samRate, scaled)
-        audio = ess.MonoLoader(filename=f"{getcwd()}\\TemporaryFiles\\audioResult.wav",sampleRate=self.samRate)
-        activations = self.model(audio)
-        #send audiofile to c++ code called performAnalysis
-        #activations = lib.SamplingControlerCPP_performAnalysis(self.obj,audioFile);
-        tags = self.parseTags(activations)
-        self.core.sendTags(tags)
+    #Returns the waitTime
+    def getWaitTime(self):
+        return self.waitTime
 
-    #This function returns a set of output data related to BPM.
-
-    '''def sampleBPM(self):
-        #returns the bgm based data from essential
-        self.rhythm_extractor = ess.RhythmExtractor2013(method="multifeature")
-        bpm, beats, beats_confidence, __, beats_intervals = rhythm_extractor(self.loader)
-        return bpm, beats, beats_confidence, beats_intervals'''
-
+    # Parse tags provided by essentia
     def parseTags(self, activations):
         tags = []
-        count = 0
-        for label, probability in zip(self.metadata, activations.mean(axis=0)):
-            if int(float(probability) * 100) > 50:
+        #count = 0
+        meanActivations = activations.mean(axis=0)
+        m = np.argmax(meanActivations, axis=0)
+        tags += [self.CONVERSIONS[self.metadata['classes'][m]]]
+
+        #for label, probability in zip(self.metadata['classes'], activations.mean(axis=0)):
+            #if int(float(probability) * 100) > 50:
                 # Convert from metadata tag into actual tag
-                tags.append(self.CONVERSIONS[label])
-            count+=1
+                #tags.append(self.CONVERSIONS[label])
+            #count+=1
         return tags
