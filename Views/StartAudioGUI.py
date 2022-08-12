@@ -10,7 +10,6 @@ class StartAudioGUI(GUI):
         super().__init__(controller, 250, 250, "Atmospheric BG - App Selection")
 
         #GUI to record/stop recording
-        self.thread = None
         self.startRecord = QtW.QPushButton("Record Audio", self)
         self.startRecord.setGeometry(QtC.QRect(55, 25, 131, 40))   
         self.startRecord.clicked.connect(self.controller.start)
