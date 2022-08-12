@@ -8,4 +8,7 @@ settings -> system -> sound -> more sound settings -> click on recording on top 
 - Make sure you have stereo mix as your default input. To do this go to
 settings -> system -> sound -> input -> stereo mix
 
-- for LED color changing to be enabled: 
+Demo video:
+https://youtu.be/dcpl5ONHl-c
+
+
