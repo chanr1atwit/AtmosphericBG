@@ -1,6 +1,7 @@
 # WSL main application, runs in the background and performs essentia analysis
 # Interacts with the main application through IPC sockets
-
+import sys
+sys.path.append('/usr/local/lib/python3/dist-packages/')
 import essentia.standard as ess
 from os import remove, getcwd
 from time import sleep
