@@ -58,3 +58,13 @@ At this point, extract the essentia folder from essentia.rar
 	Open cmd.exe
 	cd ...\AtmosphericBG
 	run_program.bat
+
+Device Requirements:
+- Make sure stereo mix is enabled. To do this, go to:
+settings -> system -> sound -> more sound settings -> click on recording on top -> right click on stereo mic and enable
+
+- Make sure you have stereo mix as your default input. To do this go to
+settings -> system -> sound -> input -> stereo mix
+
+- for LED color changing to be enabled: 
+
