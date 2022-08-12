@@ -26,7 +26,6 @@ class DetectController:
             # Thread will join on its own
             print("Signal sent to stop recording after current process finishes.")
             self.kill = True
-            self.audioGUI.startRecord.setEnabled(True)
             self.audioGUI.endRecord.setEnabled(False)
 
     def audioToWav(self):
@@ -35,7 +34,7 @@ class DetectController:
             temp_dir = "TemporaryFiles\\"
             #read in sound from speaker
             fs = 48000 # Hz
-            length = 1 # s
+            length = 15 # s
             recording = sd.rec(frames = (int)(fs * length), samplerate=fs,channels=2)
             sd.wait()
             try:
@@ -46,7 +45,8 @@ class DetectController:
             self.core.requestAnalysis()
             if self.kill:
                 break
-            sleep(30)
+            sleep(10)
+        self.audioGUI.startRecord.setEnabled(True)
            
     def hideAll(self):
         self.audioGUI.hide()

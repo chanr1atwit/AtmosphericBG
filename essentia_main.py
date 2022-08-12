@@ -13,12 +13,11 @@ sampleRate = 48000
 # It converts the array of wav files to a single wav file and the model analyzes the audioResult.wav.
 def performAnalysis(audioFile):
     #Uses the model
-    print(f"in perform")
     loader = ess.MonoLoader(filename=audioFile, sampleRate=sampleRate)
     audio = loader()
     activations = model(audio)
     
-    #remove(string)
+    remove(audioFile)
 
     return str(activations) # activations
 
@@ -35,7 +34,6 @@ connection, address = socket.accept()
 print("Main application found")
 while True:
     msg = recv(connection)
-    print(msg)
     send(connection, 'OK')
     # Functions on message, causes another recv in some cases
     if msg == 'read':

@@ -67,6 +67,7 @@ class SamplingController:
             if item == '' or item == '\n' or item == '\r':
                 continue
             count += 1
+            
             current += [item]
             if count % 10 == 0:
                 activationsLists += [current]
@@ -106,10 +107,14 @@ class SamplingController:
     # Parse tags provided by essentia
     def parseTags(self, activations):
         tags = []
-        count = 0
-        for label, probability in zip(self.metadata['classes'], activations.mean(axis=0)):
-            if int(float(probability) * 100) > 50:
+        #count = 0
+        meanActivations = activations.mean(axis=0)
+        m = np.argmax(meanActivations, axis=0)
+        tags += [self.CONVERSIONS[self.metadata['classes'][m]]]
+
+        #for label, probability in zip(self.metadata['classes'], activations.mean(axis=0)):
+            #if int(float(probability) * 100) > 50:
                 # Convert from metadata tag into actual tag
-                tags.append(self.CONVERSIONS[label])
-            count+=1
+                #tags.append(self.CONVERSIONS[label])
+            #count+=1
         return tags
